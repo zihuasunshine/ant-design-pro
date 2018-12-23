@@ -1,33 +1,17 @@
 import React, { Component, Fragment } from 'react';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Upload, Select, Button } from 'antd';
+import { Form, Input, Upload, Select, Button, Radio, DatePicker, Icon, message } from 'antd';
 import { connect } from 'dva';
 import styles from './BaseView.less';
 import GeographicView from './GeographicView';
 import PhoneView from './PhoneView';
-// import { getTimeDistance } from '@/utils/utils';
+import AvatarView from '@/components/CropImg';
+import monent from 'moment';
+import { dataURLtoFile } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
-
-// 头像组件 方便以后独立，增加裁剪之类的功能
-const AvatarView = ({ avatar }) => (
-  <Fragment>
-    <div className={styles.avatar_title}>
-      <FormattedMessage id="app.settings.basic.avatar" defaultMessage="Avatar" />
-    </div>
-    <div className={styles.avatar}>
-      <img src={avatar} alt="avatar" />
-    </div>
-    <Upload fileList={[]}>
-      <div className={styles.button_view}>
-        <Button icon="upload">
-          <FormattedMessage id="app.settings.basic.change-avatar" defaultMessage="Change avatar" />
-        </Button>
-      </div>
-    </Upload>
-  </Fragment>
-);
+const { Group: RadioGroup } = Radio;
 
 const validatorGeographic = (rule, value, callback) => {
   const { province, city } = value;
@@ -40,39 +24,121 @@ const validatorGeographic = (rule, value, callback) => {
   callback();
 };
 
-const validatorPhone = (rule, value, callback) => {
-  const values = value.split('-');
-  if (!values[0]) {
-    callback('Please input your area code!');
-  }
-  if (!values[1]) {
-    callback('Please input your phone number!');
-  }
-  callback();
-};
-
-@connect(({ user }) => ({
-  currentUser: user.currentUser,
+@connect(({ user, baseView }) => ({
+  user,
+  baseView,
 }))
 @Form.create()
 class BaseView extends Component {
   componentDidMount() {
-    this.setBaseInfo();
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/fetchCurrent',
+      token: sessionStorage.getItem('access_token'),
+    }).then(() => {
+      this.setBaseInfo();
+    });
   }
 
-  setBaseInfo = () => {
-    const { currentUser, form } = this.props;
-    Object.keys(form.getFieldsValue()).forEach(key => {
-      const obj = {};
-      obj[key] = currentUser[key] || null;
-      form.setFieldsValue(obj);
+  // 上传图片
+  uploadImg = img => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'baseView/uploadAvatar',
+      params: {
+        token: sessionStorage.getItem('access_token'),
+        file: dataURLtoFile(img),
+      },
+    }).then(() => {
+      const {
+        baseView: { uploadImgRes },
+      } = this.props;
+      if (uploadImgRes.code === 200) {
+        message.success('头像更换成功');
+      } else {
+        message.error('头像更换失败');
+      }
     });
   };
 
+  // 提交表单
+  handleSubmit = e => {
+    e.preventDefault();
+    const {
+      form: { validateFields },
+      dispatch,
+    } = this.props;
+    validateFields((err, values) => {
+      if (!err) {
+        const {
+          email,
+          sex,
+          birthday,
+          nickname,
+          urlToken,
+          geographic,
+          postgraduateTime,
+          undergraduateSchool,
+          applicationSchool,
+          applicationProfession,
+        } = values;
+        let params = {};
+        email ? (params.email = email) : '';
+        sex ? (params.sex = sex) : '';
+        birthday ? (params.birthday = birthday.format('YYYY-MM-DD')) : '';
+        nickname ? (params.nickname = nickname) : '';
+        urlToken ? (params.urlToken = urlToken) : '';
+        geographic
+          ? (params.province = geographic.province.label ? geographic.province.label : '')
+          : '';
+        geographic ? (params.city = geographic.city.label ? geographic.city.label : '') : '';
+        postgraduateTime ? (params.postgraduateTime = postgraduateTime) : '';
+        undergraduateSchool ? (params.undergraduateSchool = undergraduateSchool) : '';
+        applicationSchool ? (params.applicationSchool = applicationSchool) : '';
+        applicationProfession ? (params.applicationProfession = applicationProfession) : '';
+        dispatch({
+          type: 'baseView/submit',
+          payload: {
+            ...params,
+          },
+          token: sessionStorage.getItem('access_token'),
+        }).then(() => {
+          // 重新获取数据赋值
+          dispatch({
+            type: 'user/fetchCurrent',
+            token: sessionStorage.getItem('access_token'),
+          }).then(() => {
+            this.setBaseInfo();
+          });
+        });
+      }
+    });
+  };
+
+  setBaseInfo = () => {
+    const {
+      user: { currentUser },
+      form,
+    } = this.props;
+    if (currentUser.code === 200) {
+      const { data: currentUserInfo } = currentUser;
+      Object.keys(form.getFieldsValue()).forEach(key => {
+        const obj = {};
+        obj[key] = currentUserInfo[key] || null;
+        form.setFieldsValue(obj);
+      });
+    } else {
+    }
+  };
+
   getAvatarURL() {
-    const { currentUser } = this.props;
-    if (currentUser.avatar) {
-      return currentUser.avatar;
+    const {
+      user: { currentUser },
+    } = this.props;
+    if (currentUser.code === 200) {
+      if (currentUser.data.avatarFile) {
+        return currentUser.data.avatarFile;
+      }
     }
     const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png';
     return url;
@@ -92,88 +158,147 @@ class BaseView extends Component {
           <Form layout="vertical" onSubmit={this.handleSubmit} hideRequiredMark>
             <FormItem label={formatMessage({ id: 'app.settings.basic.email' })}>
               {getFieldDecorator('email', {
-                rules: [
+                /*rules: [
                   {
                     required: true,
                     message: formatMessage({ id: 'app.settings.basic.email-message' }, {}),
                   },
-                ],
+                ],*/
               })(<Input />)}
             </FormItem>
+            <FormItem label={formatMessage({ id: 'app.settings.basic.sex' })}>
+              {getFieldDecorator('sex', {
+                /*rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'app.settings.basic.sex-message' }, {}),
+                  },
+                ],*/
+              })(
+                <RadioGroup>
+                  <Radio value={0}>男</Radio>
+                  <Radio value={1}>女</Radio>
+                </RadioGroup>
+              )}
+            </FormItem>
+            <FormItem label={formatMessage({ id: 'app.settings.basic.birthday' })}>
+              {getFieldDecorator('birthday', {
+                /*rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'app.settings.basic.birthday-message' }, {}),
+                  },
+                ],*/
+              })(
+                <DatePicker
+                  placeholder={formatMessage({ id: 'app.settings.basic.birthday-placeholder' })}
+                />
+              )}
+            </FormItem>
             <FormItem label={formatMessage({ id: 'app.settings.basic.nickname' })}>
-              {getFieldDecorator('name', {
-                rules: [
+              {getFieldDecorator('nickname', {
+                /*rules: [
                   {
                     required: true,
                     message: formatMessage({ id: 'app.settings.basic.nickname-message' }, {}),
                   },
-                ],
+                ],*/
               })(<Input />)}
             </FormItem>
-            <FormItem label={formatMessage({ id: 'app.settings.basic.profile' })}>
-              {getFieldDecorator('profile', {
-                rules: [
+            <FormItem label={formatMessage({ id: 'app.settings.basic.urlToken' })}>
+              {getFieldDecorator('urlToken', {
+                /*rules: [
                   {
                     required: true,
-                    message: formatMessage({ id: 'app.settings.basic.profile-message' }, {}),
+                    message: formatMessage({ id: 'app.settings.basic.urlToken-message' }, {}),
                   },
-                ],
+                ],*/
               })(
-                <Input.TextArea
-                  placeholder={formatMessage({ id: 'app.settings.basic.profile-placeholder' })}
-                  rows={4}
+                <Input
+                  placeholder={formatMessage({ id: 'app.settings.basic.urlToken-placeholder' })}
                 />
-              )}
-            </FormItem>
-            <FormItem label={formatMessage({ id: 'app.settings.basic.country' })}>
-              {getFieldDecorator('country', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'app.settings.basic.country-message' }, {}),
-                  },
-                ],
-              })(
-                <Select style={{ maxWidth: 220 }}>
-                  <Option value="China">中国</Option>
-                </Select>
               )}
             </FormItem>
             <FormItem label={formatMessage({ id: 'app.settings.basic.geographic' })}>
               {getFieldDecorator('geographic', {
                 rules: [
-                  {
+                  /*{
                     required: true,
                     message: formatMessage({ id: 'app.settings.basic.geographic-message' }, {}),
                   },
                   {
                     validator: validatorGeographic,
-                  },
+                  },*/
                 ],
               })(<GeographicView />)}
             </FormItem>
-            <FormItem label={formatMessage({ id: 'app.settings.basic.address' })}>
-              {getFieldDecorator('address', {
-                rules: [
+            <FormItem label={formatMessage({ id: 'app.settings.basic.postgraduateTime' })}>
+              {/*mode='year'时 组件有bug*/}
+              {getFieldDecorator('postgraduateTime', {
+                /*ant design 插件对于年份选择有bug 故使用输入年份的方式*/
+                /*rules: [
                   {
                     required: true,
-                    message: formatMessage({ id: 'app.settings.basic.address-message' }, {}),
+                    message: formatMessage({ id: 'app.settings.basic.postgraduateTime-message' }, {}),
                   },
-                ],
-              })(<Input />)}
+                ],*/
+              })(
+                <Input
+                  placeholder={formatMessage({
+                    id: 'app.settings.basic.postgraduateTime-placeholder',
+                  })}
+                />
+              )}
             </FormItem>
-            <FormItem label={formatMessage({ id: 'app.settings.basic.phone' })}>
-              {getFieldDecorator('phone', {
-                rules: [
+            <FormItem label={formatMessage({ id: 'app.settings.basic.undergraduateSchool' })}>
+              {getFieldDecorator('undergraduateSchool', {
+                /*rules: [
                   {
                     required: true,
-                    message: formatMessage({ id: 'app.settings.basic.phone-message' }, {}),
+                    message: formatMessage({ id: 'app.settings.basic.undergraduateSchool-message' }, {}),
                   },
-                  { validator: validatorPhone },
-                ],
-              })(<PhoneView />)}
+                ],*/
+              })(
+                <Input
+                  placeholder={formatMessage({
+                    id: 'app.settings.basic.undergraduateSchool-placeholder',
+                  })}
+                />
+              )}
             </FormItem>
-            <Button type="primary">
+            <FormItem label={formatMessage({ id: 'app.settings.basic.applicationSchool' })}>
+              {getFieldDecorator('applicationSchool', {
+                /*rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'app.settings.basic.applicationSchool-message' }, {}),
+                  },
+                ],*/
+              })(
+                <Input
+                  placeholder={formatMessage({
+                    id: 'app.settings.basic.applicationSchool-placeholder',
+                  })}
+                />
+              )}
+            </FormItem>
+            <FormItem label={formatMessage({ id: 'app.settings.basic.applicationProfession' })}>
+              {getFieldDecorator('applicationProfession', {
+                /*rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'app.settings.basic.applicationProfession-message' }, {}),
+                  },
+                ],*/
+              })(
+                <Input
+                  placeholder={formatMessage({
+                    id: 'app.settings.basic.applicationProfession-placeholder',
+                  })}
+                />
+              )}
+            </FormItem>
+            <Button type="primary" htmlType="submit">
               <FormattedMessage
                 id="app.settings.basic.update"
                 defaultMessage="Update Information"
@@ -182,7 +307,7 @@ class BaseView extends Component {
           </Form>
         </div>
         <div className={styles.right}>
-          <AvatarView avatar={this.getAvatarURL()} />
+          <AvatarView avatar={this.getAvatarURL()} onUploadImg={this.uploadImg} />
         </div>
       </div>
     );

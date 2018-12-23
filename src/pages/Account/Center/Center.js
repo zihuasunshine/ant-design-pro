@@ -8,7 +8,7 @@ import styles from './Center.less';
 
 @connect(({ loading, user, project }) => ({
   listLoading: loading.effects['list/fetch'],
-  currentUser: user.currentUser,
+  currentUser: user.currentUser.data,
   currentUserLoading: loading.effects['user/fetchCurrent'],
   project,
   projectLoading: loading.effects['project/fetchNotice'],
@@ -24,6 +24,7 @@ class Center extends PureComponent {
     const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
+      token: sessionStorage.getItem('access_token'),
     });
     dispatch({
       type: 'list/fetch',
@@ -97,7 +98,7 @@ class Center extends PureComponent {
         key: 'articles',
         tab: (
           <span>
-            文章 <span style={{ fontSize: 14 }}>(8)</span>
+            待回答 <span style={{ fontSize: 14 }}>(8)</span>
           </span>
         ),
       },
@@ -105,7 +106,7 @@ class Center extends PureComponent {
         key: 'applications',
         tab: (
           <span>
-            应用 <span style={{ fontSize: 14 }}>(8)</span>
+            我的提问 <span style={{ fontSize: 14 }}>(8)</span>
           </span>
         ),
       },
@@ -113,7 +114,7 @@ class Center extends PureComponent {
         key: 'projects',
         tab: (
           <span>
-            项目 <span style={{ fontSize: 14 }}>(8)</span>
+            我的回答 <span style={{ fontSize: 14 }}>(8)</span>
           </span>
         ),
       },
@@ -127,9 +128,9 @@ class Center extends PureComponent {
               {currentUser && Object.keys(currentUser).length ? (
                 <div>
                   <div className={styles.avatarHolder}>
-                    <img alt="" src={currentUser.avatar} />
-                    <div className={styles.name}>{currentUser.name}</div>
-                    <div>{currentUser.signature}</div>
+                    <img alt="" src={currentUser.avatarFile} />
+                    <div className={styles.name}>{currentUser.nickname}</div>
+                    <div>个人主页:{currentUser.urlToken ? currentUser.urlToken : '暂无'}</div>
                   </div>
                   <div className={styles.detail}>
                     <p>
@@ -142,16 +143,16 @@ class Center extends PureComponent {
                     </p>
                     <p>
                       <i className={styles.address} />
-                      {currentUser.geographic.province.label}
-                      {currentUser.geographic.city.label}
+                      {currentUser.province}
+                      {currentUser.city}
                     </p>
                   </div>
                   <Divider dashed />
                   <div className={styles.tags}>
                     <div className={styles.tagsTitle}>标签</div>
-                    {currentUser.tags.concat(newTags).map(item => (
+                    {/*currentUser.tags.concat(newTags).map(item => (
                       <Tag key={item.key}>{item.label}</Tag>
-                    ))}
+                    ))*/}
                     {inputVisible && (
                       <Input
                         ref={this.saveInputRef}

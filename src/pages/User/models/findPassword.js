@@ -1,9 +1,9 @@
-import { register, sendSMSCode } from '@/services/api';
+import { doReset, sendVerifyCode } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
 
 export default {
-  namespace: 'register',
+  namespace: 'findpwd',
 
   state: {
     status: undefined,
@@ -11,16 +11,16 @@ export default {
 
   effects: {
     *getSMSCode({ payload }, { call, put }) {
-      const response = yield call(sendSMSCode, payload);
+      const response = yield call(sendVerifyCode, payload);
       yield put({
         type: 'SMSCodeHandle',
         payload: response,
       });
     },
     *submit({ payload }, { call, put }) {
-      const response = yield call(register, payload);
+      const response = yield call(doReset, payload);
       yield put({
-        type: 'registerHandle',
+        type: 'resetHandle',
         payload: response,
       });
     },
@@ -33,12 +33,12 @@ export default {
         codeRes: payload,
       };
     },
-    registerHandle(state, { payload }) {
+    resetHandle(state, { payload }) {
       setAuthority('user');
       reloadAuthorized();
       return {
         ...state,
-        registerRes: payload,
+        findpwdRes: payload,
       };
     },
   },

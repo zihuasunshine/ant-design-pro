@@ -72,6 +72,13 @@ export default {
   externals: {
     '@antv/data-set': 'DataSet',
   },
+  "proxy": {
+    "/api": {
+      "target": "https://dev.api.ikaoyaner.com/api",
+      "changeOrigin": true,
+      "pathRewrite": { "^/api" : "" }
+    }
+  },
   // proxy: {
   //   '/server/api/': {
   //     target: 'https://preview.pro.ant.design/',

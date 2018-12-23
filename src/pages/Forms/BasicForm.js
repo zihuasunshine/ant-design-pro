@@ -67,7 +67,7 @@ class BasicForms extends PureComponent {
     return (
       <PageHeaderWrapper
         title={<FormattedMessage id="app.forms.basic.title" />}
-        content={<FormattedMessage id="app.forms.basic.description" />}
+        //content={<FormattedMessage id="app.forms.basic.description" />}
       >
         <Card bordered={false}>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>

@@ -28,26 +28,20 @@ const passwordStatusMap = {
       <FormattedMessage id="validation.password.strength.short" />
     </div>
   ),
-  long: (
-    <div className={styles.error}>
-      <FormattedMessage id="validation.password.strength.long" />
-    </div>
-  ),
 };
 
 const passwordProgressMap = {
   ok: 'success',
   pass: 'normal',
   poor: 'exception',
-  long: 'exception',
 };
 
-@connect(({ register, loading }) => ({
-  register,
-  submitting: loading.effects['register/submit'],
+@connect(({ findpwd, loading }) => ({
+  findpwd,
+  submitting: loading.effects['findpwd/submit'],
 }))
 @Form.create()
-class Register extends Component {
+class FindPassword extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -65,11 +59,10 @@ class Register extends Component {
   }
 
   componentDidUpdate() {
-    const { form, register } = this.props;
-    const account = form.getFieldValue('mail');
-    if (register.status === 'ok') {
+    const { form, findpwd } = this.props;
+    if (findpwd.status === 'ok') {
       router.push({
-        pathname: '/user/register-result',
+        pathname: '/user/findpwd-result',
         state: {
           account,
         },
@@ -101,14 +94,14 @@ class Register extends Component {
     validateFields(['resultCode', 'mobile'], (err, values) => {
       if (!err) {
         dispatch({
-          type: 'register/getSMSCode',
+          type: 'findpwd/getSMSCode',
           payload: {
             ...values,
             token,
           },
         }).then(() => {
           const {
-            register: { codeRes },
+            findpwd: { codeRes },
           } = this.props;
           if (codeRes.code === 200) {
             message.success(formatMessage({ id: 'get_code_success' }));
@@ -127,14 +120,11 @@ class Register extends Component {
   getPasswordStatus = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
-    if (value && value.length > 9 && value.length < 13) {
+    if (value && value.length > 9) {
       return 'ok';
     }
-    if (value && value.length > 5 && value.length < 13) {
+    if (value && value.length > 5) {
       return 'pass';
-    }
-    if (value && value.length > 12) {
-      return 'long';
     }
     return 'poor';
   };
@@ -146,24 +136,24 @@ class Register extends Component {
       if (!err) {
         const { prefix } = this.state;
         dispatch({
-          type: 'register/submit',
+          type: 'findpwd/submit',
           payload: {
             ...values,
           },
         }).then(() => {
           const {
-            register: { registerRes },
+            findpwd: { findpwdRes },
           } = this.props;
-          if (registerRes.code === 200) {
-            message.success(formatMessage({ id: 'register_success' }));
+          if (findpwdRes.code === 200) {
+            message.success(formatMessage({ id: 'findpwd_success' }));
             router.push({
-              pathname: '/user/register-result',
+              pathname: '/user/login',
             });
           } else {
-            const msg = registerRes.msg;
+            const msg = findpwdRes.msg;
             const tip = formatMessage({ id: msg })
               ? formatMessage({ id: msg })
-              : formatMessage({ id: 'register_faild' });
+              : formatMessage({ id: 'findpwd_faild' });
             message.error(tip);
           }
         });
@@ -250,34 +240,14 @@ class Register extends Component {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
     const { count, prefix, help, visible, src } = this.state;
-    console.log(visible);
     return (
       <div className={styles.main}>
         <h3>
           <a>
-            <FormattedMessage id="app.register.register" />
+            <FormattedMessage id="app.findpwd.findpwd" />
           </a>
         </h3>
         <Form onSubmit={this.handleSubmit}>
-          <FormItem>
-            {getFieldDecorator('userName', {
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage({ id: 'validation.userName.required' }),
-                },
-                {
-                  pattern: /([a-zA-Z0-9\u4e00-\u9fa5]){4,20}$/,
-                  message: formatMessage({ id: 'validation.userName.wrong-format' }),
-                },
-              ],
-            })(
-              <Input
-                size="large"
-                placeholder={formatMessage({ id: 'form.userName.placeholder' })}
-              />
-            )}
-          </FormItem>
           <FormItem help={help}>
             <Popover
               getPopupContainer={node => node.parentNode}
@@ -420,7 +390,7 @@ class Register extends Component {
               type="primary"
               htmlType="submit"
             >
-              <FormattedMessage id="app.register.register" />
+              <FormattedMessage id="app.findpwd.findpwd" />
             </Button>
             <Link className={styles.login} to="/User/Login">
               <FormattedMessage id="app.register.sign-in" />
@@ -432,4 +402,4 @@ class Register extends Component {
   }
 }
 
-export default Register;
+export default FindPassword;

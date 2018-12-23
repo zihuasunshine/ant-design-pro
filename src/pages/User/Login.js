@@ -1,8 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
+import { routerRedux } from 'dva/router';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import Link from 'umi/link';
-import { Checkbox, Alert, Icon } from 'antd';
+import { Checkbox, Alert, Icon, message } from 'antd';
 import Login from '@/components/Login';
 import styles from './Login.less';
 
@@ -22,22 +23,30 @@ class LoginPage extends Component {
     this.setState({ type });
   };
 
-  onGetCaptcha = () =>
-    new Promise((resolve, reject) => {
-      this.loginForm.validateFields(['mobile'], {}, (err, values) => {
-        if (err) {
-          reject(err);
-        } else {
-          const { dispatch } = this.props;
-          dispatch({
-            type: 'login/getCaptcha',
-            payload: values.mobile,
-          })
-            .then(resolve)
-            .catch(reject);
-        }
-      });
+  onGetCaptcha = () => {
+    this.loginForm.validateFields(['mobile'], {}, (err, values) => {
+      if (!err) {
+        const { dispatch } = this.props;
+        dispatch({
+          type: 'login/getCaptcha',
+          payload: values.mobile,
+        }).then(() => {
+          const {
+            login: { captchaRes },
+          } = this.props;
+          if (captchaRes.code === 200) {
+            message.success(formatMessage({ id: 'get_code_success' }));
+          } else {
+            const { msg } = captchaRes;
+            const tip = formatMessage({ id: msg })
+              ? formatMessage({ id: msg })
+              : formatMessage({ id: 'get_code_faild' });
+            message.error(tip);
+          }
+        });
+      }
     });
+  };
 
   handleSubmit = (err, values) => {
     const { type } = this.state;
@@ -49,6 +58,37 @@ class LoginPage extends Component {
           ...values,
           type,
         },
+      }).then(() => {
+        const {
+          login: { loginRes },
+        } = this.props;
+        const error = loginRes.error;
+        if (error) {
+          let tip = '';
+          if (error === 'invalid_grant') {
+            tip =
+              type === 'account'
+                ? formatMessage({ id: 'invalid_grant_pwd' })
+                : formatMessage({ id: 'invalid_grant_code' });
+          } else {
+            tip = formatMessage({ id: error })
+              ? formatMessage({ id: error })
+              : formatMessage({ id: error });
+          }
+          message.error(tip);
+        } else {
+          // 将返回的信息(access_token, refresh_token)存储在sessionStorage做持久化
+          //sessionStorage.setItem("access_token", loginRes.access_token);
+          //sessionStorage.setItem("refresh_token", loginRes.refresh_token);
+          /*dispatch({
+            type: 'user/fetchCurrent',
+            token: sessionStorage.getItem('access_token')
+          }).then(() => {
+            routerRedux.push({
+              pathname: '/dashboard/analysis'
+            });
+          });*/
+        }
       });
     }
   };
@@ -143,9 +183,9 @@ class LoginPage extends Component {
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               <FormattedMessage id="app.login.remember-me" />
             </Checkbox>
-            <a style={{ float: 'right' }} href="">
+            <Link style={{ float: 'right' }} to="/user/findpwd">
               <FormattedMessage id="app.login.forgot-password" />
-            </a>
+            </Link>
           </div>
           <Submit loading={submitting}>
             <FormattedMessage id="app.login.login" />

@@ -5,7 +5,6 @@ export default {
   'form.submit': '提交',
   'form.save': '保存',
   'form.email.placeholder': '邮箱',
-  'form.password.placeholder': '至少6位密码，区分大小写',
   'form.confirm-password.placeholder': '确认密码',
   'form.phone-number.placeholder': '手机号',
   'form.verification-code.placeholder': '验证码',
@@ -34,4 +33,14 @@ export default {
   'form.publicUsers.option.A': '同事甲',
   'form.publicUsers.option.B': '同事乙',
   'form.publicUsers.option.C': '同事丙',
+  //===新增===//
+  'form.userName.placeholder': '用户名',
+  'form.password.placeholder': '6~20位密码，区分大小写',
+  'form.findpwd.placeholder': '新密码，6~20位密码，区分大小写',
+  'form.resultCode.placeholder': '图形验证码',
+  'form.question.title.label': '问题',
+  'form.question.title.placeholder': '写下你的问题',
+  'form.question.detail.label': '问题描述',
+  'form.question.detail.placeholder': '选填，详细说明问题',
+  'form.question.imgs.label': '图片描述',
 };

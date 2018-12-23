@@ -1,4 +1,5 @@
 import { query as queryUsers, queryCurrent } from '@/services/user';
+import { currentUser } from '@/services/api';
 
 export default {
   namespace: 'user',
@@ -16,16 +17,22 @@ export default {
         payload: response,
       });
     },
-    *fetchCurrent(_, { call, put }) {
-      const response = yield call(queryCurrent);
+    *fetchCurrent({ token }, { call, put }) {
+      const response = yield call(currentUser, token);
       yield put({
-        type: 'saveCurrentUser',
+        type: 'currentUserHandle',
         payload: response,
       });
     },
   },
 
   reducers: {
+    currentUserHandle(state, { payload }) {
+      return {
+        ...state,
+        currentUser: payload,
+      };
+    },
     save(state, action) {
       return {
         ...state,
