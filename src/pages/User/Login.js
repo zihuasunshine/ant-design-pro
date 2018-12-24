@@ -76,18 +76,6 @@ class LoginPage extends Component {
               : formatMessage({ id: error });
           }
           message.error(tip);
-        } else {
-          // 将返回的信息(access_token, refresh_token)存储在sessionStorage做持久化
-          //sessionStorage.setItem("access_token", loginRes.access_token);
-          //sessionStorage.setItem("refresh_token", loginRes.refresh_token);
-          /*dispatch({
-            type: 'user/fetchCurrent',
-            token: sessionStorage.getItem('access_token')
-          }).then(() => {
-            routerRedux.push({
-              pathname: '/dashboard/analysis'
-            });
-          });*/
         }
       });
     }

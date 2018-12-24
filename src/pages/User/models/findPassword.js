@@ -1,4 +1,4 @@
-import { doReset, sendVerifyCode } from '@/services/api';
+import { doReset, sendVerifyCode, modifyPassword } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
 
@@ -24,6 +24,13 @@ export default {
         payload: response,
       });
     },
+    *modifyPwd({ payload, token }, { call, put }) {
+      const response = yield call(modifyPassword, payload, token);
+      yield put({
+        type: 'modifyPwdHandle',
+        payload: response
+      });
+    }
   },
 
   reducers: {
@@ -41,5 +48,11 @@ export default {
         findpwdRes: payload,
       };
     },
+    modifyPwdHandle(state, { payload }) {
+      return {
+        ...state,
+       modifyPwdRes: payload
+      }
+    }
   },
 };

@@ -2,11 +2,13 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import Link from 'umi/link';
 import router from 'umi/router';
-import { Card, Row, Col, Icon, Avatar, Tag, Divider, Spin, Input } from 'antd';
+import { formatMessage, FormattedMessage } from 'umi/locale';
+import { Card, Row, Col, Icon, Avatar, Tag, Divider, Spin, Input, message } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './Center.less';
 
-@connect(({ loading, user, project }) => ({
+@connect(({ center, loading, user, project }) => ({
+  center,
   listLoading: loading.effects['list/fetch'],
   currentUser: user.currentUser.data,
   currentUserLoading: loading.effects['user/fetchCurrent'],
@@ -14,18 +16,19 @@ import styles from './Center.less';
   projectLoading: loading.effects['project/fetchNotice'],
 }))
 class Center extends PureComponent {
-  state = {
-    newTags: [],
-    inputVisible: false,
-    inputValue: '',
-  };
+
+  constructor(props){
+    super(props);
+    this.state = {
+      newTags: props.currentUser ? props.currentUser.tags : [],
+      inputVisible: false,
+      inputValue: '',
+    };
+  }
+  
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'user/fetchCurrent',
-      token: sessionStorage.getItem('access_token'),
-    });
     dispatch({
       type: 'list/fetch',
       payload: {
@@ -67,18 +70,53 @@ class Center extends PureComponent {
   };
 
   handleInputConfirm = () => {
-    const { state } = this;
-    const { inputValue } = state;
-    let { newTags } = state;
-    if (inputValue && newTags.filter(tag => tag.label === inputValue).length === 0) {
-      newTags = [...newTags, { key: `new-${newTags.length}`, label: inputValue }];
+    const { dispatch } = this.props;
+    const { inputValue } = this.state;
+    let { newTags } = this.state;
+    if(!inputValue){
+      message.error(formatMessage({ id: 'ag_cant_be_empty' }));
+      return;
     }
+    if( newTags.indexOf(inputValue) > -1) {
+      message.error(formatMessage({ id: 'tag_already_exists' }));
+      return;
+    }
+    dispatch({
+      type: 'center/addTag',
+      tag: inputValue,
+      token: sessionStorage.getItem('access_token')
+    }).then(() => {
+      const { center: { addTagRes } }= this.props;
+      if(addTagRes.code === 200){
+        newTags = [...newTags, { key: `new-${newTags.length}`, text: inputValue }];
+        this.setState({newTags});
+      }else{
+        const { msg } = addTagRes;
+        message.error(formatMessage({ id: msg}));
+      }
+    });
     this.setState({
-      newTags,
       inputVisible: false,
       inputValue: '',
     });
   };
+
+  handleClose = (id) =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'center/deleteTag',
+      tagId: id,
+      token: sessionStorage.getItem('access_token')
+    }).then(() => { 
+      const { center: { deleteTagRes } } = this.props;
+      if(deleteTagRes.code === 200){
+        // 成功
+      }else{
+        const { msg } = addTagRes;
+        message.error(formatMessage({ id: msg}));
+      }
+    });
+  }
 
   render() {
     const { newTags, inputVisible, inputValue } = this.state;
@@ -150,9 +188,9 @@ class Center extends PureComponent {
                   <Divider dashed />
                   <div className={styles.tags}>
                     <div className={styles.tagsTitle}>标签</div>
-                    {/*currentUser.tags.concat(newTags).map(item => (
-                      <Tag key={item.key}>{item.label}</Tag>
-                    ))*/}
+                    {currentUser.tags.concat(newTags).map(item => (
+                      <Tag closable onClose={() => this.handleClose(item.id)} key={item.id}>{item.text}</Tag>
+                    ))}
                     {inputVisible && (
                       <Input
                         ref={this.saveInputRef}

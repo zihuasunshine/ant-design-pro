@@ -11,6 +11,7 @@ export default {
   'app.login.signup': '注册账户',
   'app.login.login': '登录',
   'app.findpwd.findpwd': '找回密码',
+  'app.modifypwd.modifypwd':'修改密码',
   'app.register.register': '注册',
   'app.register.get-verification-code': '获取验证码',
   'app.register.sign-in': '使用已有账户登录',
@@ -43,4 +44,5 @@ export default {
   'validation.resultCode.required': '请输入图形验证码',
   'app.register-result.login': '马上登陆',
   'validation.question.title.required': '请输入问题',
+  'validation.old-password.required': '请输入旧密码！',
 };

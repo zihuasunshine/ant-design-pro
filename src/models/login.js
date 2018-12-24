@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { login, getLoginCode } from '@/services/api';
+import { login, getLoginCode, refreshToken } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -13,6 +13,17 @@ export default {
   },
 
   effects: {
+    *refreshToken({refresh_token}, { call, put }) {
+      const response = yield call(refreshToken, refresh_token);
+      if(!response.error){
+        sessionStorage.setItem('access_token', response.access_token);
+        sessionStorage.setItem('refresh_token', response.refresh_token);
+      }
+      yield put({
+        type: 'refreshTokenHandle',
+        payload: response
+      });
+    },
     *login({ payload }, { call, put }) {
       const { type } = payload;
       const response = yield call(login, payload);
@@ -81,6 +92,12 @@ export default {
   },
 
   reducers: {
+    refreshTokenHandle(state, { payload }) {
+      return {
+        ...state,
+        refreshTokenRes: payload
+      }
+    },
     changeLoginStatus(state, { payload }) {
       //setAuthority(payload.currentAuthority);
       setAuthority('admin');

@@ -38,16 +38,7 @@ export default {
     notifyCount: 12,
     unreadCount: 11,
     country: 'China',
-    geographic: {
-      province: {
-        label: '浙江省',
-        key: '330000',
-      },
-      city: {
-        label: '杭州市',
-        key: '330100',
-      },
-    },
+    
     address: '西湖区工专路 77 号',
     phone: '0752-268888888',
   },

@@ -43,4 +43,5 @@ export default {
   'form.question.detail.label': '问题描述',
   'form.question.detail.placeholder': '选填，详细说明问题',
   'form.question.imgs.label': '图片描述',
+  'form.old-password.placeholder': '旧密码',
 };

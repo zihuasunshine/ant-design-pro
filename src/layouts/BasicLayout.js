@@ -4,6 +4,7 @@ import DocumentTitle from 'react-document-title';
 import isEqual from 'lodash/isEqual';
 import memoizeOne from 'memoize-one';
 import { connect } from 'dva';
+import router from 'umi/router';
 import { ContainerQuery } from 'react-container-query';
 import classNames from 'classnames';
 import pathToRegexp from 'path-to-regexp';
@@ -62,16 +63,42 @@ class BasicLayout extends React.PureComponent {
       dispatch,
       route: { routes, authority },
     } = this.props;
-    dispatch({
-      type: 'user/fetchCurrent',
-      token: sessionStorage.getItem('access_token'),
-    });
+    
+    this.getCurrentUser();
     dispatch({
       type: 'setting/getSetting',
     });
     dispatch({
       type: 'menu/getMenuData',
       payload: { routes, authority },
+    });
+  }
+
+  // 请求当前用户currentUser
+  getCurrentUser = () =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/fetchCurrent',
+      token: sessionStorage.getItem('access_token'),
+    }).then(() => {
+      const { user: { currentUser }} = this.props;
+      if(currentUser.error){
+        if(currentUser.error === 'invalid_token'){
+          // token过期, 刷新token
+          dispatch({
+            type: 'login/refreshToken',
+            refresh_token: sessionStorage.getItem('refresh_token')
+          }).then(() => {
+            const { login: {refreshTokenRes }} = this.props
+            if(!refreshTokenRes.error){
+              this.getCurrentUser();
+            }else{
+              // 跳转到登录页
+              router.push('/user/login?redirect='+window.location.href);
+            }
+          });
+        } 
+      }
     });
   }
 
@@ -221,7 +248,9 @@ class BasicLayout extends React.PureComponent {
   }
 }
 
-export default connect(({ global, setting, menu }) => ({
+export default connect(({ user, login, global, setting, menu }) => ({
+  user,
+  login,
   collapsed: global.collapsed,
   layout: setting.layout,
   menuData: menu.menuData,

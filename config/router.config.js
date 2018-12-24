@@ -8,6 +8,7 @@ export default [
       { path: '/user/login', component: './User/Login' },
       { path: '/user/register', component: './User/Register' },
       { path: '/user/findpwd', component: './User/FindPassword' },
+      { path: '/user/modifypwd', component: './User/ModifyPassword' },
       { path: '/user/register-result', component: './User/RegisterResult' },
     ],
   },
@@ -18,39 +19,48 @@ export default [
     Routes: ['src/pages/Authorized'],
     authority: ['admin', 'user'],
     routes: [
-      // dashboard
-      { path: '/', redirect: '/dashboard/analysis' },
+      // home
+      { path: '/', redirect: '/home' },
       {
-        path: '/dashboard',
-        name: 'dashboard',
-        icon: 'dashboard',
+        name: 'home',
+        icon: 'home',
+        path: '/home',
         routes: [
           {
-            path: '/dashboard/analysis',
-            name: 'analysis',
-            component: './Dashboard/Analysis',
-          },
-          {
-            path: '/dashboard/monitor',
-            name: 'monitor',
-            component: './Dashboard/Monitor',
-          },
-          {
-            path: '/dashboard/workplace',
-            name: 'workplace',
-            component: './Dashboard/Workplace',
-          },
-        ],
+            path: '/home',
+            //name: 'center',
+            component: './Dashboard/Center',
+            routes: [
+              {
+                path: '/home',
+                redirect: '/home/new',
+              },
+              {
+                path: '/home/new',
+                component: './Dashboard/Articles',
+              },
+              {
+                path: '/home/hot',
+                component: './Dashboard/Applications',
+              },
+              {
+                path: '/home/discuss',
+                component: './Dashboard/Projects',
+              },
+            ],
+          }
+        ]
       },
       // forms
+      {path: '/question', redirect: '/question/ask'},
       {
-        path: '/question',
+        path: '/question/ask',
         icon: 'question-circle',
         name: 'question',
         routes: [
           {
             path: '/question/ask',
-            name: 'askQuestion',
+            //name: 'askQuestion',
             component: './Question/Ask',
           },
         ],
@@ -213,13 +223,13 @@ export default [
       //   ],
       // },
       {
-        name: 'account',
+        //name: 'account',
         icon: 'user',
         path: '/account',
         routes: [
           {
             path: '/account/center',
-            name: 'center',
+            //name: 'center',
             component: './Account/Center/Center',
             routes: [
               {
@@ -242,7 +252,7 @@ export default [
           },
           {
             path: '/account/settings',
-            name: 'settings',
+            //name: 'settings',
             component: './Account/Settings/Info',
             routes: [
               {
