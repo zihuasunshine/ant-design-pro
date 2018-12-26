@@ -77,6 +77,11 @@ export default {
       "target": "https://dev.api.ikaoyaner.com/api",
       "changeOrigin": true,
       "pathRewrite": { "^/api" : "" }
+    },
+    "/search": {
+      "target": "http://120.78.124.40:8000/",
+      "changeOrigin": true,
+      "pathRewrite": { "^/search" : "" }
     }
   },
   // proxy: {

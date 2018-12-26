@@ -130,9 +130,12 @@ export async function getFakeCaptcha(mobile) {
 // ================新增=================== //
 // 重新获取token
 export async function refreshToken(refreshToken) {
-  return request(`/api/oauth/token?client_id=app&client_secret=app_secure&grant_type=refresh_token&refresh_token=${refreshToken}`, {
-    method: 'POST'
-  });
+  return request(
+    `/api/oauth/token?client_id=app&client_secret=app_secure&grant_type=refresh_token&refresh_token=${refreshToken}`,
+    {
+      method: 'POST',
+    }
+  );
 }
 
 // 获取短信验证码
@@ -192,10 +195,13 @@ export async function doReset(params) {
 
 // 修改密码
 export async function modifyPassword(params, token) {
-  const { oldPassword, password, confirm} = params;
-  return request(`/api/user/modifyPassword/${oldPassword}/${password}/${confirm}?access_token=${token}`, {
-    method: 'POST'
-  });
+  const { oldPassword, password, confirm } = params;
+  return request(
+    `/api/user/modifyPassword/${oldPassword}/${password}/${confirm}?access_token=${token}`,
+    {
+      method: 'POST',
+    }
+  );
 }
 
 // 获取当前登陆用户信息
@@ -205,15 +211,18 @@ export async function currentUser(token) {
 
 // 修改用户信息
 export async function modifyUserInfo(params, token) {
-  let strParams = Object.keys(params).length > 0? '&' : '';
-  for(let key in params){
-    strParams += key +'='+params[key] + '&';
+  let strParams = Object.keys(params).length > 0 ? '&' : '';
+  for (let key in params) {
+    strParams += key + '=' + params[key] + '&';
   }
   console.log(params);
   console.log(strParams);
-  return request(`/api/user/modifyUserInfo?access_token=${token}${strParams.slice(0, strParams.length-1)}`, {
-    method: 'POST',
-  });
+  return request(
+    `/api/user/modifyUserInfo?access_token=${token}${strParams.slice(0, strParams.length - 1)}`,
+    {
+      method: 'POST',
+    }
+  );
 }
 
 // 文件上传
@@ -249,11 +258,44 @@ export async function addQuestion(params, token) {
 // 添加标签
 export async function addTag(tag, token) {
   return request(`/api/user/tag/add?tag=${tag}&access_token=${token}`, {
-    method: 'POST'
+    method: 'POST',
   });
 }
 
 // 删除标签
 export async function deleteTag(tagId, token) {
   return request(`/api/user/tag/delete/${tagId}?access_token=${token}`);
+}
+
+// 给回答答案点赞或点踩
+export async function vote(params, token) {
+  const { answerId, voteValue } = params;
+  return request(`/api/answer/vote/${answerId}/${voteValue}?access_token=${token}`);
+}
+
+// 回答问题
+export async function answer(params, token) {
+  const { questionId, content } = params;
+  return request(
+    `/api/answer/answerQuestion/${questionId}?answerContent=${content}&access_token=${token}`,
+    {
+      method: 'POST',
+    }
+  );
+}
+
+// 评论回答
+export async function comment(params, token) {
+  const { answerId, message } = params;
+  return request(`/api/answer/comment/${answerId}?message=${message}&access_token=${token}`, {
+    method: 'POST',
+  });
+}
+
+// 查询问题列表
+export async function search(params) {
+  return request(`/search/search-qa/`, {
+    method: 'POST',
+    body: params,
+  });
 }

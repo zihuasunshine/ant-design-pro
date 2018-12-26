@@ -1,9 +1,9 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { Row, Col, Tabs } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
-import styles from './Center.less';
+import styles from './Home.less';
 
 const TabPane = Tabs.TabPane;
 
@@ -14,25 +14,9 @@ const TabPane = Tabs.TabPane;
   project,
   projectLoading: loading.effects['project/fetchNotice'],
 }))
-class Center extends PureComponent {
-  state = {
-    newTags: [],
-    inputVisible: false,
-    inputValue: '',
-  };
-
+class Home extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'user/fetchCurrent',
-      token: sessionStorage.getItem('access_token'),
-    })
-    dispatch({
-      type: 'list/fetch',
-      payload: {
-        count: 8,
-      },
-    });
     dispatch({
       type: 'project/fetchNotice',
     });
@@ -59,21 +43,30 @@ class Center extends PureComponent {
     const { children } = this.props;
 
     return (
-      <GridContent className={styles.userCenter}>
-        <Row gutter={24}>
-          <Col lg={24} md={24}>
-            <div className={styles.tabs}>
-              <Tabs onChange={this.onTabChange} type="card">
-                <TabPane tab="新问题" key="new">{children}</TabPane>
-                <TabPane tab="热门问题" key="hot">{children}</TabPane>
-                <TabPane tab="神讨论" key="discuss">{children}</TabPane>
-              </Tabs>
-            </div>
-          </Col>
-        </Row>
-      </GridContent>
+      <Fragment>
+        <div className={styles.banner} />
+        <GridContent className={styles.userCenter}>
+          <Row gutter={24}>
+            <Col lg={24} md={24}>
+              <div className={styles.tabs}>
+                <Tabs onChange={this.onTabChange} type="card">
+                  <TabPane tab="新问题" key="new">
+                    {children}
+                  </TabPane>
+                  <TabPane tab="热门问题" key="hot">
+                    {children}
+                  </TabPane>
+                  <TabPane tab="神讨论" key="discuss">
+                    {children}
+                  </TabPane>
+                </Tabs>
+              </div>
+            </Col>
+          </Row>
+        </GridContent>
+      </Fragment>
     );
   }
 }
 
-export default Center;
+export default Home;

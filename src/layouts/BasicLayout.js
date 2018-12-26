@@ -63,7 +63,7 @@ class BasicLayout extends React.PureComponent {
       dispatch,
       route: { routes, authority },
     } = this.props;
-    
+
     this.getCurrentUser();
     dispatch({
       type: 'setting/getSetting',
@@ -75,32 +75,49 @@ class BasicLayout extends React.PureComponent {
   }
 
   // 请求当前用户currentUser
-  getCurrentUser = () =>{
+  getCurrentUser = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'user/fetchCurrent',
       token: sessionStorage.getItem('access_token'),
     }).then(() => {
-      const { user: { currentUser }} = this.props;
-      if(currentUser.error){
-        if(currentUser.error === 'invalid_token'){
+      const {
+        user: { currentUser },
+      } = this.props;
+      if (currentUser.error) {
+        if (currentUser.error === 'invalid_token') {
           // token过期, 刷新token
           dispatch({
             type: 'login/refreshToken',
-            refresh_token: sessionStorage.getItem('refresh_token')
+            refresh_token: sessionStorage.getItem('refresh_token'),
           }).then(() => {
-            const { login: {refreshTokenRes }} = this.props
-            if(!refreshTokenRes.error){
+            const {
+              login: { refreshTokenRes },
+            } = this.props;
+            if (!refreshTokenRes.error) {
               this.getCurrentUser();
-            }else{
+            } else {
               // 跳转到登录页
-              router.push('/user/login?redirect='+window.location.href);
+              router.push('/user/login?redirect=' + window.location.href);
             }
           });
-        } 
+        }
+      } else {
+        const { data: currentUserInfo } = currentUser;
+        // 处理地理位置
+        currentUserInfo.geographic = {
+          province: {
+            label: currentUser.province,
+            key: '330000',
+          },
+          city: {
+            label: currentUser.city,
+            key: '330100',
+          },
+        };
       }
     });
-  }
+  };
 
   componentDidUpdate(preProps) {
     // After changing to phone mode,

@@ -123,23 +123,24 @@ class BaseView extends Component {
     } = this.props;
     if (currentUser.code === 200) {
       const { data: currentUserInfo } = currentUser;
-       // 处理地理位置
-       currentUserInfo.geographic = {
-        province: {
-          label: currentUser.province,
-          key: '330000',
-        },
-        city: {
-          label: currentUser.city,
-          key: '330100',
-        },
-      };
+      // const { data: currentUserInfo } = currentUser;
+      //  // 处理地理位置
+      //  currentUserInfo.geographic = {
+      //   province: {
+      //     label: currentUser.province,
+      //     key: '330000',
+      //   },
+      //   city: {
+      //     label: currentUser.city,
+      //     key: '330100',
+      //   },
+      // };
       Object.keys(form.getFieldsValue()).forEach(key => {
         const obj = {};
         obj[key] = currentUserInfo[key] || null;
-        if(key === 'birthday') {
-          form.setFieldsValue({[key]: moment(obj[key], 'YYYY-MM-DD')});
-        }else {
+        if (key === 'birthday') {
+          form.setFieldsValue({ [key]: moment(obj[key], 'YYYY-MM-DD') });
+        } else {
           form.setFieldsValue(obj);
         }
       });

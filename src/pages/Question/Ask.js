@@ -8,9 +8,9 @@ import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 const FormItem = Form.Item;
 const { TextArea } = Input;
 
-@connect(({ ask, loading }) => ({
-  ask,
-  submitting: loading.effects['ask/submit'],
+@connect(({ question, loading }) => ({
+  question,
+  submitting: loading.effects['question/submit'],
 }))
 @Form.create()
 class AskForms extends PureComponent {
@@ -28,7 +28,7 @@ class AskForms extends PureComponent {
       if (!detail) delete values.detail;
       if (!err) {
         dispatch({
-          type: 'ask/submit',
+          type: 'question/submit',
           payload: values,
           token: sessionStorage.getItem('access_token'),
         });
@@ -40,14 +40,14 @@ class AskForms extends PureComponent {
   uploadImg = file => {
     const { dispatch } = this.props;
     return dispatch({
-      type: 'ask/upload',
+      type: 'question/upload',
       payload: {
         type: 'question',
         file: file,
       },
     }).then(() => {
       const {
-        ask: { uploadRes },
+        question: { uploadRes },
       } = this.props;
       if (uploadRes.code === 200) {
         this.imgs.push(uploadRes.data.id);

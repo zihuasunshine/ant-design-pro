@@ -6,6 +6,7 @@ import Link from 'umi/link';
 import { Checkbox, Alert, Icon, message } from 'antd';
 import Login from '@/components/Login';
 import styles from './Login.less';
+import logo from '@/assets/black_logo.png';
 
 const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
 
@@ -96,6 +97,11 @@ class LoginPage extends Component {
     const { type, autoLogin } = this.state;
     return (
       <div className={styles.main}>
+        <div className={styles.header}>
+          <Link to="/">
+            <img alt="logo" className={styles.logo} src={logo} />
+          </Link>
+        </div>
         <Login
           defaultActiveKey={type}
           onTabChange={this.onTabChange}
@@ -111,7 +117,7 @@ class LoginPage extends Component {
               this.renderMessage(formatMessage({ id: 'app.login.message-invalid-credentials' }))}
             <UserName
               name="userName"
-              placeholder={`${formatMessage({ id: 'app.login.userName' })}: admin or user`}
+              placeholder={`${formatMessage({ id: 'app.login.userName' })}`}
               rules={[
                 {
                   required: true,
@@ -121,7 +127,7 @@ class LoginPage extends Component {
             />
             <Password
               name="password"
-              placeholder={`${formatMessage({ id: 'app.login.password' })}: ant.design`}
+              placeholder={`${formatMessage({ id: 'app.login.password' })}`}
               rules={[
                 {
                   required: true,

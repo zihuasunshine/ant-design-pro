@@ -7,6 +7,7 @@ import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } fro
 import styles from './Register.less';
 import hash from 'hash.js';
 import { imgCodeURL } from '@/services/api';
+import logo from '@/assets/black_logo.png';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -253,11 +254,11 @@ class Register extends Component {
     console.log(visible);
     return (
       <div className={styles.main}>
-        <h3>
-          <a>
-            <FormattedMessage id="app.register.register" />
-          </a>
-        </h3>
+        <div className={styles.header}>
+          <Link to="/">
+            <img alt="logo" className={styles.logo} src={logo} />
+          </Link>
+        </div>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
             {getFieldDecorator('userName', {
@@ -351,35 +352,23 @@ class Register extends Component {
             </Row>
           </FormItem>
           <FormItem>
-            <InputGroup compact>
-              <Select
+            {getFieldDecorator('mobile', {
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.phone-number.required' }),
+                },
+                {
+                  pattern: /^\d{11}$/,
+                  message: formatMessage({ id: 'validation.phone-number.wrong-format' }),
+                },
+              ],
+            })(
+              <Input
                 size="large"
-                value={prefix}
-                onChange={this.changePrefix}
-                style={{ width: '20%' }}
-              >
-                <Option value="86">+86</Option>
-                <Option value="87">+87</Option>
-              </Select>
-              {getFieldDecorator('mobile', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'validation.phone-number.required' }),
-                  },
-                  {
-                    pattern: /^\d{11}$/,
-                    message: formatMessage({ id: 'validation.phone-number.wrong-format' }),
-                  },
-                ],
-              })(
-                <Input
-                  size="large"
-                  style={{ width: '80%' }}
-                  placeholder={formatMessage({ id: 'form.phone-number.placeholder' })}
-                />
-              )}
-            </InputGroup>
+                placeholder={formatMessage({ id: 'form.phone-number.placeholder' })}
+              />
+            )}
           </FormItem>
           <FormItem>
             <Row gutter={8}>

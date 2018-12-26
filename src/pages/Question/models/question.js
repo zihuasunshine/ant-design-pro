@@ -1,7 +1,7 @@
 import { addQuestion, fileUpload } from '@/services/api';
 
 export default {
-  namespace: 'ask',
+  namespace: 'question',
 
   state: {},
 

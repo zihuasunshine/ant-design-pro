@@ -1,16 +1,56 @@
-import React, { PureComponent } from 'react';
-import { List, Icon, Tag } from 'antd';
+import React, { PureComponent, Fragment } from 'react';
+import { Row, Col, List, Icon, Tag, Input, Divider } from 'antd';
 import { connect } from 'dva';
 import ArticleListContent from '@/components/ArticleListContent';
 import styles from './Articles.less';
 
-@connect(({ list }) => ({
-  list,
+const Search = Input.Search;
+const qtypes = {
+  new: '1',
+  hot: '2',
+  discuss: '3',
+};
+
+@connect(({ home }) => ({
+  home,
 }))
 class Center extends PureComponent {
+  constructor(props) {
+    super(props);
+    this.question = '';
+    (this.qtype = props.route.query.key),
+      (this.pager = {
+        page: 1,
+        size: 10,
+      });
+  }
+
+  componentDidMount() {
+    const { dispatch } = this.props;
+    this.getQuestionList();
+  }
+
+  handleSerach = value => {
+    this.question = value;
+    this.getQuestionList();
+  };
+
+  getQuestionList = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'home/fetchList',
+      params: {
+        question: this.question,
+        qtype: this.qtype,
+        ...this.pager,
+      },
+    });
+  };
+
   render() {
+    const colLayout = { xs: 24, sm: 24, md: 12, lg: 6, xl: 6, xxl: 6 };
     const {
-      list: { list },
+      home: { list },
     } = this.props;
     const IconText = ({ type, text }) => (
       <span>
@@ -19,39 +59,42 @@ class Center extends PureComponent {
       </span>
     );
     return (
-      <List
-        size="large"
-        className={styles.articleList}
-        rowKey="id"
-        itemLayout="vertical"
-        dataSource={list}
-        renderItem={item => (
-          <List.Item
-            key={item.id}
-            actions={[
-              <IconText type="star-o" text={item.star} />,
-              <IconText type="like-o" text={item.like} />,
-              <IconText type="message" text={item.message} />,
-            ]}
-          >
-            <List.Item.Meta
-              title={
-                <a className={styles.listItemMetaTitle} href={item.href}>
-                  {item.title}
-                </a>
-              }
-              description={
-                <span>
-                  <Tag>Ant Design</Tag>
-                  <Tag>设计语言</Tag>
-                  <Tag>蚂蚁金服</Tag>
-                </span>
-              }
-            />
-            <ArticleListContent data={item} />
-          </List.Item>
-        )}
-      />
+      <Fragment>
+        <Row>
+          <Col {...colLayout}>
+            <Search placeholder="输入关键词" onSearch={this.handleSerach} enterButton />
+          </Col>
+        </Row>
+        <List
+          size="large"
+          className={styles.articleList}
+          rowKey="id"
+          itemLayout="vertical"
+          dataSource={list && list.data ? list.data : []}
+          renderItem={item => (
+            <List.Item
+              key={item.id}
+              actions={[
+                <IconText type="like-o" text={item.like} />,
+                <IconText type="message" text={item.message} />,
+              ]}
+            >
+              <List.Item.Meta
+                title={''}
+                description={
+                  ''
+                  /*<span>
+                    <Tag>Ant Design</Tag>
+                    <Tag>设计语言</Tag>
+                    <Tag>蚂蚁金服</Tag>
+                  </span>*/
+                }
+              />
+              <ArticleListContent data={item} link={'/question/answer'} />
+            </List.Item>
+          )}
+        />
+      </Fragment>
     );
   }
 }

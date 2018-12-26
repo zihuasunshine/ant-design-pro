@@ -7,6 +7,7 @@ import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } fro
 import styles from './Register.less';
 import hash from 'hash.js';
 import { imgCodeURL } from '@/services/api';
+import logo from '@/assets/black_logo.png';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -242,11 +243,11 @@ class FindPassword extends Component {
     const { count, prefix, help, visible, src } = this.state;
     return (
       <div className={styles.main}>
-        <h3>
-          <a>
-            <FormattedMessage id="app.findpwd.findpwd" />
-          </a>
-        </h3>
+        <div className={styles.header}>
+          <Link to="/">
+            <img alt="logo" className={styles.logo} src={logo} />
+          </Link>
+        </div>
         <Form onSubmit={this.handleSubmit}>
           <FormItem help={help}>
             <Popover

@@ -37,7 +37,7 @@ class SearchList extends Component {
       {
         key: 'hot',
         tab: '热门提问',
-      }
+      },
     ];
 
     const mainSearch = (

@@ -17,30 +17,30 @@ export default {
       const response = yield call(addTag, tag, token);
       yield put({
         type: 'addTagHandle',
-        payload: response
+        payload: response,
       });
     },
     *deleteTag({ tagId, token }, { call, put }) {
       const response = yield call(deleteTag, tagId, token);
       yield put({
         type: 'deleteTagHandle',
-        payload: response
+        payload: response,
       });
-    }
+    },
   },
 
   reducers: {
     addTagHandle(state, { payload }) {
       return {
         ...state,
-        addTagRes: payload
-      }
+        addTagRes: payload,
+      };
     },
     deleteTagHandle(state, { payload }) {
       return {
         ...state,
-        deleteTagRes: payload
-      }
-    }
+        deleteTagRes: payload,
+      };
+    },
   },
 };

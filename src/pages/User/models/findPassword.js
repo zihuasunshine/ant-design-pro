@@ -28,9 +28,9 @@ export default {
       const response = yield call(modifyPassword, payload, token);
       yield put({
         type: 'modifyPwdHandle',
-        payload: response
+        payload: response,
       });
-    }
+    },
   },
 
   reducers: {
@@ -51,8 +51,8 @@ export default {
     modifyPwdHandle(state, { payload }) {
       return {
         ...state,
-       modifyPwdRes: payload
-      }
-    }
+        modifyPwdRes: payload,
+      };
+    },
   },
 };

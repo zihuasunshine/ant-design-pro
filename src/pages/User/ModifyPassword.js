@@ -2,10 +2,12 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
+import Link from 'umi/link';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
 import styles from './Register.less';
 import hash from 'hash.js';
 import { imgCodeURL } from '@/services/api';
+import logo from '@/assets/black_logo.png';
 
 const FormItem = Form.Item;
 
@@ -93,7 +95,7 @@ class FindPassword extends Component {
           payload: {
             ...values,
           },
-          token: sessionStorage.getItem('access_token')
+          token: sessionStorage.getItem('access_token'),
         }).then(() => {
           const {
             findpwd: { modifyPwdRes },
@@ -115,7 +117,6 @@ class FindPassword extends Component {
       }
     });
   };
-
 
   checkConfirm = (rule, value, callback) => {
     const { form } = this.props;
@@ -186,11 +187,11 @@ class FindPassword extends Component {
     const { help, visible } = this.state;
     return (
       <div className={styles.main}>
-        <h3>
-          <a>
-            <FormattedMessage id="app.modifypwd.modifypwd" />
-          </a>
-        </h3>
+        <div className={styles.header}>
+          <Link to="/">
+            <img alt="logo" className={styles.logo} src={logo} />
+          </Link>
+        </div>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
             {getFieldDecorator('oldPassword', {

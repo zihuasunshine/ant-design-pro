@@ -13,15 +13,15 @@ export default {
   },
 
   effects: {
-    *refreshToken({refresh_token}, { call, put }) {
+    *refreshToken({ refresh_token }, { call, put }) {
       const response = yield call(refreshToken, refresh_token);
-      if(!response.error){
+      if (!response.error) {
         sessionStorage.setItem('access_token', response.access_token);
         sessionStorage.setItem('refresh_token', response.refresh_token);
       }
       yield put({
         type: 'refreshTokenHandle',
-        payload: response
+        payload: response,
       });
     },
     *login({ payload }, { call, put }) {
@@ -95,8 +95,8 @@ export default {
     refreshTokenHandle(state, { payload }) {
       return {
         ...state,
-        refreshTokenRes: payload
-      }
+        refreshTokenRes: payload,
+      };
     },
     changeLoginStatus(state, { payload }) {
       //setAuthority(payload.currentAuthority);

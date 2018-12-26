@@ -16,16 +16,15 @@ import styles from './Center.less';
   projectLoading: loading.effects['project/fetchNotice'],
 }))
 class Center extends PureComponent {
-
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       newTags: props.currentUser ? props.currentUser.tags : [],
       inputVisible: false,
       inputValue: '',
     };
+    this.count = 0;
   }
-  
 
   componentDidMount() {
     const { dispatch } = this.props;
@@ -73,26 +72,28 @@ class Center extends PureComponent {
     const { dispatch } = this.props;
     const { inputValue } = this.state;
     let { newTags } = this.state;
-    if(!inputValue){
+    if (!inputValue) {
       message.error(formatMessage({ id: 'ag_cant_be_empty' }));
       return;
     }
-    if( newTags.indexOf(inputValue) > -1) {
+    if (newTags.indexOf(inputValue) > -1) {
       message.error(formatMessage({ id: 'tag_already_exists' }));
       return;
     }
     dispatch({
       type: 'center/addTag',
       tag: inputValue,
-      token: sessionStorage.getItem('access_token')
+      token: sessionStorage.getItem('access_token'),
     }).then(() => {
-      const { center: { addTagRes } }= this.props;
-      if(addTagRes.code === 200){
-        newTags = [...newTags, { key: `new-${newTags.length}`, text: inputValue }];
-        this.setState({newTags});
-      }else{
+      const {
+        center: { addTagRes },
+      } = this.props;
+      if (addTagRes.code === 200) {
+        newTags = [...newTags, { id: `${addTagRes.data}`, text: inputValue }];
+        this.setState({ newTags });
+      } else {
         const { msg } = addTagRes;
-        message.error(formatMessage({ id: msg}));
+        message.error(formatMessage({ id: msg }));
       }
     });
     this.setState({
@@ -101,22 +102,24 @@ class Center extends PureComponent {
     });
   };
 
-  handleClose = (id) =>{
+  handleClose = id => {
     const { dispatch } = this.props;
     dispatch({
       type: 'center/deleteTag',
       tagId: id,
-      token: sessionStorage.getItem('access_token')
-    }).then(() => { 
-      const { center: { deleteTagRes } } = this.props;
-      if(deleteTagRes.code === 200){
+      token: sessionStorage.getItem('access_token'),
+    }).then(() => {
+      const {
+        center: { deleteTagRes },
+      } = this.props;
+      if (deleteTagRes.code === 200) {
         // 成功
-      }else{
+      } else {
         const { msg } = addTagRes;
-        message.error(formatMessage({ id: msg}));
+        message.error(formatMessage({ id: msg }));
       }
     });
-  }
+  };
 
   render() {
     const { newTags, inputVisible, inputValue } = this.state;
@@ -130,6 +133,14 @@ class Center extends PureComponent {
       location,
       children,
     } = this.props;
+    console.log(currentUser);
+    if (this.count === 0) {
+      if (currentUser) {
+        this.state.newTags = currentUser.tags;
+        this.count = 1;
+      }
+    }
+    const tags = newTags.length == 0 ? (currentUser ? currentUser.tags : newTags) : newTags;
 
     const operationTabList = [
       {
@@ -168,7 +179,7 @@ class Center extends PureComponent {
                   <div className={styles.avatarHolder}>
                     <img alt="" src={currentUser.avatarFile} />
                     <div className={styles.name}>{currentUser.nickname}</div>
-                    <div>个人主页:{currentUser.urlToken ? currentUser.urlToken : '暂无'}</div>
+                    <div>个人主页：{currentUser.urlToken ? currentUser.urlToken : '暂无'}</div>
                   </div>
                   <div className={styles.detail}>
                     <p>
@@ -181,15 +192,26 @@ class Center extends PureComponent {
                     </p>
                     <p>
                       <i className={styles.address} />
-                      {currentUser.province}
-                      {currentUser.city}
+                      {currentUser.geographic && currentUser.geographic.province.label}
+                      {currentUser.geographic && currentUser.geographic.city.label}
                     </p>
+                  </div>
+                  <Divider dashed />
+                  <div className={styles.center}>
+                    研究生院：
+                    {currentUser.applicationSchool ? currentUser.applicationSchool : '暂无'}
+                  </div>
+                  <div className={styles.center}>
+                    专业：
+                    {currentUser.applicationProfession ? currentUser.applicationProfession : '暂无'}
                   </div>
                   <Divider dashed />
                   <div className={styles.tags}>
                     <div className={styles.tagsTitle}>标签</div>
-                    {currentUser.tags.concat(newTags).map(item => (
-                      <Tag closable onClose={() => this.handleClose(item.id)} key={item.id}>{item.text}</Tag>
+                    {tags.map(item => (
+                      <Tag closable key={'key' + item.id} onClose={() => this.handleClose(item.id)}>
+                        {item.text}
+                      </Tag>
                     ))}
                     {inputVisible && (
                       <Input

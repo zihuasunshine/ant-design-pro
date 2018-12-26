@@ -29,7 +29,7 @@ export default [
           {
             path: '/home',
             //name: 'center',
-            component: './Dashboard/Center',
+            component: './Dashboard/Home',
             routes: [
               {
                 path: '/home',
@@ -37,31 +37,43 @@ export default [
               },
               {
                 path: '/home/new',
+                query: {key: 1},
                 component: './Dashboard/Articles',
               },
               {
                 path: '/home/hot',
-                component: './Dashboard/Applications',
+                query: {key: 2},
+                component: './Dashboard/Articles',
               },
               {
                 path: '/home/discuss',
-                component: './Dashboard/Projects',
+                query: {key: 3},
+                component: './Dashboard/Articles',
               },
             ],
           }
         ]
       },
       // forms
-      {path: '/question', redirect: '/question/ask'},
       {
-        path: '/question/ask',
         icon: 'question-circle',
         name: 'question',
+        path: '/question',
         routes: [
+          {
+            path: '/question',
+            //name: 'center',
+            component: './Question/Ask',
+          },
           {
             path: '/question/ask',
             //name: 'askQuestion',
             component: './Question/Ask',
+          },
+          {
+            path: '/question/answer',
+            //name: 'askQuestion',
+            component: './Question/Answer',
           },
         ],
       },
@@ -115,7 +127,7 @@ export default [
       {
         path: '/list',
         icon: 'table',
-        name: 'list',
+        //name: 'list',
         routes: [
           {
             path: '/list/table-list',
@@ -162,7 +174,7 @@ export default [
       },
       {
         path: '/profile',
-        name: 'profile',
+        //name: 'profile',
         icon: 'profile',
         routes: [
           // profile

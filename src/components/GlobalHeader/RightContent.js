@@ -133,7 +133,7 @@ export default class GlobalHeaderRight extends PureComponent {
         */}
         {!sessionStorage.getItem('access_token') ? (
           <div className={styles.login_wrapper}>
-            <Link to={"/user/login?redirect="+window.location.href}>登录</Link>
+            <Link to={'/user/login?redirect=' + window.location.href}>登录</Link>
             <Link to="/user/register">注册</Link>
           </div>
         ) : null}
