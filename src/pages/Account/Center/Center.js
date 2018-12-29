@@ -10,7 +10,7 @@ import styles from './Center.less';
 @connect(({ center, loading, user, project }) => ({
   center,
   listLoading: loading.effects['list/fetch'],
-  currentUser: user.currentUser.data,
+  // currentUser: user.currentUserRes.data,
   currentUserLoading: loading.effects['user/fetchCurrent'],
   project,
   projectLoading: loading.effects['project/fetchNotice'],
@@ -73,7 +73,8 @@ class Center extends PureComponent {
     const { inputValue } = this.state;
     let { newTags } = this.state;
     if (!inputValue) {
-      message.error(formatMessage({ id: 'ag_cant_be_empty' }));
+      // message.error(formatMessage({ id: 'tag_cant_be_empty' }));
+      this.setState({inputVisible: false})
       return;
     }
     if (newTags.indexOf(inputValue) > -1) {
@@ -123,9 +124,9 @@ class Center extends PureComponent {
 
   render() {
     const { newTags, inputVisible, inputValue } = this.state;
+    const currentUser = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')): null;
     const {
       listLoading,
-      currentUser,
       currentUserLoading,
       project: { notice },
       projectLoading,
@@ -133,7 +134,6 @@ class Center extends PureComponent {
       location,
       children,
     } = this.props;
-    console.log(currentUser);
     if (this.count === 0) {
       if (currentUser) {
         this.state.newTags = currentUser.tags;
@@ -183,17 +183,8 @@ class Center extends PureComponent {
                   </div>
                   <div className={styles.detail}>
                     <p>
-                      <i className={styles.title} />
-                      {currentUser.title}
-                    </p>
-                    <p>
-                      <i className={styles.group} />
-                      {currentUser.group}
-                    </p>
-                    <p>
                       <i className={styles.address} />
-                      {currentUser.geographic && currentUser.geographic.province.label}
-                      {currentUser.geographic && currentUser.geographic.city.label}
+                      <span>{currentUser.province}{currentUser.city}</span>
                     </p>
                   </div>
                   <Divider dashed />
@@ -234,7 +225,7 @@ class Center extends PureComponent {
                       </Tag>
                     )}
                   </div>
-                  <Divider style={{ marginTop: 16 }} dashed />
+                  {/*<Divider style={{ marginTop: 16 }} dashed />
                   <div className={styles.team}>
                     <div className={styles.teamTitle}>团队</div>
                     <Spin spinning={projectLoading}>
@@ -249,7 +240,7 @@ class Center extends PureComponent {
                         ))}
                       </Row>
                     </Spin>
-                  </div>
+                  </div>*/}
                 </div>
               ) : (
                 'loading...'

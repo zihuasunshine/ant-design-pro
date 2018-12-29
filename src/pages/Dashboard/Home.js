@@ -1,25 +1,59 @@
 import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
-import { Row, Col, Tabs } from 'antd';
+import Link from 'umi/link';
+import { Row, Col, Tabs, Card, Avatar } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './Home.less';
 
 const TabPane = Tabs.TabPane;
+const { Meta } = Card;
+const colLayout = {xs: 24, sm: 24, md:12, lg: 12, xl: 6, xl: 6 }
+const img = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
 
-@connect(({ loading, user, project }) => ({
+@connect(({ home, loading }) => ({
+  home,
   listLoading: loading.effects['list/fetch'],
-  currentUser: user.currentUser.data,
-  currentUserLoading: loading.effects['user/fetchCurrent'],
-  project,
-  projectLoading: loading.effects['project/fetchNotice'],
 }))
 class Home extends PureComponent {
+
   componentDidMount() {
+    // 获取文章列表
     const { dispatch } = this.props;
     dispatch({
-      type: 'project/fetchNotice',
+      type: 'home/articleList'
     });
+  }
+
+  article = (item) => {
+    return (
+      <Row className={styles.article_box}>
+        <Col span={6}>
+          <div style={{backgroundImage: item.img?`url(${item.img})`:`url(${img})`}} className={styles.article_img}></div>
+        </Col>
+        <Col span={18}>
+          <div className={styles.article_text}>
+            <Link className={styles.a} to={`/home/article/${item.id}`}>{item.title}</Link>
+          </div>
+        </Col>
+      </Row>
+    )
+  }
+
+  articles = (articlelistRes) =>{
+    return (
+      <div className={styles.article_container}>
+          <Row>
+          {
+            articlelistRes && articlelistRes.data.map((item, index) => {
+              if(index !== 0){
+                return <Col key={item.id} {...colLayout} className={styles.article_col}>{this.article(item)}</Col>
+              }
+            })
+          }
+          </Row>
+      </div>
+    )
   }
 
   onTabChange = key => {
@@ -40,11 +74,13 @@ class Home extends PureComponent {
   };
 
   render() {
-    const { children } = this.props;
+    const { children, home: { articlelistRes }} = this.props;
 
     return (
       <Fragment>
-        <div className={styles.banner} />
+        <div className={styles.banner}>
+          {this.articles(articlelistRes)}
+        </div>
         <GridContent className={styles.userCenter}>
           <Row gutter={24}>
             <Col lg={24} md={24}>

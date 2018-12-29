@@ -10,6 +10,7 @@ export default {
 
   state: {
     status: undefined,
+    loginRes: {}
   },
 
   effects: {
@@ -55,11 +56,10 @@ export default {
       }
     },
 
-    *getCaptcha({ payload }, { call, put }) {
-      yield call(getLoginCode, payload);
+    *getCaptcha({ params }, { call, put }) {
+      yield call(getLoginCode, params);
       put({
         type: 'captchaHandler',
-        payload: response,
       });
     },
 
@@ -72,12 +72,14 @@ export default {
         },
       });
       reloadAuthorized();
+      // 退出登录后 跳转到首页
       yield put(
         routerRedux.push({
-          pathname: window.location.pathname,
-          search: stringify({
-            redirect: window.location.href,
-          }),
+          pathname: '/',
+          // pathname: window.location.pathname,
+          // search: stringify({
+          //   redirect: window.location.href,
+          // }),
         })
       );
       /*yield put(
@@ -105,12 +107,6 @@ export default {
         ...state,
         loginRes: payload,
       };
-    },
-    captchaHandler(state, { payload }) {
-      return {
-        ...state,
-        captchaRes: payload,
-      };
-    },
+    }
   },
 };

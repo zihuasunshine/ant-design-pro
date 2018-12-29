@@ -20,6 +20,7 @@ export default class RichTextEditor extends React.Component {
   }
 
   handleChange = editorState => {
+    console.log(editorState);
     this.setState({
       editorState: editorState,
       outputHTML: editorState.toHTML(),

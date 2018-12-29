@@ -27,6 +27,10 @@ export default [
         path: '/home',
         routes: [
           {
+            path: '/home/article/:id',
+            component: './Dashboard/ArticleDetail'
+          },
+          {
             path: '/home',
             //name: 'center',
             component: './Dashboard/Home',
@@ -71,7 +75,7 @@ export default [
             component: './Question/Ask',
           },
           {
-            path: '/question/answer',
+            path: '/question/answer/:id',
             //name: 'askQuestion',
             component: './Question/Answer',
           },

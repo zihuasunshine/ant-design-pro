@@ -67,8 +67,9 @@ export default class GlobalHeaderRight extends PureComponent {
   };
 
   render() {
+    const currentUser = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')): null;
     const {
-      currentUser,
+      //currentUser,
       fetchingNotices,
       onNoticeVisibleChange,
       onMenuClick,

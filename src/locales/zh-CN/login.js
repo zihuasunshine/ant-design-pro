@@ -45,4 +45,6 @@ export default {
   'app.register-result.login': '马上登陆',
   'validation.question.title.required': '请输入问题',
   'validation.old-password.required': '请输入旧密码！',
+  'validation.reason.required': '请输入完善原因',
+  'validation.answer.required': '请输入答案'
 };

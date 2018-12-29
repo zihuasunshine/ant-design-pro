@@ -5,7 +5,7 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
 import styles from './Register.less';
-import hash from 'hash.js';
+import { generateUUID } from '@/utils/utils';
 import { imgCodeURL } from '@/services/api';
 import logo from '@/assets/black_logo.png';
 
@@ -240,7 +240,7 @@ class Register extends Component {
   };
 
   refreshCode = () => {
-    const token = hash.sha256().digest('hex');
+    const token = generateUUID();
     this.setState({
       token: token,
       src: imgCodeURL + '?token=' + token,
@@ -251,7 +251,8 @@ class Register extends Component {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
     const { count, prefix, help, visible, src } = this.state;
-    console.log(visible);
+    console.log(src);
+
     return (
       <div className={styles.main}>
         <div className={styles.header}>
@@ -347,7 +348,7 @@ class Register extends Component {
                 )}
               </Col>
               <Col span={8}>
-                <img className={styles.imgCode} src={src} onClick={this.refreshCode} />
+                <img title={formatMessage({id: 'change_img_code'})} className={styles.imgCode} src={src} onClick={this.refreshCode} />
               </Col>
             </Row>
           </FormItem>

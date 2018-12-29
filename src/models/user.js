@@ -1,24 +1,19 @@
-import { query as queryUsers, queryCurrent } from '@/services/user';
 import { currentUser } from '@/services/api';
 
 export default {
   namespace: 'user',
 
   state: {
-    list: [],
-    currentUser: {},
+    currentUserRes: {},
   },
 
   effects: {
-    *fetch(_, { call, put }) {
-      const response = yield call(queryUsers);
-      yield put({
-        type: 'save',
-        payload: response,
-      });
-    },
-    *fetchCurrent({ token }, { call, put }) {
-      const response = yield call(currentUser, token);
+    *fetchCurrent({ }, { call, put }) {
+      const response = yield call(currentUser);
+      if(!response.error){
+        let user = response.data;
+        sessionStorage.setItem('user', JSON.stringify(response.data));
+      }
       yield put({
         type: 'currentUserHandle',
         payload: response,
@@ -28,31 +23,10 @@ export default {
 
   reducers: {
     currentUserHandle(state, { payload }) {
+      console.log(payload);
       return {
         ...state,
-        currentUser: payload,
-      };
-    },
-    save(state, action) {
-      return {
-        ...state,
-        list: action.payload,
-      };
-    },
-    saveCurrentUser(state, action) {
-      return {
-        ...state,
-        currentUser: action.payload || {},
-      };
-    },
-    changeNotifyCount(state, action) {
-      return {
-        ...state,
-        currentUser: {
-          ...state.currentUser,
-          notifyCount: action.payload.totalCount,
-          unreadCount: action.payload.unreadCount,
-        },
+        currentUserRes: payload,
       };
     },
   },

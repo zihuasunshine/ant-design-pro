@@ -74,10 +74,10 @@ class Center extends PureComponent {
           renderItem={item => (
             <List.Item
               key={item.id}
-              actions={[
-                <IconText type="like-o" text={item.like} />,
-                <IconText type="message" text={item.message} />,
-              ]}
+              // actions={[
+              //   <IconText type="like-o" text={item.like} />,
+              //   <IconText type="message" text={item.message} />,
+              // ]}
             >
               <List.Item.Meta
                 title={''}
@@ -90,7 +90,7 @@ class Center extends PureComponent {
                   </span>*/
                 }
               />
-              <ArticleListContent data={item} link={'/question/answer'} />
+              <ArticleListContent data={item} link={`/question/answer/${item.id}`} />
             </List.Item>
           )}
         />

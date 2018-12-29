@@ -7,16 +7,16 @@ import styles from './index.less';
 const colLayout1 = { xs: 24, sm: 24, md: 24, lg: 20, xl: 18, xxl: 18 };
 const colLayout2 = { xs: 24, sm: 24, md: 24, lg: 4, xl: 6, xxl: 6 };
 
-const ArticleListContent = ({ data, data: { qtitle, quptime }, link }) => (
+const ArticleListContent = ({ data, data: { baid, qtitle, quptime }, link }) => (
   <div className={styles.listContent}>
     <Row gutter={32}>
       <Col {...colLayout1}>
         <div className={styles.description}>
-          <Link to={{ pathname: link, state: data }}>{qtitle}</Link>
+          <Link className={styles.a} to={{ pathname: link, state: data }}>{qtitle}</Link>
         </div>
       </Col>
       <Col {...colLayout2} className={styles.align_right}>
-        <span>{moment(quptime * 1000).format('YYYY-MM-DD')}</span>
+        <span>{baid == 0? '未回答':'已回答'}</span> | <span>{moment(quptime * 1000).format('YYYY-MM-DD')}</span>
       </Col>
     </Row>
     <div className={styles.extra}>

@@ -3,6 +3,7 @@ export default {
   'form.captcha.second': '秒',
   'form.optional': '（选填）',
   'form.submit': '提交',
+  'form.login.submit': '登录提交',
   'form.save': '保存',
   'form.email.placeholder': '邮箱',
   'form.confirm-password.placeholder': '确认密码',
@@ -44,4 +45,6 @@ export default {
   'form.question.detail.placeholder': '选填，详细说明问题',
   'form.question.imgs.label': '图片描述',
   'form.old-password.placeholder': '旧密码',
+  'form.reason.placeholder': '为什么完善',
+  'form.answer.placeholder': '说说你的答案~',
 };

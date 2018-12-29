@@ -69,7 +69,10 @@ class HeaderView extends PureComponent {
       return;
     }
     if (key === 'logout') {
+      // 清除会话缓存
       sessionStorage.removeItem('access_token');
+      sessionStorage.removeItem('refresh_token');
+      sessionStorage.removeItem('user');
       dispatch({
         type: 'login/logout',
       });
@@ -152,7 +155,7 @@ class HeaderView extends PureComponent {
 }
 
 export default connect(({ user, global, setting, loading }) => ({
-  currentUser: user.currentUser.data,
+  currentUser: user.currentUserRes.data,
   collapsed: global.collapsed,
   fetchingNotices: loading.effects['global/fetchNotices'],
   notices: global.notices,

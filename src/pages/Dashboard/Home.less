@@ -1,6 +1,12 @@
 @import '~antd/lib/style/themes/default.less';
 @import '~@/utils/utils.less';
 
+.a{
+  color: #666;
+  &:hover{
+    color: #13C2C2;
+  }
+}
 .tabs{
   padding: 16px;
   box-sizing: border-box;
@@ -102,8 +108,38 @@
   }
 }
 .banner{
+  position: relative;
   width: 1200px;
   height: 430px;
   margin: 0 auto;
   background: url(../../assets/index.jpg);
+}
+.article_container{
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  .article_col{
+    padding: 10px 0;
+    box-sizing: border-box;
+    background: rgba(0,0,0, 0.2);
+    .article_box{
+      width: 96%;
+      height: 96px;
+      margin: 0 auto;
+      padding: 10px;
+      box-sizing: border-box;
+      background: rgba(255,255,255,1);
+      overflow: hidden;
+      .article_img{
+        width: 100%;
+        height: 72px;
+        background-position: center center;
+      }
+      .article_text{
+        padding: 8px;
+        box-sizing: border-box;
+      }
+    }
+  }
+  
 }

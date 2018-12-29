@@ -2,11 +2,12 @@ import React, { Fragment } from 'react';
 import { Layout, Icon } from 'antd';
 import GlobalFooter from '@/components/GlobalFooter';
 
+const year = new Date().getFullYear();
 const { Footer } = Layout;
 const FooterView = () => (
   <Footer style={{ padding: 0 }}>
     <GlobalFooter
-      links={[
+      /*links={[
         {
           key: 'Pro 首页',
           title: 'Pro 首页',
@@ -25,11 +26,11 @@ const FooterView = () => (
           href: 'https://ant.design',
           blankTarget: true,
         },
-      ]}
+      ]}*/
       copyright={
-        <Fragment>
-          Copyright <Icon type="copyright" /> 2018 蚂蚁金服体验技术部出品
-        </Fragment>
+        <div style={{color: 'rgba(0,0,0,.9)'}}>
+          Copyright <Icon type="copyright" /> {year} 小白考研
+        </div>
       }
     />
   </Footer>

@@ -1,8 +1,12 @@
 import fetch from 'dva/fetch';
-import { notification } from 'antd';
+import { notification, Icon } from 'antd';
+import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import hash from 'hash.js';
-import { isAntdPro } from './utils';
+import { notificationTip, isAntdPro } from './utils';
+import { reject } from 'q';
+
+const refreshTokenURL = `/api/oauth/token?client_id=app&client_secret=app_secure&grant_type=refresh_token&refresh_token=${sessionStorage.getItem('refresh_token')}`;
 
 const codeMessage = {
   200: '服务器成功返回请求的数据。',
@@ -22,8 +26,66 @@ const codeMessage = {
   504: '网关超时。',
 };
 
-const checkStatus = response => {
-  if (response.status >= 200 && response.status < 600) {
+/**
+ * 检查token是否失效
+ * @param {*} url 
+ * @param {*} option 
+ * @param {*} res 
+ */
+
+ const getrefreshToken = async (url, option) => {
+  fetch(refreshTokenURL, {method: 'POST'}).then(result =>{
+    if(result.err){
+      // refresh_token失效, 重新登录
+      window.g_app._store.dispatch({
+        type: 'login/logout',
+      });
+      return;
+    }else{
+      sessionStorage.setItem('access_token', result.access_token);
+      sessionStorage.setItem('refresh_token', result.refresh_token);
+      securityRequest(url, option);
+    }
+  });
+}
+
+const checkToken = (url, option, res) =>{
+  if(res.error && res.error === 'invalid_token'){
+    // token失效, 获取token
+    fetch(refreshTokenURL, {method: 'POST'}).then(result =>{
+      if(result.err){
+        // refresh_token失效, 重新登录
+        window.g_app._store.dispatch({
+          type: 'login/logout',
+        });
+        return;
+      }else{
+        sessionStorage.setItem('access_token', result.access_token);
+        sessionStorage.setItem('refresh_token', result.refresh_token);
+        securityRequest(url, option);
+      }
+    });
+  } else{
+    return res;
+  }
+}
+
+/**
+ * 处理请求错误
+ * @param {*} res 
+ */
+const handleError = (res) => {
+  if((res.error && res.error !== 'invalid_token')/* || (res.msg && res.msg !== 'invalid_token')*/){
+    notificationTip(formatMessage({id: res.error || res.msg}));
+    // notification.info({
+    //   message: formatMessage({id: res.error || res.msg}),
+    //   description: '',
+    //   duration: 2,
+    //   icon: <Icon type="frown" style={{ color: 'red' }} />
+    // });
+  }
+  return res;
+  /*if (response.status >= 200 && response.status < 600) {
     return response;
   }
   const errortext = codeMessage[response.status] || response.statusText;
@@ -34,7 +96,7 @@ const checkStatus = response => {
   const error = new Error(errortext);
   error.name = response.status;
   error.response = response;
-  throw error;
+  throw error;*/
 };
 
 const cachedSave = (response, hashcode) => {
@@ -63,7 +125,124 @@ const cachedSave = (response, hashcode) => {
  * @param  {object} [option] The options we want to pass to "fetch"
  * @return {object}           An object containing either "data" or "err"
  */
-export default function request(url, option) {
+export function request(url, option) {
+  const newOptions = handleParams(url, option);
+  return (
+    fetch(url, newOptions)
+      //.then(handleError)
+      //.then((response) => {checkToken(url, option, response)})
+      //.then(response => cachedSave(response, hashcode))
+      .then(response => {
+        // DELETE and 204 do not return data by default
+        // using .json will report an error.
+        if (newOptions.method === 'DELETE' || response.status === 204) {
+          return response.text();
+        }
+        return response.json();
+      })
+      .then(handleError)
+      .catch(e => {
+        const status = e.name;
+        if (status === 401) {
+          // @HACK
+          /* eslint-disable no-underscore-dangle */
+          window.g_app._store.dispatch({
+            type: 'login/logout',
+          });
+          return;
+        }
+        // environment should not be used
+        if (status === 403) {
+          router.push('/exception/403');
+          return;
+        }
+        if (status <= 504 && status >= 500) {
+          router.push('/exception/500');
+          return;
+        }
+        if (status >= 404 && status < 422) {
+          router.push('/exception/404');
+        }
+      })
+  );
+}
+
+/**
+ * 需要登录后才发的请求
+ * @param {*} url 
+ * @param {*} option 
+ */
+export function securityRequest(url, option) {
+  const newOptions = handleParams(url, option);
+  const token = sessionStorage.getItem('access_token');
+  //const token = '4bbab859-7797-4881-a802-d04bd5641f00';
+  if(token){
+    // 已登录
+    if(url.indexOf('?') > -1) {
+      url += `&access_token=${token}`;
+    }else {
+      url += `?access_token=${token}`;
+    }
+  }else{
+    // 还未登陆
+    // notification.info({
+    //   message: formatMessage({id: 'not_login'}),
+    //   description: '',
+    //   duration: 2,
+    //   icon: <Icon type="smile" style={{ color: '#13C2C2' }} />,
+    // });
+    notificationTip(formatMessage({id: 'not_login'}));
+    return;
+  }
+  return (
+    fetch(url, newOptions)
+      //.then((response) => {checkToken(url, option, response)})
+      //.then(handleError)
+      //.then(response => cachedSave(response, hashcode))
+      .then(response => {
+        // DELETE and 204 do not return data by default
+        // using .json will report an error.
+        if (newOptions.method === 'DELETE' || response.status === 204) {
+          return response.text();
+        }
+        return response.json();
+      })
+      //.then((res) => {checkToken(url, option, res)})
+      .then(handleError)
+      .catch(e => {
+        console.log(e);
+      })
+      // .catch(e => {
+      //   const status = e.name;
+      //   if (status === 401) {
+      //     // @HACK
+      //     /* eslint-disable no-underscore-dangle */
+      //     window.g_app._store.dispatch({
+      //       type: 'login/logout',
+      //     });
+      //     return;
+      //   }
+      //   // environment should not be used
+      //   if (status === 403) {
+      //     router.push('/exception/403');
+      //     return;
+      //   }
+      //   if (status <= 504 && status >= 500) {
+      //     router.push('/exception/500');
+      //     return;
+      //   }
+      //   if (status >= 404 && status < 422) {
+      //     router.push('/exception/404');
+      //   }
+      // })
+  );
+
+}
+
+/**
+ * 处理参数
+ */
+function handleParams(url, option) {
   const options = {
     expirys: isAntdPro(),
     ...option,
@@ -119,40 +298,5 @@ export default function request(url, option) {
       sessionStorage.removeItem(`${hashcode}:timestamp`);
     }
   }
-  return (
-    fetch(url, newOptions)
-      .then(checkStatus)
-      //.then(response => cachedSave(response, hashcode))
-      .then(response => {
-        // DELETE and 204 do not return data by default
-        // using .json will report an error.
-        if (newOptions.method === 'DELETE' || response.status === 204) {
-          return response.text();
-        }
-        return response.json();
-      })
-      .catch(e => {
-        const status = e.name;
-        if (status === 401) {
-          // @HACK
-          /* eslint-disable no-underscore-dangle */
-          window.g_app._store.dispatch({
-            type: 'login/logout',
-          });
-          return;
-        }
-        // environment should not be used
-        if (status === 403) {
-          router.push('/exception/403');
-          return;
-        }
-        if (status <= 504 && status >= 500) {
-          router.push('/exception/500');
-          return;
-        }
-        if (status >= 404 && status < 422) {
-          router.push('/exception/404');
-        }
-      })
-  );
+  return newOptions;
 }

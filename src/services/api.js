@@ -1,5 +1,5 @@
 import { stringify } from 'qs';
-import request from '@/utils/request';
+import {request, securityRequest } from '@/utils/request';
 
 export const imgCodeURL = '/api/getVerificationCodeImg';
 
@@ -153,8 +153,9 @@ export async function register(params) {
 }
 
 // 登陆获取短信验证码
-export async function getLoginCode(mobile) {
-  return request(`/api/login/sendSMS/${mobile}`);
+export async function getLoginCode(params) {
+  const { mobile, resultCode, token } = params;
+  return request(`/api/login/sendSMS/${mobile}?token=${token}&resultCode=${resultCode}`);
 }
 
 // 账号密码登陆
@@ -190,14 +191,14 @@ export async function sendVerifyCode(params) {
 // 找回密码
 export async function doReset(params) {
   const { mobile, verifycode, password } = params;
-  return request(`/api/pwd/reset/doReset/${mobile}/${verifycode}/${password}`);
+  return securityRequest(`/api/pwd/reset/doReset/${mobile}/${verifycode}/${password}`);
 }
 
 // 修改密码
-export async function modifyPassword(params, token) {
+export async function modifyPassword(params) {
   const { oldPassword, password, confirm } = params;
-  return request(
-    `/api/user/modifyPassword/${oldPassword}/${password}/${confirm}?access_token=${token}`,
+  return securityRequest(
+    `/api/user/modifyPassword/${oldPassword}/${password}/${confirm}`,
     {
       method: 'POST',
     }
@@ -205,20 +206,18 @@ export async function modifyPassword(params, token) {
 }
 
 // 获取当前登陆用户信息
-export async function currentUser(token) {
-  return request(`/api/user/currentUser?access_token=${token}`);
+export async function currentUser() {
+  return securityRequest(`/api/user/currentUser`);
 }
 
 // 修改用户信息
-export async function modifyUserInfo(params, token) {
+export async function modifyUserInfo(params) {
   let strParams = Object.keys(params).length > 0 ? '&' : '';
   for (let key in params) {
     strParams += key + '=' + params[key] + '&';
   }
-  console.log(params);
-  console.log(strParams);
-  return request(
-    `/api/user/modifyUserInfo?access_token=${token}${strParams.slice(0, strParams.length - 1)}`,
+  return securityRequest(
+    `/api/user/modifyUserInfo?${strParams.slice(0, strParams.length - 1)}`,
     {
       method: 'POST',
     }
@@ -241,53 +240,71 @@ export async function uploadAvatar(params) {
   const { token, file } = params;
   const formData = new FormData();
   formData.append('file', file);
-  return request(`/api/file/uploadAvatar?access_token=${token}`, {
+  return securityRequest(`/api/file/uploadAvatar`, {
     method: 'POST',
     body: formData,
   });
 }
 
 // 添加问题
-export async function addQuestion(params, token) {
-  return request(`/api/question/add?access_token=${token}`, {
+export async function addQuestion(params) {
+  return securityRequest(`/api/question/add`, {
     method: 'POST',
     body: params,
   });
 }
 
 // 添加标签
-export async function addTag(tag, token) {
-  return request(`/api/user/tag/add?tag=${tag}&access_token=${token}`, {
+export async function addTag(tag) {
+  return securityRequest(`/api/user/tag/add?tag=${tag}`, {
     method: 'POST',
   });
 }
 
 // 删除标签
-export async function deleteTag(tagId, token) {
-  return request(`/api/user/tag/delete/${tagId}?access_token=${token}`);
+export async function deleteTag(tagId) {
+  return securityRequest(`/api/user/tag/delete/${tagId}`);
+}
+
+// 查询用户对指定答案是否点赞或点踩
+export async function isVote(params) {
+  const { answerId } = params;
+  return securityRequest(`/api/answer/getVoteValue/${answerId}`);
 }
 
 // 给回答答案点赞或点踩
-export async function vote(params, token) {
+export async function vote(params) {
   const { answerId, voteValue } = params;
-  return request(`/api/answer/vote/${answerId}/${voteValue}?access_token=${token}`);
+  return securityRequest(`/api/answer/vote/${answerId}/${voteValue}`);
 }
 
 // 回答问题
-export async function answer(params, token) {
+export async function answer(params) {
   const { questionId, content } = params;
-  return request(
-    `/api/answer/answerQuestion/${questionId}?answerContent=${content}&access_token=${token}`,
+  return securityRequest(
+    `/api/answer/answerQuestion/${questionId}?answerContent=${content}`,
     {
       method: 'POST',
     }
   );
 }
 
+// 完善问题
+export async function perfect(params) {
+  const { answerId, reason, perfectAnswer } = params;
+  return securityRequest(`/api/perfect/add/${answerId}`, {
+    method: 'POST',
+    body: {
+      reason,
+      perfectAnswer
+    }
+  });
+}
+
 // 评论回答
-export async function comment(params, token) {
+export async function comment(params) {
   const { answerId, message } = params;
-  return request(`/api/answer/comment/${answerId}?message=${message}&access_token=${token}`, {
+  return securityRequest(`/api/answer/comment/${answerId}?message=${message}`, {
     method: 'POST',
   });
 }
@@ -298,4 +315,19 @@ export async function search(params) {
     method: 'POST',
     body: params,
   });
+}
+
+// 问题详情
+export async function getQdetail(id) {
+  return request(`/api/question/${id}`);
+}
+
+// 文章列表
+export async function articleList() {
+  return request(`/api/article/daily`);
+}
+
+// 文章详情
+export async function articleDetail(id) {
+  return request(`/api/article/${id}`);
 }

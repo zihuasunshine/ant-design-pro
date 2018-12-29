@@ -62,4 +62,17 @@ export default {
       },
     ],
   },
+  ImgCode: {
+    props: {
+      size: 'large',
+      prefix: <Icon type="picture" className={styles.prefixIcon} />,
+      placeholder: '图像验证码',
+    },
+    rules: [
+      {
+        required: true,
+        message: 'Please enter Captcha!',
+      },
+    ],
+  }
 };

@@ -24,20 +24,23 @@
 .detail {
   p {
     margin-bottom: 8px;
-    padding-left: 26px;
     position: relative;
+    text-align: center;
 
     &:last-child {
       margin-bottom: 0;
     }
+    span {
+      display: inline-block;
+      vertical-align: middle;
+    }
   }
 
   i {
-    position: absolute;
+    display: inline-block;
     height: 14px;
     width: 14px;
-    left: 0;
-    top: 4px;
+    vertical-align: middle;
     background: url(https://gw.alipayobjects.com/zos/rmsportal/pBjWzVAHnOOtAUvZmZfy.svg);
 
     &.title {
@@ -49,6 +52,7 @@
     }
 
     &.address {
+      margin-right: 4px;
       background-position: 0 -44px;
     }
   }

@@ -75,4 +75,5 @@ export default {
   'app.settings.close': '关',
   'app.settings.answer': '我来回答',
   'app.settings.perfect': '我来完善',
+  'app.settings.submit.answer': '提交答案',
 };

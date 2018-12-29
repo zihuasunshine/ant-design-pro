@@ -1,7 +1,8 @@
 import React, { PureComponent } from 'react';
 import { connect } from 'dva';
+import router from 'umi/router';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Button, Card } from 'antd';
+import { Form, Input, Button, Card, message } from 'antd';
 import PicturesWall from '@/components/PicturesWall';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
 
@@ -21,19 +22,31 @@ class AskForms extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    const { dispatch, form } = this.props;
-    form.validateFieldsAndScroll((err, values) => {
-      const { detail } = values;
-      if (this.imgs.length > 0) values.imgs = this.imgs;
-      if (!detail) delete values.detail;
-      if (!err) {
-        dispatch({
-          type: 'question/submit',
-          payload: values,
-          token: sessionStorage.getItem('access_token'),
-        });
-      }
-    });
+    if(sessionStorage.getItem('access_token')){
+      const { dispatch, form } = this.props;
+      form.validateFieldsAndScroll((err, values) => {
+        const { detail } = values;
+        if (this.imgs.length > 0) values.imgs = this.imgs;
+        if (!detail) delete values.detail;
+        if (!err) {
+          dispatch({
+            type: 'question/submit',
+            payload: values,
+            token: sessionStorage.getItem('access_token'),
+          }).then(() => {
+            const { question: { addQuestionRes }} = this.props;
+            if(addQuestionRes.code === 200){
+              router.push('/');
+            }else{
+  
+            }
+          });
+        }
+      });
+    }else {
+      message.info(formatMessage({id: 'not_login'}));
+    }
+    
   };
 
   // 上传图片
@@ -127,7 +140,7 @@ class AskForms extends PureComponent {
             </FormItem>
             <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
               <Button type="primary" htmlType="submit" loading={submitting}>
-                <FormattedMessage id="form.submit" />
+                {sessionStorage.getItem('access_token')? <FormattedMessage id="form.submit"/>: <FormattedMessage id="form.login.submit"/>}
               </Button>
             </FormItem>
           </Form>

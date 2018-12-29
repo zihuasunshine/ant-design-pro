@@ -2,6 +2,7 @@ import moment from 'moment';
 import React from 'react';
 import nzh from 'nzh/cn';
 import { parse, stringify } from 'qs';
+import { notification } from 'antd';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -189,6 +190,30 @@ export function dataURLtoFile(dataurl, filename = 'file') {
     u8arr[n] = bstr.charCodeAt(n);
   }
   return new File([u8arr], `${filename}.${suffix}`, { type: mime });
+}
+
+// 生成uuid
+export function generateUUID() {
+  var d = new Date().getTime();
+  if (window.performance && typeof window.performance.now === "function") {
+      d += performance.now(); //use high-precision timer if available
+  }
+  var uuid = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      var r = (d + Math.random() * 16) % 16 | 0;
+      d = Math.floor(d / 16);
+      return (c == 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+  });
+  return uuid;
+}
+
+// 未登录提示
+export function notificationTip(message) {
+  notification.info({
+    message: message,
+    description: '',
+    duration: 2,
+    icon: <Icon type="smile" style={{ color: '#13C2C2' }} />,
+  });
 }
 
 // 给官方演示站点用，用于关闭真实开发环境不需要使用的特性

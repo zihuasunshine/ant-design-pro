@@ -94,11 +94,7 @@ class Info extends Component {
   };
 
   render() {
-    const { children, currentUser } = this.props;
-    if (currentUser.code !== 200) {
-      return '';
-    }
-
+    const { children } = this.props;
     const { mode, selectKey } = this.state;
     return (
       <GridContent>

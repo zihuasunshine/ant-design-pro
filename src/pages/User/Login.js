@@ -1,51 +1,58 @@
 import React, { Component } from 'react';
 import { connect } from 'dva';
-import { routerRedux } from 'dva/router';
+import router from 'umi/router';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import Link from 'umi/link';
 import { Checkbox, Alert, Icon, message } from 'antd';
 import Login from '@/components/Login';
+import { generateUUID } from '@/utils/utils';
 import styles from './Login.less';
+import { imgCodeURL } from '@/services/api';
 import logo from '@/assets/black_logo.png';
 
-const { Tab, UserName, Password, Mobile, Captcha, Submit } = Login;
+const { Tab, UserName, Password, Mobile, ImgCode, Captcha, Submit } = Login;
 
-@connect(({ login, loading }) => ({
+@connect(({ user, login, loading }) => ({
+  user,
   login,
   submitting: loading.effects['login/login'],
 }))
 class LoginPage extends Component {
   state = {
     type: 'account',
+    src:'',
     autoLogin: true,
   };
+
+  componentDidMount() {
+    this.refreshCode();
+  }
 
   onTabChange = type => {
     this.setState({ type });
   };
 
   onGetCaptcha = () => {
-    this.loginForm.validateFields(['mobile'], {}, (err, values) => {
+    this.loginForm.validateFields(['mobile','resultCode'], {}, (err, values) => {
       if (!err) {
+        const { token } = this.state;
         const { dispatch } = this.props;
         dispatch({
           type: 'login/getCaptcha',
-          payload: values.mobile,
-        }).then(() => {
-          const {
-            login: { captchaRes },
-          } = this.props;
-          if (captchaRes.code === 200) {
-            message.success(formatMessage({ id: 'get_code_success' }));
-          } else {
-            const { msg } = captchaRes;
-            const tip = formatMessage({ id: msg })
-              ? formatMessage({ id: msg })
-              : formatMessage({ id: 'get_code_faild' });
-            message.error(tip);
+          params: {
+            ...values,
+            token
           }
-        });
+        })
       }
+    });
+  };
+
+  refreshCode = () => {
+    const token = generateUUID();
+    this.setState({
+      token: token,
+      src: imgCodeURL + '?token=' + token,
     });
   };
 
@@ -63,23 +70,45 @@ class LoginPage extends Component {
         const {
           login: { loginRes },
         } = this.props;
-        const error = loginRes.error;
-        if (error) {
-          let tip = '';
-          if (error === 'invalid_grant') {
-            tip =
-              type === 'account'
-                ? formatMessage({ id: 'invalid_grant_pwd' })
-                : formatMessage({ id: 'invalid_grant_code' });
-          } else {
-            tip = formatMessage({ id: error })
-              ? formatMessage({ id: error })
-              : formatMessage({ id: error });
-          }
-          message.error(tip);
-        }
-      });
+        if (!loginRes.error) {
+          dispatch({
+            type: 'user/fetchCurrent'
+          })
+        } 
+      })
     }
+  };
+
+  // 请求当前用户currentUser
+  getCurrentUser = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/fetchCurrent',
+      token: sessionStorage.getItem('access_token'),
+    }).then(() => {
+      const {
+        user: { currentUserRes },
+      } = this.props;
+      if (currentUserRes.error) {
+        if (currentUserRes.error === 'invalid_token') {
+          // token过期, 刷新token
+          dispatch({
+            type: 'login/refreshToken',
+            refresh_token: sessionStorage.getItem('refresh_token'),
+          }).then(() => {
+            const {
+              login: { refreshTokenRes },
+            } = this.props;
+            if (!refreshTokenRes.error) {
+              this.getCurrentUser();
+            } else {
+              // 跳转到登录页
+              router.push('/user/login?redirect=' + window.location.href);
+            }
+          });
+        }
+      }
+    });
   };
 
   changeAutoLogin = e => {
@@ -93,10 +122,10 @@ class LoginPage extends Component {
   );
 
   render() {
-    const { login, submitting } = this.props;
-    const { type, autoLogin } = this.state;
+    const { login, submitting, style } = this.props;
+    const { type, autoLogin, src } = this.state;
     return (
-      <div className={styles.main}>
+      <div className={styles.main} style={style}>
         <div className={styles.header}>
           <Link to="/">
             <img alt="logo" className={styles.logo} src={logo} />
@@ -158,6 +187,18 @@ class LoginPage extends Component {
                 },
               ]}
             />
+            <ImgCode
+              name="resultCode"
+              placeholder={formatMessage({ id: 'form.resultCode.placeholder' })}
+              src={src}
+              onFreshcode={this.refreshCode}
+              rules={[
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.resultCode.required' }),
+                },
+              ]}
+            />
             <Captcha
               name="captcha"
               placeholder={formatMessage({ id: 'form.verification-code.placeholder' })}
@@ -173,22 +214,25 @@ class LoginPage extends Component {
               ]}
             />
           </Tab>
-          <div>
+          {/*<div>
             <Checkbox checked={autoLogin} onChange={this.changeAutoLogin}>
               <FormattedMessage id="app.login.remember-me" />
             </Checkbox>
             <Link style={{ float: 'right' }} to="/user/findpwd">
               <FormattedMessage id="app.login.forgot-password" />
             </Link>
-          </div>
+          </div>*/}
           <Submit loading={submitting}>
             <FormattedMessage id="app.login.login" />
           </Submit>
           <div className={styles.other}>
-            <FormattedMessage id="app.login.sign-in-with" />
+            {/*<FormattedMessage id="app.login.sign-in-with" />
             <Icon type="alipay-circle" className={styles.icon} theme="outlined" />
             <Icon type="taobao-circle" className={styles.icon} theme="outlined" />
-            <Icon type="weibo-circle" className={styles.icon} theme="outlined" />
+            <Icon type="weibo-circle" className={styles.icon} theme="outlined" />*/}
+            <Link style={{ float: 'left' }} to="/user/findpwd">
+              <FormattedMessage id="app.login.forgot-password" />
+            </Link>
             <Link className={styles.register} to="/user/register">
               <FormattedMessage id="app.login.signup" />
             </Link>

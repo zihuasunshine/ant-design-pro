@@ -31,13 +31,6 @@ const validatorGeographic = (rule, value, callback) => {
 @Form.create()
 class BaseView extends Component {
   componentDidMount() {
-    // const { dispatch } = this.props;
-    // dispatch({
-    //   type: 'user/fetchCurrent',
-    //   token: sessionStorage.getItem('access_token'),
-    // }).then(() => {
-    //   this.setBaseInfo();
-    // });
     this.setBaseInfo();
   }
 
@@ -118,23 +111,21 @@ class BaseView extends Component {
 
   setBaseInfo = () => {
     const {
-      user: { currentUser },
       form,
     } = this.props;
-    if (currentUser.code === 200) {
-      const { data: currentUserInfo } = currentUser;
-      // const { data: currentUserInfo } = currentUser;
-      //  // 处理地理位置
-      //  currentUserInfo.geographic = {
-      //   province: {
-      //     label: currentUser.province,
-      //     key: '330000',
-      //   },
-      //   city: {
-      //     label: currentUser.city,
-      //     key: '330100',
-      //   },
-      // };
+    const currentUser = sessionStorage.getItem('user');
+    if(currentUser){
+      const currentUserInfo = JSON.parse(currentUser);
+      currentUserInfo.geographic = {
+        province: {
+          label: currentUserInfo.province || '',
+          key: currentUserInfo.provinceCode ||  0,
+        },
+        city: {
+          label: currentUserInfo.city || '',
+          key: currentUserInfo.cityCode || 0,
+        },
+      },
       Object.keys(form.getFieldsValue()).forEach(key => {
         const obj = {};
         obj[key] = currentUserInfo[key] || null;
@@ -144,16 +135,16 @@ class BaseView extends Component {
           form.setFieldsValue(obj);
         }
       });
+   
     } else {
+      message.info(formatMessage({id: 'not_login'}));
     }
   };
 
   getAvatarURL() {
-    const {
-      user: { currentUser },
-    } = this.props;
-    if (currentUser.data.avatarFile) {
-      return currentUser.data.avatarFile;
+    const currentUser = sessionStorage.getItem('user');
+    if (currentUser) {
+      return JSON.parse(currentUser).avatarFile;
     }
     const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png';
     return url;

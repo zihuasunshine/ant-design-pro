@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Form, Input, Button, Row, Col } from 'antd';
 import omit from 'omit.js';
+import { formatMessage } from 'umi/locale';
 import styles from './index.less';
 import ItemMap from './map';
 import LoginContext from './loginContext';
@@ -25,6 +26,7 @@ class WrapFormItem extends Component {
     if (updateActive) {
       updateActive(name);
     }
+    this.refreshCode();
   }
 
   componentWillUnmount() {
@@ -57,6 +59,11 @@ class WrapFormItem extends Component {
     return options;
   };
 
+  refreshCode = () => {
+    const { onFreshcode } = this.props;
+    onFreshcode? onFreshcode() : null;
+  };
+
   runGetCaptchaCountDown = () => {
     const { countDown } = this.props;
     let count = countDown || 59;
@@ -74,6 +81,7 @@ class WrapFormItem extends Component {
     const { count } = this.state;
 
     const {
+      src,
       form: { getFieldDecorator },
     } = this.props;
 
@@ -112,6 +120,19 @@ class WrapFormItem extends Component {
               >
                 {count ? `${count} ${getCaptchaSecondText}` : getCaptchaButtonText}
               </Button>
+            </Col>
+          </Row>
+        </FormItem>
+      );
+    } else if (type === 'ImgCode') {
+      return (
+        <FormItem>
+          <Row gutter={8}>
+            <Col span={16}>
+              {getFieldDecorator(name, options)(<Input {...customprops} />)}
+            </Col>
+            <Col span={8}>
+              <img title={formatMessage({id: 'change_img_code'})} className={styles.imgCode} src={src} onClick={this.refreshCode} />
             </Col>
           </Row>
         </FormItem>
