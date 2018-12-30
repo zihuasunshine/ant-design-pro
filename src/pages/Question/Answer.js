@@ -3,10 +3,13 @@ import { connect } from 'dva';
 import router from 'umi/router';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import RichTextEditor from '@/components/RichTextEditor';
+import CommentList from '@/components/CommentList';
 import BraftEditor from 'braft-editor';
+import { ContentUtils } from 'braft-utils'
+import { ImageUtils } from 'braft-finder'
 import { notificationTip } from  '@/utils/utils';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Row, Col, Icon, Button, Input, Avatar, message, Form, Divider } from 'antd';
+import { Row, Col, Icon, Button, Input, Avatar, message, Form, Divider, Upload } from 'antd';
 import styles from './Answer.less';
 import bestSrc from '@/assets/best.png';
 
@@ -20,7 +23,6 @@ const controls = [
   'separator',
   'link',
   'separator',
-  'media',
 ];
 
 @connect(({ question }) => ({
@@ -33,36 +35,18 @@ class Answer extends PureComponent {
     this.state = {
       inputVisible: false,
       inputValue: '',
+      editorState: BraftEditor.createEditorState(null),
     }
     this.id = props.match.params.id
   }
 
   componentDidMount(){
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'question/getDetail',
-      id: this.id,
-    }).then(() => {
-      const { question: { qDetailRes }} = this.props;
-      if(qDetailRes.code !== 200) {
-        message.error(formatMessage({id:qDetailRes.msg})+',即将跳转到首页');
-        setTimeout(() => {
-          router.push('/'); // 返回到首页
-        }, 500);
-        return;
-      }else{
-        const { data: { answer }} = qDetailRes;
-        this.isVote(answer.answerId);
-      }
-    });
+    this.getQuestionDetail();
   }
 
   showInput = () => {
     const { inputVisible } = this.state;
-    if(inputVisible){
-      return;
-    }
-    this.setState({ inputVisible: true }, () => this.input.focus());
+    this.setState({ inputVisible: !inputVisible });
   };
 
   saveInputRef = input => {
@@ -81,6 +65,27 @@ class Answer extends PureComponent {
     }
   };
 
+  getQuestionDetail = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/getDetail',
+      id: this.id,
+    }).then(() => {
+      const { question: { qDetailRes }} = this.props;
+      if(qDetailRes.code !== 200) {
+        message.error(formatMessage({id:qDetailRes.msg})+',即将跳转到首页');
+        setTimeout(() => {
+          router.push('/'); // 返回到首页
+        }, 500);
+        return;
+      }else{
+        const { data: { answer }} = qDetailRes;
+        this.isVote(answer.answerId);
+        this.getComment(answer.answerId);
+      }
+    });
+  }
+
   isVote = (answerId) => {
     if(sessionStorage.getItem('access_token')){
       const { dispatch } = this.props;
@@ -96,6 +101,16 @@ class Answer extends PureComponent {
 
   }
 
+  getComment = (answerId) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/getComment',
+      params:{
+        answerId
+      }
+    });
+  }
+
   handleVote = (voteValue, answerId) => {
     const { dispatch } = this.props;
     dispatch({
@@ -104,6 +119,8 @@ class Answer extends PureComponent {
         answerId, 
         voteValue
       },
+    }).then(() => {
+      this.getQuestionDetail();
     });
   }
 
@@ -121,9 +138,37 @@ class Answer extends PureComponent {
 
   }
 
+  handleChange = (editorState) => {
+    this.setState({ editorState })
+  }
+
+  uploadHandler = (param) => {
+    if (!param.file) {
+      return false;
+    }
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/upload',
+      payload: {
+        type: 'answer',
+        file: param.file
+      }
+    }).then(()=> {
+      const { question: {uploadRes: { data } } } = this.props;
+      this.setState({
+        editorState: ContentUtils.insertMedias(this.state.editorState, [{
+          type: 'IMAGE',
+          url: data.url
+        }])
+      })
+    });
+  }
+
   handleSubmit = (e, answerId) =>{
     e.preventDefault();
     const { dispatch, form: { validateFields }} = this.props;
+    const { editorState } = this.state;
+
     validateFields((err, values) => {
       if(!err){
         dispatch({
@@ -131,22 +176,49 @@ class Answer extends PureComponent {
           params: {
             answerId,
             reason: values.reason,
-            perfectAnswer: values.answer.toHTML()
+            perfectAnswer: editorState.toHTML()
           },
           token: sessionStorage.getItem('access_token')
+        }).then(() => {
+          // 跳转到首页
+          router.push({
+            pathname: '/'
+          });
         });
       }
     });
   }
 
   render() {
-    const { question: { qDetailRes }, form: { getFieldDecorator }} = this.props;
+    const extendControls = [
+      {
+        key: 'antd-uploader',
+        type: 'component',
+        component: (
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            //onChange = {}
+            customRequest={this.uploadHandler}
+          >
+            {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
+            <button type="button" className="control-item button upload-button" data-title="插入图片">
+              <Icon type="picture" theme="filled" />
+            </button>
+          </Upload>
+        )
+      }
+    ]
+    const { question: { qDetailRes, isVoteRes, commentRes }, form: { getFieldDecorator }} = this.props;
+    const isLiked = isVoteRes && isVoteRes.data == 1; // 点过赞
+    const isNotCare = isVoteRes && isVoteRes.data == 0; // 没点赞也没有点踩 
+    const isDislike = isVoteRes && isVoteRes.data == -1; // 点过踩
     let answer = {}, question = {};
     if(qDetailRes && qDetailRes.code === 200){
       answer = qDetailRes.data.answer,
       question = qDetailRes.data.question;
     }
-    const { inputVisible, inputValue } = this.state;
+    const { inputVisible, inputValue, editorState } = this.state;
     return (
       <GridContent>
         <div className={styles.main}>
@@ -176,11 +248,11 @@ class Answer extends PureComponent {
                 </div>
                 <div className={styles.answer} dangerouslySetInnerHTML={{__html: answer.answerContent}}></div>
                 <div className={styles.operator}>
-                  <span className={styles.icon_wrapper} onClick={() => {this.handleVote(1,answer.answerId)}}>
-                    <Icon type="like" className={styles.icon}/>{answer.agreeCount}
+                  <span className={styles.icon_wrapper} onClick={isNotCare?() => {this.handleVote(1,answer.answerId)}:()=>{}}>
+                    <Icon type="like" theme={isLiked?'filled':'' } className={styles.icon}/>{answer.agreeCount}
                   </span>
-                  <span className={styles.icon_wrapper} onClick={() => {this.handleVote(-1,answer.answerId)}}>
-                    <Icon type="dislike" className={styles.icon}/>{answer.againstCount}
+                  <span className={styles.icon_wrapper} onClick={isNotCare? () => {this.handleVote(-1,answer.answerId)}:()=>{}}>
+                    <Icon type="dislike" theme={isDislike?'filled':''} className={styles.icon}/>{answer.againstCount}
                   </span>
                   <span title='评论' className={styles.icon_wrapper} onClick={this.showInput}>
                     <Icon type="message" className={styles.icon}/>{answer.commentCount}
@@ -198,7 +270,7 @@ class Answer extends PureComponent {
                           value={inputValue}
                           placeholder={formatMessage({id: 'rate_to_best_answer'})}
                           onChange={this.handleInputChange}
-                          onBlur={this.handleInputConfirm}
+                          //onBlur={this.handleInputConfirm}
                           onPressEnter={this.handleInputConfirm}
                         />
                       </Col>
@@ -206,6 +278,7 @@ class Answer extends PureComponent {
                         <Button type='primary' size='large' onClick={() => this.handleComment(answer.answerId)}>评论</Button>
                       </Col>
                     </Row>
+                    <CommentList listData={commentRes.code===200?commentRes.data:[]}/>
                   </div>
                 )}
               </Col>
@@ -243,27 +316,15 @@ class Answer extends PureComponent {
                 </FormItem>):null
                 }
                 <FormItem>
-                  {getFieldDecorator('answer', {
-                    validateTrigger: 'onBlur',
-                    rules: [{
-                      required: true,
-                      validator: (_, value, callback) => {
-                        if (value.isEmpty()) {
-                          callback(formatMessage({ id: 'validation.answer.required' }))
-                        } else {
-                          callback()
-                        }
-                      }
-                    }]
-  
-                  })(
-                    <BraftEditor
+                  <BraftEditor
+                      value={editorState}
+                      placeholder={formatMessage({ id: 'form.answer.placeholder' })}
                       contentClassName={styles.height}
                       className={styles.my_editor}
+                      onChange={this.handleChange}
                       controls={controls}
-                      placeholder={formatMessage({ id: 'form.answer.placeholder' })}
+                      extendControls={extendControls}
                     />
-                  )}
                 </FormItem>
                 <div className={styles.align_right}>
                   <Button htmlType="submit" type="primary">{formatMessage({id: 'app.settings.submit.answer'})}</Button>

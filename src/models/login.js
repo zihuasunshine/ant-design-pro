@@ -10,23 +10,19 @@ export default {
 
   state: {
     status: undefined,
+    loginModalVisible: false,
     loginRes: {}
   },
 
   effects: {
-    *refreshToken({ refresh_token }, { call, put }) {
-      const response = yield call(refreshToken, refresh_token);
-      if (!response.error) {
-        sessionStorage.setItem('access_token', response.access_token);
-        sessionStorage.setItem('refresh_token', response.refresh_token);
-      }
+    *setLoginModelVisible({ visible }, {  put }) {
       yield put({
-        type: 'refreshTokenHandle',
-        payload: response,
+        type: 'changeModalVisible',
+        payload: visible
       });
     },
     *login({ payload }, { call, put }) {
-      const { type } = payload;
+      const { type, dialogCls } = payload;
       const response = yield call(login, payload);
       yield put({
         type: 'changeLoginStatus',
@@ -36,23 +32,31 @@ export default {
       if (!response.error) {
         sessionStorage.setItem('access_token', response.access_token);
         sessionStorage.setItem('refresh_token', response.refresh_token);
-        reloadAuthorized();
-        const urlParams = new URL(window.location.href);
-        const params = getPageQuery();
-        let { redirect } = params;
-        if (redirect) {
-          const redirectUrlParams = new URL(redirect);
-          if (redirectUrlParams.origin === urlParams.origin) {
-            redirect = redirect.substr(urlParams.origin.length);
-            if (redirect.match(/^\/.*#/)) {
-              redirect = redirect.substr(redirect.indexOf('#') + 1);
+        if(dialogCls){
+          // 弹窗登录 页面不跳转
+          yield put({
+            type: 'changeModalVisible',
+            payload: false
+          });
+        }else {
+          reloadAuthorized();
+          const urlParams = new URL(window.location.href);
+          const params = getPageQuery();
+          let { redirect } = params;
+          if (redirect) {
+            const redirectUrlParams = new URL(redirect);
+            if (redirectUrlParams.origin === urlParams.origin) {
+              redirect = redirect.substr(urlParams.origin.length);
+              if (redirect.match(/^\/.*#/)) {
+                redirect = redirect.substr(redirect.indexOf('#') + 1);
+              }
+            } else {
+              window.location.href = redirect;
+              return;
             }
-          } else {
-            window.location.href = redirect;
-            return;
           }
+          yield put(routerRedux.replace(redirect || '/'));
         }
-        yield put(routerRedux.replace(redirect || '/'));
       }
     },
 
@@ -94,12 +98,7 @@ export default {
   },
 
   reducers: {
-    refreshTokenHandle(state, { payload }) {
-      return {
-        ...state,
-        refreshTokenRes: payload,
-      };
-    },
+   
     changeLoginStatus(state, { payload }) {
       //setAuthority(payload.currentAuthority);
       setAuthority('admin');
@@ -107,6 +106,12 @@ export default {
         ...state,
         loginRes: payload,
       };
-    }
+    },
+    changeModalVisible(state, { payload }) {
+      return {
+        ...state,
+        loginModalVisible: payload
+      }
+    },
   },
 };

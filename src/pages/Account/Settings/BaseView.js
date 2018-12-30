@@ -182,8 +182,8 @@ class BaseView extends Component {
                 ],*/
               })(
                 <RadioGroup>
-                  <Radio value={0}>男</Radio>
-                  <Radio value={1}>女</Radio>
+                  <Radio value='0'>男</Radio>
+                  <Radio value='1'>女</Radio>
                 </RadioGroup>
               )}
             </FormItem>

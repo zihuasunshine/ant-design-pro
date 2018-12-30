@@ -1,4 +1,4 @@
-import { addQuestion, fileUpload, getQdetail, isVote, vote, comment, perfect } from '@/services/api';
+import { addQuestion, fileUpload, getQdetail, isVote, getComment,vote, comment, perfect } from '@/services/api';
 
 export default {
   namespace: 'question',
@@ -29,6 +29,17 @@ export default {
     },
     *isVote({ params }, { call, put }) {
       const response = yield call(isVote, params);
+      yield put({
+        type: 'isVoteHandle',
+        payload: response
+      });
+    },
+    *getComment({params}, {call, put}) {
+      const response = yield call(getComment, params);
+      yield put({
+        type: 'getCommentHandle',
+        payload: response
+      });
     },
     *vote({params}, { call }) {
       const response = yield call(vote, params);
@@ -36,7 +47,7 @@ export default {
     *comment({params, token}, { call }) {
       const response = yield call(comment, params, token);
     },
-    *perfectAnswer({params, token}, { call, pull }) {
+    *perfectAnswer({params, token}, { call, put }) {
       const response = yield call(perfect, params, token);
       yield put({
         type: 'perfectAnswerHandel',
@@ -68,6 +79,18 @@ export default {
       return {
         ...state,
         pAnswerRes: payload
+      }
+    },
+    isVoteHandle(state, { payload }) {
+      return {
+        ...state,
+        isVoteRes: payload
+      }
+    },
+    getCommentHandle(state, { payload }) {
+      return {
+        ...state,
+        commentRes: payload
       }
     },
   },

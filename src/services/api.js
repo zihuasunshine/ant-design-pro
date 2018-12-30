@@ -322,6 +322,12 @@ export async function getQdetail(id) {
   return request(`/api/question/${id}`);
 }
 
+// 根据答案ID查询该答案下的所有评论
+export async function getComment(params) {
+  const { answerId } = params;
+  return request(`/api/answer/findByAnswerId/${answerId}`);
+}
+
 // 文章列表
 export async function articleList() {
   return request(`/api/article/daily`);

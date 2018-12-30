@@ -75,7 +75,7 @@ const checkToken = (url, option, res) =>{
  * @param {*} res 
  */
 const handleError = (res) => {
-  if((res.error && res.error !== 'invalid_token')/* || (res.msg && res.msg !== 'invalid_token')*/){
+  if((res.error && res.error !== 'invalid_token')/* || (res.code !== 200 && res.msg && res.msg !== 'invalid_token')*/){
     notificationTip(formatMessage({id: res.error || res.msg}));
     // notification.info({
     //   message: formatMessage({id: res.error || res.msg}),
@@ -184,15 +184,12 @@ export function securityRequest(url, option) {
       url += `?access_token=${token}`;
     }
   }else{
-    // 还未登陆
-    // notification.info({
-    //   message: formatMessage({id: 'not_login'}),
-    //   description: '',
-    //   duration: 2,
-    //   icon: <Icon type="smile" style={{ color: '#13C2C2' }} />,
-    // });
-    notificationTip(formatMessage({id: 'not_login'}));
-    return;
+   // 弹出登录框
+   window.g_app._store.dispatch({
+    type: 'login/setLoginModelVisible',
+    visible: true
+  });
+  return;
   }
   return (
     fetch(url, newOptions)

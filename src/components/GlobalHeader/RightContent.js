@@ -1,17 +1,22 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage, formatMessage } from 'umi/locale';
-import { Spin, Tag, Menu, Icon, Avatar, Tooltip } from 'antd';
+import { Spin, Tag, Menu, Icon, Avatar, Tooltip, Modal } from 'antd';
 import Link from 'umi/link';
+import { connect } from 'dva' 
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import NoticeIcon from '../NoticeIcon';
 import HeaderSearch from '../HeaderSearch';
 import HeaderDropdown from '../HeaderDropdown';
 import SelectLang from '../SelectLang';
+import Login from '@/pages/User/Login';
 import styles from './index.less';
 
 const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'; // 默认头像
 
+@connect(({ login }) => ({
+  login
+}))
 export default class GlobalHeaderRight extends PureComponent {
   getNoticeData() {
     const { notices = [] } = this.props;
@@ -66,10 +71,19 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   };
 
+  handleCancle = () =>{
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'login/setLoginModelVisible',
+      visible: false
+    });
+  }
+
   render() {
     const currentUser = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')): null;
     const {
       //currentUser,
+      login: { loginModalVisible },
       fetchingNotices,
       onNoticeVisibleChange,
       onMenuClick,
@@ -197,6 +211,14 @@ export default class GlobalHeaderRight extends PureComponent {
           </HeaderDropdown>
         ) : null}
         {/*<SelectLang className={styles.action} />*/}
+        <Modal
+          width={430}
+          onCancel={this.handleCancle }
+          visible={loginModalVisible}
+          footer={null}
+        >
+          <Login dialogCls={true}/>
+        </Modal>
       </div>
     );
   }

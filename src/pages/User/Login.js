@@ -59,12 +59,13 @@ class LoginPage extends Component {
   handleSubmit = (err, values) => {
     const { type } = this.state;
     if (!err) {
-      const { dispatch } = this.props;
+      const { dispatch, dialogCls } = this.props;
       dispatch({
         type: 'login/login',
         payload: {
           ...values,
           type,
+          dialogCls,
         },
       }).then(() => {
         const {
@@ -122,10 +123,10 @@ class LoginPage extends Component {
   );
 
   render() {
-    const { login, submitting, style } = this.props;
+    const { login, submitting, style, dialogCls } = this.props;
     const { type, autoLogin, src } = this.state;
     return (
-      <div className={styles.main} style={style}>
+      <div className={dialogCls?styles.dialog_main:styles.main} style={style}>
         <div className={styles.header}>
           <Link to="/">
             <img alt="logo" className={styles.logo} src={logo} />
