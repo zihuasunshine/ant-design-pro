@@ -1,4 +1,4 @@
-import { addQuestion, fileUpload, getQdetail, isVote, getComment,vote, comment, perfect } from '@/services/api';
+import { addQuestion, fileUpload, getQdetail, isVote, getComment,vote, comment, perfect, answer } from '@/services/api';
 
 export default {
   namespace: 'question',
@@ -41,16 +41,31 @@ export default {
         payload: response
       });
     },
-    *vote({params}, { call }) {
+    *vote({params}, { call, put }) {
       const response = yield call(vote, params);
-    },
-    *comment({params, token}, { call }) {
-      const response = yield call(comment, params, token);
-    },
-    *perfectAnswer({params, token}, { call, put }) {
-      const response = yield call(perfect, params, token);
       yield put({
-        type: 'perfectAnswerHandel',
+        type: 'voteHandle',
+        payload: response,
+      });
+    },
+    *comment({params, token}, { call, put }) {
+      const response = yield call(comment, params, token);
+      yield put({
+        type: 'commentHandle',
+        payload: response,
+      });
+    },
+    *perfectAnswer({params}, { call, put }) {
+      const response = yield call(perfect, params);
+      yield put({
+        type: 'perfectAnswerHandle',
+        payload: response
+      });
+    },
+    *answer({params}, { call, put }) {
+      const response = yield call(answer, params);
+      yield put({
+        type: 'answerHandle',
         payload: response
       });
     }
@@ -75,16 +90,34 @@ export default {
         qDetailRes: payload
       }
     },
-    perfectAnswer(state, { payload }) {
+    perfectAnswerHandle(state, { payload }) {
       return {
         ...state,
         pAnswerRes: payload
+      }
+    },
+    answerHandle(state, { payload }){
+      return {
+        ...state,
+        answerRes: payload
       }
     },
     isVoteHandle(state, { payload }) {
       return {
         ...state,
         isVoteRes: payload
+      }
+    },
+    voteHandle(state, { payload }) {
+      return {
+        ...state,
+        voteRes: payload
+      }
+    },
+    commentHandle(state, { payload }) {
+      return {
+        ...state,
+        commentRes: payload
       }
     },
     getCommentHandle(state, { payload }) {

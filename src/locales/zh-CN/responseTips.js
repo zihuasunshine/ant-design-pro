@@ -46,4 +46,5 @@ export default {
   answer_not_found: '改答案不存在',
   thank_answer: '感谢您的回答',
   change_img_code: '点击切换图形验证码',
+  not_edit_content: '还没有填写内容呢',
 };

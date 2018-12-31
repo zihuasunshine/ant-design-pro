@@ -66,7 +66,13 @@ class Center extends PureComponent {
           </Col>
         </Row>
         <List
-          size="large"
+          //size="large"
+          pagination={{
+            onChange: (page) => {
+              console.log(page);
+            },
+            pageSize: 6,
+          }}
           className={styles.articleList}
           rowKey="id"
           itemLayout="vertical"

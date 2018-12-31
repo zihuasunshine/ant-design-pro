@@ -173,6 +173,7 @@ export function request(url, option) {
  * @param {*} option 
  */
 export function securityRequest(url, option) {
+
   const newOptions = handleParams(url, option);
   const token = sessionStorage.getItem('access_token');
   //const token = '4bbab859-7797-4881-a802-d04bd5641f00';
@@ -186,10 +187,10 @@ export function securityRequest(url, option) {
   }else{
    // 弹出登录框
    window.g_app._store.dispatch({
-    type: 'login/setLoginModelVisible',
-    visible: true
-  });
-  return;
+      type: 'login/setLoginModelVisible',
+      visible: true
+    });
+    return;
   }
   return (
     fetch(url, newOptions)

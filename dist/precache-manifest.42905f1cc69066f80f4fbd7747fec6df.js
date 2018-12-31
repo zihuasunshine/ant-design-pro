@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/27.async.js"
   },
   {
-    "revision": "381438562b7ed61cbeba",
+    "revision": "e342b71bb08767f33c6c",
     "url": "/vendors.chunk.css"
   },
   {
@@ -32,15 +32,15 @@ self.__precacheManifest = [
     "url": "/static/user_bg.0bd4a903.jpg"
   },
   {
-    "revision": "381438562b7ed61cbeba",
+    "revision": "e342b71bb08767f33c6c",
     "url": "/vendors.async.js"
   },
   {
-    "revision": "700e0849a56df1a402dc",
+    "revision": "320cae862e241955d0f8",
     "url": "/umi.js"
   },
   {
-    "revision": "700e0849a56df1a402dc",
+    "revision": "320cae862e241955d0f8",
     "url": "/umi.css"
   },
   {
@@ -52,7 +52,7 @@ self.__precacheManifest = [
     "url": "/10.async.js"
   },
   {
-    "revision": "7683378f2339d175000e",
+    "revision": "996f56037a4d2ff7e1c9",
     "url": "/12.async.js"
   },
   {
@@ -124,11 +124,11 @@ self.__precacheManifest = [
     "url": "/23.async.js"
   },
   {
-    "revision": "90fb2c489d34830f54be",
+    "revision": "f1ab52bff1ac76cc50d7",
     "url": "/24.chunk.css"
   },
   {
-    "revision": "90fb2c489d34830f54be",
+    "revision": "f1ab52bff1ac76cc50d7",
     "url": "/24.async.js"
   },
   {
@@ -172,7 +172,7 @@ self.__precacheManifest = [
     "url": "/30.async.js"
   },
   {
-    "revision": "3f53b6d2e817b0cba847",
+    "revision": "de2ded049f9c93a19683",
     "url": "/11.async.js"
   },
   {
@@ -280,20 +280,20 @@ self.__precacheManifest = [
     "url": "/index.html"
   },
   {
-    "revision": "5661ce8e2472d2727e8fd0390b22ba37",
-    "url": "/icons/icon-512x512.png"
-  },
-  {
     "revision": "694c4300be571fdd4d8b6abbe14d2e3f",
     "url": "/favicon.png"
+  },
+  {
+    "revision": "347329d0982682b42d40c8162817a940",
+    "url": "/icons/icon-128x128.png"
   },
   {
     "revision": "c23aa881b8d0e959f6c0aeb5ae7e4baa",
     "url": "/icons/icon-192x192.png"
   },
   {
-    "revision": "347329d0982682b42d40c8162817a940",
-    "url": "/icons/icon-128x128.png"
+    "revision": "5661ce8e2472d2727e8fd0390b22ba37",
+    "url": "/icons/icon-512x512.png"
   },
   {
     "revision": "d62b76153c4e4779638df0751ab6b385",

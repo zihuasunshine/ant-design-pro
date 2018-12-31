@@ -13,7 +13,8 @@ import { Row, Col, Icon, Button, Input, Avatar, message, Form, Divider, Upload }
 import styles from './Answer.less';
 import bestSrc from '@/assets/best.png';
 
-const colLayout = { xs: 24, sm: 24, md: 24, lg: 16, xl: 16, xxl: 16 };
+//const colLayout = { xs: 24, sm: 24, md: 24, lg: 16, xl: 16, xxl: 16 };
+const colLayout = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 };
 const FormItem = Form.Item;
 const controls = [
   'bold',
@@ -80,8 +81,8 @@ class Answer extends PureComponent {
         return;
       }else{
         const { data: { answer }} = qDetailRes;
-        this.isVote(answer.answerId);
-        this.getComment(answer.answerId);
+        if(answer) this.isVote(answer.answerId);
+        if(answer) this.getComment(answer.answerId);
       }
     });
   }
@@ -120,13 +121,17 @@ class Answer extends PureComponent {
         voteValue
       },
     }).then(() => {
-      this.getQuestionDetail();
+      
     });
   }
 
   handleComment = (answerId) => {
     const { inputValue } = this.state;
     const { dispatch } = this.props;
+    if(!inputValue){
+      notificationTip(formatMessage({id: 'not_edit_content'}));
+      return;
+    }
     dispatch({
       type: 'question/comment',
       params: {
@@ -134,6 +139,12 @@ class Answer extends PureComponent {
         message: inputValue,
       },
       token: sessionStorage.getItem('access_token')
+    }).then(() =>{
+      const { question: { commentRes }} = this.props;
+      if(commentRes && commentRes.code === 200) {
+        this.getComment(answerId);
+        this.setState({inputValue: ''});
+      }
     });
 
   }
@@ -164,29 +175,50 @@ class Answer extends PureComponent {
     });
   }
 
-  handleSubmit = (e, answerId) =>{
+  handleSubmit = (e, answerId, questionId) =>{
     e.preventDefault();
     const { dispatch, form: { validateFields }} = this.props;
     const { editorState } = this.state;
 
-    validateFields((err, values) => {
-      if(!err){
-        dispatch({
-          type: 'question/perfectAnswer',
-          params: {
-            answerId,
-            reason: values.reason,
-            perfectAnswer: editorState.toHTML()
-          },
-          token: sessionStorage.getItem('access_token')
-        }).then(() => {
-          // 跳转到首页
-          router.push({
-            pathname: '/'
+    if(answerId){
+      // 完善问题
+      validateFields((err, values) => {
+        if(!err){
+          dispatch({
+            type: 'question/perfectAnswer',
+            params: {
+              answerId,
+              reason: values.reason,
+              perfectAnswer: editorState.toHTML()
+            },
+          }).then(() => {
+            // 跳转到首页
+            router.push({
+              pathname: '/'
+            });
           });
-        });
+        }
+      });
+    }else {
+      // 回答问题
+      if(!editorState.toText()){
+        notificationTip(formatMessage({id: 'not_edit_content'}));
+        return;
       }
-    });
+      dispatch({
+        type: 'question/answer',
+        params: {
+          questionId,
+          content: editorState.toHTML()
+        }
+      }).then(() => {
+        // 跳转到首页
+        router.push({
+          pathname: '/'
+        });
+      });
+    }
+    
   }
 
   render() {
@@ -240,7 +272,7 @@ class Answer extends PureComponent {
               </div>
               <div className={styles.qDetail}>{question.detail}</div>
             </Col>
-            {answer.answerId ? (
+            {answer && answer.answerId ? (
               <Col {...colLayout}>
                 <div className={styles.title_wrapper}>
                   <img alt="best" src={bestSrc} />
@@ -278,7 +310,7 @@ class Answer extends PureComponent {
                         <Button type='primary' size='large' onClick={() => this.handleComment(answer.answerId)}>评论</Button>
                       </Col>
                     </Row>
-                    <CommentList listData={commentRes.code===200?commentRes.data:[]}/>
+                    <CommentList listData={commentRes && commentRes.code===200?commentRes.data:[]}/>
                   </div>
                 )}
               </Col>
@@ -290,7 +322,7 @@ class Answer extends PureComponent {
                 <div className={styles.answer_btn}>
                   <Icon type="edit" className={styles.icon}/>
                   <span className={styles.text}>
-                    {answer.answerId ? formatMessage({ id: 'app.settings.perfect' }) : formatMessage({ id: 'app.settings.answer' })}
+                    {answer && answer.answerId ? formatMessage({ id: 'app.settings.perfect' }) : formatMessage({ id: 'app.settings.answer' })}
                   </span>
                 </div>
              </Divider>
@@ -298,7 +330,7 @@ class Answer extends PureComponent {
           </Row>
           <Row className={styles.form_box}>
             <Col {...colLayout}>
-              <Form onSubmit={(e) => this.handleSubmit(e, question.bestAnswer)}>
+              <Form onSubmit={(e) => this.handleSubmit(e, question.bestAnswer, question.id)}>
                 {question.bestAnswer? (<FormItem className={styles.formitem}>
                   {getFieldDecorator('reason', {
                     rules: [

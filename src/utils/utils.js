@@ -2,7 +2,7 @@ import moment from 'moment';
 import React from 'react';
 import nzh from 'nzh/cn';
 import { parse, stringify } from 'qs';
-import { notification } from 'antd';
+import { notification, Icon } from 'antd';
 
 export function fixedZero(val) {
   return val * 1 < 10 ? `0${val}` : val;
@@ -212,7 +212,7 @@ export function notificationTip(message) {
     message: message,
     description: '',
     duration: 2,
-    icon: <Icon type="smile" style={{ color: '#13C2C2' }} />,
+    icon: <Icon type="frown" style={{color: 'red'}} />,
   });
 }
 
