@@ -5,7 +5,7 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
 import styles from './Register.less';
-import { generateUUID } from '@/utils/utils';
+import { generateUUID, notificationTip } from '@/utils/utils';
 import { imgCodeURL } from '@/services/api';
 import logo from '@/assets/black_logo.png';
 
@@ -86,14 +86,6 @@ class Register extends Component {
   onGetCaptcha = () => {
     let count = 59;
     this.setState({ count });
-    this.interval = setInterval(() => {
-      count -= 1;
-      this.setState({ count });
-      if (count === 0) {
-        clearInterval(this.interval);
-      }
-    }, 1000);
-
     const {
       form: { validateFields },
       dispatch,
@@ -101,6 +93,13 @@ class Register extends Component {
     const { token } = this.state;
     validateFields(['resultCode', 'mobile'], (err, values) => {
       if (!err) {
+        this.interval = setInterval(() => {
+          count -= 1;
+          this.setState({ count });
+          if (count === 0) {
+            clearInterval(this.interval);
+          }
+        }, 1000);
         dispatch({
           type: 'register/getSMSCode',
           payload: {
@@ -112,13 +111,10 @@ class Register extends Component {
             register: { codeRes },
           } = this.props;
           if (codeRes.code === 200) {
-            message.success(formatMessage({ id: 'get_code_success' }));
+            notificationTip(formatMessage({ id: 'get_code_success' }), true);
           } else {
-            const msg = codeRes.msg;
-            const tip = formatMessage({ id: msg })
-              ? formatMessage({ id: msg })
-              : formatMessage({ id: 'get_code_faild' });
-            message.error(tip);
+            this.setState({ count: 0 });
+            clearInterval(this.interval);
           }
         });
       }
@@ -156,16 +152,12 @@ class Register extends Component {
             register: { registerRes },
           } = this.props;
           if (registerRes.code === 200) {
-            message.success(formatMessage({ id: 'register_success' }));
+            notificationTip(formatMessage({ id: 'register_success' }),true);
             router.push({
               pathname: '/user/register-result',
             });
           } else {
-            const msg = registerRes.msg;
-            const tip = formatMessage({ id: msg })
-              ? formatMessage({ id: msg })
-              : formatMessage({ id: 'register_faild' });
-            message.error(tip);
+            
           }
         });
       }

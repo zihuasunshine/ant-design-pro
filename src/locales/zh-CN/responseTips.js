@@ -47,4 +47,9 @@ export default {
   thank_answer: '感谢您的回答',
   change_img_code: '点击切换图形验证码',
   not_edit_content: '还没有填写内容呢',
+  user_info_update_success: '用户信息更新成功',
+  avatar_update_success: '头像更换成功',
+  avatar_update_faild: '头像更换失败',
+  has_voted_like: '已经点过赞了哦',
+  has_voted_dislike: '已经点过踩了哦',
 };

@@ -2,16 +2,27 @@ import React, { PureComponent } from 'react';
 import { List, Icon, Tag } from 'antd';
 import { connect } from 'dva';
 import ArticleListContent from '@/components/ArticleListContent';
-import styles from './Articles.less';
+import styles from './Questions.less';
 
-@connect(({ list }) => ({
-  list,
+@connect((center) => ({
+  center,
 }))
 class Center extends PureComponent {
+
+  componentDidMount() {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'center/getMyQuestion',
+      params: {
+        userId: user.uid
+      }
+
+    });
+  }
+
   render() {
-    const {
-      list: { list },
-    } = this.props;
+   
     const IconText = ({ type, text }) => (
       <span>
         <Icon type={type} style={{ marginRight: 8 }} />
@@ -24,7 +35,7 @@ class Center extends PureComponent {
         className={styles.articleList}
         rowKey="id"
         itemLayout="vertical"
-        dataSource={list}
+        dataSource={[]}
         renderItem={item => (
           <List.Item
             key={item.id}

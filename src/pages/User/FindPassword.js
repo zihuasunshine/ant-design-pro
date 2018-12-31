@@ -77,16 +77,6 @@ class FindPassword extends Component {
 
   // 获取手机短信验证码
   onGetCaptcha = () => {
-    let count = 59;
-    this.setState({ count });
-    this.interval = setInterval(() => {
-      count -= 1;
-      this.setState({ count });
-      if (count === 0) {
-        clearInterval(this.interval);
-      }
-    }, 1000);
-
     const {
       form: { validateFields },
       dispatch,
@@ -94,6 +84,15 @@ class FindPassword extends Component {
     const { token } = this.state;
     validateFields(['resultCode', 'mobile'], (err, values) => {
       if (!err) {
+        let count = 59;
+        this.setState({ count });
+        this.interval = setInterval(() => {
+          count -= 1;
+          this.setState({ count });
+          if (count === 0) {
+            clearInterval(this.interval);
+          }
+        }, 1000);
         dispatch({
           type: 'findpwd/getSMSCode',
           payload: {
@@ -105,13 +104,10 @@ class FindPassword extends Component {
             findpwd: { codeRes },
           } = this.props;
           if (codeRes.code === 200) {
-            message.success(formatMessage({ id: 'get_code_success' }));
+            notificationTip(formatMessage({ id: 'get_code_success' }), true);
           } else {
-            const msg = codeRes.msg;
-            const tip = formatMessage({ id: msg })
-              ? formatMessage({ id: msg })
-              : formatMessage({ id: 'get_code_faild' });
-            message.error(tip);
+            this.setState({ count: 0 });
+            clearInterval(this.interval);
           }
         });
       }
@@ -146,16 +142,12 @@ class FindPassword extends Component {
             findpwd: { findpwdRes },
           } = this.props;
           if (findpwdRes.code === 200) {
-            message.success(formatMessage({ id: 'findpwd_success' }));
+            notificationTip(formatMessage({ id: 'findpwd_success' }), true);
             router.push({
               pathname: '/user/login',
             });
           } else {
-            const msg = findpwdRes.msg;
-            const tip = formatMessage({ id: msg })
-              ? formatMessage({ id: msg })
-              : formatMessage({ id: 'findpwd_faild' });
-            message.error(tip);
+
           }
         });
       }
@@ -323,15 +315,6 @@ class FindPassword extends Component {
           </FormItem>
           <FormItem>
             <InputGroup compact>
-              <Select
-                size="large"
-                value={prefix}
-                onChange={this.changePrefix}
-                style={{ width: '20%' }}
-              >
-                <Option value="86">+86</Option>
-                <Option value="87">+87</Option>
-              </Select>
               {getFieldDecorator('mobile', {
                 rules: [
                   {
@@ -346,7 +329,7 @@ class FindPassword extends Component {
               })(
                 <Input
                   size="large"
-                  style={{ width: '80%' }}
+                  style={{ width: '100%' }}
                   placeholder={formatMessage({ id: 'form.phone-number.placeholder' })}
                 />
               )}

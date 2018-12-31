@@ -48,8 +48,8 @@ export default {
         payload: response,
       });
     },
-    *comment({params, token}, { call, put }) {
-      const response = yield call(comment, params, token);
+    *comment({params}, { call, put }) {
+      const response = yield call(comment, params);
       yield put({
         type: 'commentHandle',
         payload: response,

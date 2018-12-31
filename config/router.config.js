@@ -250,19 +250,19 @@ export default [
             routes: [
               {
                 path: '/account/center',
-                redirect: '/account/center/articles',
+                redirect: '/account/center/waitAnswer',
               },
               {
-                path: '/account/center/articles',
-                component: './Account/Center/Articles',
+                path: '/account/center/waitAnswer',
+                component: './Account/Center/WaitAnswer',
               },
               {
-                path: '/account/center/applications',
-                component: './Account/Center/Applications',
+                path: '/account/center/myQuestion',
+                component: './Account/Center/Questions',
               },
               {
-                path: '/account/center/projects',
-                component: './Account/Center/Projects',
+                path: '/account/center/myAnswer',
+                component: './Account/Center/MyAnswers',
               },
             ],
           },

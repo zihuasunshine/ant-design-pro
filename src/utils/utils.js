@@ -207,12 +207,12 @@ export function generateUUID() {
 }
 
 // 未登录提示
-export function notificationTip(message) {
+export function notificationTip(message, isSuccess) {
   notification.info({
     message: message,
     description: '',
     duration: 2,
-    icon: <Icon type="frown" style={{color: 'red'}} />,
+    icon: isSuccess?<Icon type="smile" style={{color: '#13C2C2'}}/>:<Icon type="frown" style={{color: 'red'}} />,
   });
 }
 

@@ -32,7 +32,7 @@ export default {
     userInfoHandle(state, { payload }) {
       return {
         ...state,
-        registerRes: payload,
+        updateRes: payload,
       };
     },
   },

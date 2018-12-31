@@ -42,14 +42,14 @@ class Center extends PureComponent {
   onTabChange = key => {
     const { match } = this.props;
     switch (key) {
-      case 'articles':
-        router.push(`${match.url}/articles`);
+      case 'waitAnswer':
+        router.push(`${match.url}/waitAnswer`);
         break;
-      case 'applications':
-        router.push(`${match.url}/applications`);
+      case 'myQuestion':
+        router.push(`${match.url}/myQuestion`);
         break;
-      case 'projects':
-        router.push(`${match.url}/projects`);
+      case 'myAnswer':
+        router.push(`${match.url}/myAnswer`);
         break;
       default:
         break;
@@ -144,7 +144,7 @@ class Center extends PureComponent {
 
     const operationTabList = [
       {
-        key: 'articles',
+        key: 'waitAnswer',
         tab: (
           <span>
             待回答 <span style={{ fontSize: 14 }}>(8)</span>
@@ -152,7 +152,7 @@ class Center extends PureComponent {
         ),
       },
       {
-        key: 'applications',
+        key: 'myQuestion',
         tab: (
           <span>
             我的提问 <span style={{ fontSize: 14 }}>(8)</span>
@@ -160,7 +160,7 @@ class Center extends PureComponent {
         ),
       },
       {
-        key: 'projects',
+        key: 'myAnswer',
         tab: (
           <span>
             我的回答 <span style={{ fontSize: 14 }}>(8)</span>

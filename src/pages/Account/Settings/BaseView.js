@@ -7,7 +7,7 @@ import GeographicView from './GeographicView';
 import PhoneView from './PhoneView';
 import AvatarView from '@/components/CropImg';
 import moment from 'moment';
-import { dataURLtoFile } from '@/utils/utils';
+import { dataURLtoFile, notificationTip } from '@/utils/utils';
 
 const FormItem = Form.Item;
 const { Option } = Select;
@@ -48,9 +48,15 @@ class BaseView extends Component {
         baseView: { uploadImgRes },
       } = this.props;
       if (uploadImgRes.code === 200) {
-        message.success('头像更换成功');
+        notificationTip(formatMessage({id: 'avatar_update_success'}),true);
+        dispatch({
+          type: 'user/fetchCurrent',
+          token: sessionStorage.getItem('access_token'),
+        }).then(() => {
+          this.setBaseInfo();
+        });
       } else {
-        message.error('头像更换失败');
+        notificationTip(formatMessage({id: 'avatar_update_faild'}));
       }
     });
   };
@@ -98,12 +104,16 @@ class BaseView extends Component {
           token: sessionStorage.getItem('access_token'),
         }).then(() => {
           // 重新获取数据赋值
-          dispatch({
-            type: 'user/fetchCurrent',
-            token: sessionStorage.getItem('access_token'),
-          }).then(() => {
-            this.setBaseInfo();
-          });
+          const { baseView: { updateRes }} = this.props;
+          if(updateRes.code === 200){
+            notificationTip(formatMessage({id: 'user_info_update_success'}),true);
+            dispatch({
+              type: 'user/fetchCurrent',
+              token: sessionStorage.getItem('access_token'),
+            }).then(() => {
+              this.setBaseInfo();
+            });
+          }
         });
       }
     });

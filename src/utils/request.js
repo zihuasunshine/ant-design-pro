@@ -75,7 +75,7 @@ const checkToken = (url, option, res) =>{
  * @param {*} res 
  */
 const handleError = (res) => {
-  if((res.error && res.error !== 'invalid_token')/* || (res.code !== 200 && res.msg && res.msg !== 'invalid_token')*/){
+  if((res.error && res.error !== 'invalid_token') || (res.code !== 200 && res.msg && res.msg !== 'invalid_token')){
     notificationTip(formatMessage({id: res.error || res.msg}));
     // notification.info({
     //   message: formatMessage({id: res.error || res.msg}),

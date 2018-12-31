@@ -33,7 +33,7 @@ class Center extends PureComponent {
             <div className={styles.article_detail}>
               <h2 className={styles.title}>{articleDetailRes.data.title}</h2>
               <div className={styles.date}>编辑时间：{moment(articleDetailRes.data.lrsj).format('YYYY-MM-DD')}</div>
-              <div className={styles.img}><img src={articleDetailRes.data.img}/></div>
+              {articleDetailRes.data.img?<div className={styles.img}><img src={articleDetailRes.data.img}/></div>:null}
               <div dangerouslySetInnerHTML={{__html: articleDetailRes.data.content}}></div>
               <p className={styles.keyword}><Tag color="magenta">{articleDetailRes.data.keyword}</Tag></p>
               <p className={styles.source}>来源：{articleDetailRes.data.source}</p>

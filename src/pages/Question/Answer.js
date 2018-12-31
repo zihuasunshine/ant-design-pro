@@ -37,9 +37,34 @@ class Answer extends PureComponent {
       inputVisible: false,
       inputValue: '',
       editorState: BraftEditor.createEditorState(null),
+      likeCount: 0,       // 点赞数
+      dislikeCount: 0,    // 点踩数
+      commentCount: 0,    // 评论数
+      commentList: [],    // 评论列表
     }
-    this.id = props.match.params.id
+    this.count = 0;
+    this.id = props.match.params.id;
   }
+
+  extendControls = [
+    {
+      key: 'antd-uploader',
+      type: 'component',
+      component: (
+        <Upload
+          accept="image/*"
+          showUploadList={false}
+          //onChange = {}
+          customRequest={this.uploadHandler}
+        >
+          {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
+          <button type="button" className="control-item button upload-button" data-title="插入图片">
+            <Icon type="picture" theme="filled" />
+          </button>
+        </Upload>
+      )
+    }
+  ]
 
   componentDidMount(){
     this.getQuestionDetail();
@@ -113,20 +138,60 @@ class Answer extends PureComponent {
   }
 
   handleVote = (voteValue, answerId) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'question/vote',
-      params: {
-        answerId, 
-        voteValue
-      },
-    }).then(() => {
-      
-    });
+    const { dispatch, question: { isVoteRes } } = this.props;
+    // 先查询是否点过赞 点过踩
+    if(isVoteRes){
+      // 登陆过
+      const isVote = isVoteRes.data;
+      this.handleVoteTip(isVote, voteValue, answerId);
+    }else {
+      dispatch({
+        type: 'question/isVote',
+        params:{
+          answerId
+        }
+      }).then(()=>{
+        const { dispatch, question: { isVoteRes } } = this.props;
+        if(isVoteRes && isVoteRes.code ===200){
+          this.handleVoteTip(isVoteRes.data, voteValue, answerId);
+        } 
+      });
+    }
   }
 
-  handleComment = (answerId) => {
-    const { inputValue } = this.state;
+  handleVoteTip = (isVote, voteValue, answerId) => {
+    const { dispatch } = this.props;
+    if(isVote === 1 ){
+      notificationTip(formatMessage({id: 'has_voted_like'}), true);
+      return;
+    }
+    if(isVote === -1){
+      notificationTip(formatMessage({id: 'has_voted_dislike'}), false);
+      return;
+    }
+    if(isVote === 0) {
+      dispatch({
+        type: 'question/vote',
+        params: {
+          answerId, 
+          voteValue
+        },
+      }).then(() => {
+        const { question: {isVoteRes }} = this.props;
+        if(isVoteRes && isVoteRes.code === 200){
+          if(voteValue == 1) {
+            let { likeCount } = this.state;
+            this.setState({ likeCount: likeCount++});
+          }else {
+            let { dislikeCount } = this.state;
+            this.setState({ dislikeCount: dislikeCount++});
+          }
+        }
+      });
+    }
+  }
+
+  handleComment = (inputValue, answerId, commentId) => {
     const { dispatch } = this.props;
     if(!inputValue){
       notificationTip(formatMessage({id: 'not_edit_content'}));
@@ -137,6 +202,7 @@ class Answer extends PureComponent {
       params: {
         answerId, 
         message: inputValue,
+        commentId
       },
       token: sessionStorage.getItem('access_token')
     }).then(() =>{
@@ -222,30 +288,26 @@ class Answer extends PureComponent {
   }
 
   render() {
-    const extendControls = [
-      {
-        key: 'antd-uploader',
-        type: 'component',
-        component: (
-          <Upload
-            accept="image/*"
-            showUploadList={false}
-            //onChange = {}
-            customRequest={this.uploadHandler}
-          >
-            {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
-            <button type="button" className="control-item button upload-button" data-title="插入图片">
-              <Icon type="picture" theme="filled" />
-            </button>
-          </Upload>
-        )
-      }
-    ]
     const { question: { qDetailRes, isVoteRes, commentRes }, form: { getFieldDecorator }} = this.props;
+    const { likeCount, dislikeCount, commentCount, commentList } = this.state;
+    let answer = {}, question = {};
+    if (this.count === 0) {
+      if (qDetailRes && qDetailRes.code === 200 && commentRes && commentRes.code === 200) {
+        const as = qDetailRes.data.answer;
+        this.state.likeCount = as.agreeCount;
+        this.state.dislikeCount = as.againstCount;
+        this.state.commentCount = as.commentCount;
+        this.state.commentList = commentRes.data
+        this.count = 1;
+      }
+    }
+    const agreeCount = likeCount == 0? (qDetailRes && qDetailRes.data? qDetailRes.data.answer.agreeCount : likeCount) : likeCount;
+    const disagreeCount = dislikeCount == 0? (qDetailRes && qDetailRes.data? qDetailRes.data.answer.againstCount : dislikeCount) : dislikeCount;
+    const commentsCount = commentCount == 0? (qDetailRes && qDetailRes.data? qDetailRes.data.answer.commentCount : commentCount) : commentCount;
+
     const isLiked = isVoteRes && isVoteRes.data == 1; // 点过赞
     const isNotCare = isVoteRes && isVoteRes.data == 0; // 没点赞也没有点踩 
     const isDislike = isVoteRes && isVoteRes.data == -1; // 点过踩
-    let answer = {}, question = {};
     if(qDetailRes && qDetailRes.code === 200){
       answer = qDetailRes.data.answer,
       question = qDetailRes.data.question;
@@ -280,14 +342,14 @@ class Answer extends PureComponent {
                 </div>
                 <div className={styles.answer} dangerouslySetInnerHTML={{__html: answer.answerContent}}></div>
                 <div className={styles.operator}>
-                  <span className={styles.icon_wrapper} onClick={isNotCare?() => {this.handleVote(1,answer.answerId)}:()=>{}}>
-                    <Icon type="like" theme={isLiked?'filled':'' } className={styles.icon}/>{answer.agreeCount}
+                  <span className={styles.icon_wrapper} onClick={() => this.handleVote(1,answer.answerId)}>
+                    <Icon type="like" theme={isLiked?'filled':'' } className={styles.icon}/>{agreeCount}
                   </span>
-                  <span className={styles.icon_wrapper} onClick={isNotCare? () => {this.handleVote(-1,answer.answerId)}:()=>{}}>
-                    <Icon type="dislike" theme={isDislike?'filled':''} className={styles.icon}/>{answer.againstCount}
+                  <span className={styles.icon_wrapper} onClick={() => this.handleVote(-1,answer.answerId)}>
+                    <Icon type="dislike" theme={isDislike?'filled':''} className={styles.icon}/>{disagreeCount}
                   </span>
                   <span title='评论' className={styles.icon_wrapper} onClick={this.showInput}>
-                    <Icon type="message" className={styles.icon}/>{answer.commentCount}
+                    <Icon type="message" className={styles.icon}/>{commentsCount}
                   </span>
                 </div>
                 {inputVisible && (
@@ -307,10 +369,13 @@ class Answer extends PureComponent {
                         />
                       </Col>
                       <Col span={2}>
-                        <Button type='primary' size='large' onClick={() => this.handleComment(answer.answerId)}>评论</Button>
+                        <Button type='primary' size='large' onClick={() => this.handleComment(inputValue, answer.answerId)}>评论</Button>
                       </Col>
                     </Row>
-                    <CommentList listData={commentRes && commentRes.code===200?commentRes.data:[]}/>
+                    <CommentList 
+                      onHandleComment={this.handleComment}
+                      listData={commentRes && commentRes.code===200?commentRes.data:[]}
+                    />
                   </div>
                 )}
               </Col>
@@ -355,7 +420,7 @@ class Answer extends PureComponent {
                       className={styles.my_editor}
                       onChange={this.handleChange}
                       controls={controls}
-                      extendControls={extendControls}
+                      extendControls={this.extendControls}
                     />
                 </FormItem>
                 <div className={styles.align_right}>

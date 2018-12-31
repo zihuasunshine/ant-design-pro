@@ -1,4 +1,4 @@
-import { search, articleList, articleDetail } from '@/services/api';
+import { search, articleList, articleDetail, category } from '@/services/api';
 
 export default {
   namespace: 'home',
@@ -8,6 +8,13 @@ export default {
   },
 
   effects: {
+    *category({ params }, { call, put}) {
+      const response = yield call(category, params);
+      yield put({
+        type: 'categoryHandle',
+        payload: response
+      });
+    },
     *articleList({}, { call, put }) {
       const response = yield call(articleList);
       yield put({
@@ -32,6 +39,12 @@ export default {
   },
 
   reducers: {
+    categoryHandle(state, { payload }) {
+      return {
+        ...state,
+        categoryRes: payload,
+      };
+    },
     articleListHandle(state, { payload }) {
       return {
         ...state,

@@ -266,6 +266,18 @@ export async function deleteTag(tagId) {
   return securityRequest(`/api/user/tag/delete/${tagId}`);
 }
 
+// 我的提问
+export async function myQuestion(params) {
+  const { userId } = params;
+  return securityRequest(`/api/question/u/${userId}`);
+}
+
+// 我的回答
+export async function myAnswer(params) {
+  const { pageNo, pageSize} = params;
+  return securityRequest(`/api/answer/findMoreComment?pageNo=${pageNo}&pageSize=${pageSize}`);
+}
+
 // 查询用户对指定答案是否点赞或点踩
 export async function isVote(params) {
   const { answerId } = params;
@@ -303,8 +315,10 @@ export async function perfect(params) {
 
 // 评论回答
 export async function comment(params) {
-  const { answerId, message } = params;
-  return securityRequest(`/api/answer/comment/${answerId}?message=${message}`, {
+  const { answerId, message, commentId } = params;
+  const url = commentId?`/api/answer/comment/${answerId}?message=${message}&commentId=${commentId}`:
+    `/api/answer/comment/${answerId}?message=${message}`;
+  return securityRequest(url, {
     method: 'POST',
   });
 }
@@ -336,4 +350,10 @@ export async function articleList() {
 // 文章详情
 export async function articleDetail(id) {
   return request(`/api/article/${id}`);
+}
+
+// 问题分类
+export async function category(params) {
+  const { pId } = params;
+  return request(pId?`/api/question/category?pid=${pId}`:`/api/question/category`);
 }
