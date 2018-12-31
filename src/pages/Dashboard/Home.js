@@ -9,7 +9,9 @@ import styles from './Home.less';
 const TabPane = Tabs.TabPane;
 const Option = Select.Option;
 const { Meta } = Card;
-const colLayout = {xs: 24, sm: 24, md:12, lg: 12, xl: 6, xl: 6 }
+const colLayout = {xs: 24, sm: 24, md:12, lg: 12, xl: 6, xl: 6, xxl: 6 }
+const colLayout1 = {xs:6, sm:6, md: 6, lg: 6, xl: 6, xl: 6, xxl: 6};
+const colLayout2 = {xs:18, sm:18, md: 18, lg: 18, xl: 18, xl: 18, xxl: 18};
 const img = "https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png";
 
 function onChange(value) {
@@ -67,12 +69,13 @@ class Home extends PureComponent {
       <div>
         <Link to={`/home/article/${item.id}`}>
           <Row className={styles.article_box}>
-            <Col span={6}>
+            <Col {...colLayout1}>
               <div style={{backgroundImage: item.img?`url(${item.img})`:`url(${img})`}} className={styles.article_img}></div>
             </Col>
-            <Col span={18}>
+            <Col {...colLayout2}>
               <div className={styles.article_text}>
                 <Link className={styles.a} to={`/home/article/${item.id}`}>{item.title}</Link>
+                <div className={styles.source}><span>来源：{item.source}</span></div>
               </div>
             </Col>
           </Row>
@@ -126,10 +129,10 @@ class Home extends PureComponent {
     console.log(options1);
     return (
       <Fragment>
+        <GridContent className={styles.userCenter}>
         <div className={styles.banner}>
           {this.articles(articlelistRes)}
         </div>
-        <GridContent className={styles.userCenter}>
           <Row gutter={24}>
             <Col lg={24} md={24}>
               <div className={styles.category_box}>

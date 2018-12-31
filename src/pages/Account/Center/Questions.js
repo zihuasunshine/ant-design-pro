@@ -1,10 +1,13 @@
 import React, { PureComponent } from 'react';
-import { List, Icon, Tag } from 'antd';
+import { List, Row, Col } from 'antd';
 import { connect } from 'dva';
-import ArticleListContent from '@/components/ArticleListContent';
+import momont from 'moment';
 import styles from './Questions.less';
 
-@connect((center) => ({
+const colLayout1 = {xs:24, sm: 24, md: 18, lg: 18, xl: 18, xxl: 18};
+const colLayout2 = {xs:24, sm: 24, md: 6, lg: 6, xl: 6, xxl:68};
+
+@connect(({center}) => ({
   center,
 }))
 class Center extends PureComponent {
@@ -22,44 +25,33 @@ class Center extends PureComponent {
   }
 
   render() {
-   
-    const IconText = ({ type, text }) => (
-      <span>
-        <Icon type={type} style={{ marginRight: 8 }} />
-        {text}
-      </span>
-    );
+    const { center: { myQuestionRes } } = this.props;
+    const listData = myQuestionRes && myQuestionRes.code===200 ? myQuestionRes.data.list :[];
+
     return (
       <List
         size="large"
         className={styles.articleList}
         rowKey="id"
         itemLayout="vertical"
-        dataSource={[]}
+        dataSource={listData}
         renderItem={item => (
           <List.Item
             key={item.id}
-            actions={[
-              <IconText type="star-o" text={item.star} />,
-              <IconText type="like-o" text={item.like} />,
-              <IconText type="message" text={item.message} />,
-            ]}
           >
             <List.Item.Meta
               title={
-                <a className={styles.listItemMetaTitle} href={item.href}>
-                  {item.title}
-                </a>
+                <Row>
+                  <Col {...colLayout1}><a className={styles.listItemMetaTitle} href={item.title}>{item.title}</a></Col>
+                  <Col {...colLayout2}>
+                    <span className={styles.listItemMetaTitle}>{item.bestAnswer==0?'未回答':'已回答'}|{momont(item.addTime).format('YYYY-MM-DD HH:mm')}</span>
+                  </Col>
+                </Row>
               }
               description={
-                <span>
-                  <Tag>Ant Design</Tag>
-                  <Tag>设计语言</Tag>
-                  <Tag>蚂蚁金服</Tag>
-                </span>
+               <span>{item.detail}</span>
               }
             />
-            <ArticleListContent data={item} />
           </List.Item>
         )}
       />

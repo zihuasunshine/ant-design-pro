@@ -1,5 +1,5 @@
 import React, { PureComponent, Fragment } from 'react';
-import { Row, Col, List, Icon, Tag, Input, Divider } from 'antd';
+import { Row, Col, List, Icon, Tag, Input, Divider, Pagination } from 'antd';
 import { connect } from 'dva';
 import ArticleListContent from '@/components/ArticleListContent';
 import styles from './Articles.less';
@@ -47,6 +47,14 @@ class Center extends PureComponent {
     });
   };
 
+  handleChange = (page) =>{
+    this.pager = {
+      page,
+      size: 10
+    }
+    this.getQuestionList();
+  }
+
   render() {
     const colLayout = { xs: 24, sm: 24, md: 12, lg: 6, xl: 6, xxl: 6 };
     const {
@@ -67,19 +75,21 @@ class Center extends PureComponent {
         </Row>
         <List
           //size="large"
-          pagination={{
-            onChange: (page) => {
-              console.log(page);
-            },
-            pageSize: 6,
-          }}
+          // pagination={{
+          //   onChange: (page) => {
+          //     console.log(page);
+          //   },
+          //   pageSize: 6,
+          // }}
           className={styles.articleList}
           rowKey="id"
           itemLayout="vertical"
           dataSource={list && list.data ? list.data : []}
           renderItem={item => (
             <List.Item
+
               key={item.id}
+              style={{padding:0}}
               // actions={[
               //   <IconText type="like-o" text={item.like} />,
               //   <IconText type="message" text={item.message} />,
@@ -100,6 +110,13 @@ class Center extends PureComponent {
             </List.Item>
           )}
         />
+        <div className={styles.page}>
+          <Pagination 
+            defaultCurrent={1} 
+            total={50}
+            onChange={this.handleChange}
+          />
+        </div>
       </Fragment>
     );
   }

@@ -40,9 +40,10 @@ class Answer extends PureComponent {
       likeCount: 0,       // 点赞数
       dislikeCount: 0,    // 点踩数
       commentCount: 0,    // 评论数
-      commentList: [],    // 评论列表
     }
+    this._comments = [];
     this.count = 0;
+    this.commentId = -1;
     this.id = props.match.params.id;
   }
 
@@ -137,6 +138,17 @@ class Answer extends PureComponent {
     });
   }
 
+  getMoreComment = (commentId) =>{
+    this.commentId = commentId;
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/getMoreComment',
+      params:{
+        id: commentId
+      }
+    });
+  }
+
   handleVote = (voteValue, answerId) => {
     const { dispatch, question: { isVoteRes } } = this.props;
     // 先查询是否点过赞 点过踩
@@ -179,13 +191,15 @@ class Answer extends PureComponent {
       }).then(() => {
         const { question: {isVoteRes }} = this.props;
         if(isVoteRes && isVoteRes.code === 200){
+          let { likeCount, dislikeCount } = this.state;
           if(voteValue == 1) {
-            let { likeCount } = this.state;
-            this.setState({ likeCount: likeCount++});
+            likeCount = likeCount+1;
+            this.setState({ likeCount: likeCount});
           }else {
-            let { dislikeCount } = this.state;
+            dislikeCount++;
             this.setState({ dislikeCount: dislikeCount++});
           }
+          this.isVote(answerId);
         }
       });
     }
@@ -284,12 +298,25 @@ class Answer extends PureComponent {
         });
       });
     }
-    
+  }
+
+  // 合并评论数据和更多评论数据
+  mergeCommentData = (comments, moreComments) => {
+    let _comments = [...comments];
+    if(moreComments) {
+      comments.forEach(item => {
+        if(item.id === this.commentId){
+          item.commentlist = moreComments;
+        }
+      });
+    }
+    this._comments = _comments;
+    return _comments
   }
 
   render() {
-    const { question: { qDetailRes, isVoteRes, commentRes }, form: { getFieldDecorator }} = this.props;
-    const { likeCount, dislikeCount, commentCount, commentList } = this.state;
+    const { question: { qDetailRes, isVoteRes, commentRes, moreCommentRes }, form: { getFieldDecorator }} = this.props;
+    const { likeCount, dislikeCount, commentCount} = this.state;
     let answer = {}, question = {};
     if (this.count === 0) {
       if (qDetailRes && qDetailRes.code === 200 && commentRes && commentRes.code === 200) {
@@ -297,7 +324,6 @@ class Answer extends PureComponent {
         this.state.likeCount = as.agreeCount;
         this.state.dislikeCount = as.againstCount;
         this.state.commentCount = as.commentCount;
-        this.state.commentList = commentRes.data
         this.count = 1;
       }
     }
@@ -311,6 +337,9 @@ class Answer extends PureComponent {
     if(qDetailRes && qDetailRes.code === 200){
       answer = qDetailRes.data.answer,
       question = qDetailRes.data.question;
+    }
+    if(commentRes && commentRes.code === 200){
+      this._comments = commentRes.data;
     }
     const { inputVisible, inputValue, editorState } = this.state;
     return (
@@ -373,8 +402,9 @@ class Answer extends PureComponent {
                       </Col>
                     </Row>
                     <CommentList 
+                      listData={this.mergeCommentData(this._comments, moreCommentRes.data)}
                       onHandleComment={this.handleComment}
-                      listData={commentRes && commentRes.code===200?commentRes.data:[]}
+                      onGetMoreComment={this.getMoreComment}
                     />
                   </div>
                 )}

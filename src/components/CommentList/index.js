@@ -55,9 +55,22 @@ class CommentList extends Component {
     this.setState({inputValue: ''});
   }
 
+  onLoadMore = (commentId) => {
+    const { onGetMoreComment } = this.props;
+    onGetMoreComment(commentId);
+  }
+
   render() {
     const { listData } = this.props;
-    const { inputVisible, inputValue, currentId } = this.state;
+    const { inputVisible, inputValue, currentId, } = this.state;
+    const LoadMore = ({commentId}) => (
+      <div style={{
+        textAlign: 'center', marginTop: 12, height: 32, lineHeight: '32px',
+      }}
+      >
+        <Button onClick={() => this.onLoadMore(commentId)}>查看更多</Button>
+      </div>
+    );
 
     return (
       <List
@@ -78,7 +91,7 @@ class CommentList extends Component {
               actions={[
                 <span style={{marginLeft: 46}} onClick={()=>{this.handleClick(item.id)}}>
                   <Icon type={'message'} style={{ marginRight: 8 }} />
-                  {item.commentlist.length?item.commentlist.length:''}
+                  {item.commentsCount==0?'':item.commentsCount}
                 </span>]}
              >
               <List.Item.Meta
@@ -112,13 +125,14 @@ class CommentList extends Component {
               <List
                 size='small'
                 locale={{emptyText:''}}
+                loadMore={item.commentsCount>3 && item.commentlist.length==3?<LoadMore commentId={item.id} />:null}
                 dataSource={item.commentlist}
-                renderItem={item => (
+                renderItem={el => (
                   <List.Item key={item.addTime}>
                     <List.Item.Meta
-                      avatar={<Avatar src={item.avatarFile} />}
-                      title={<div><a>{item.userName}</a><span className={styles.add_time}>{moment(item.addTime).format('YYYY-MM-DD mm:ss')}</span></div>}
-                      description={item.message}
+                      avatar={<Avatar src={el.avatarFile} />}
+                      title={<div><a>{el.userName}</a><span className={styles.add_time}>{moment(el.addTime).format('YYYY-MM-DD mm:ss')}</span></div>}
+                      description={el.message}
                     />
                   </List.Item>
                 )}

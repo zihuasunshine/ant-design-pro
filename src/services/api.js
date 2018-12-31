@@ -275,7 +275,7 @@ export async function myQuestion(params) {
 // 我的回答
 export async function myAnswer(params) {
   const { pageNo, pageSize} = params;
-  return securityRequest(`/api/answer/findMoreComment?pageNo=${pageNo}&pageSize=${pageSize}`);
+  return securityRequest(`/api/answer/findAnswerByUid?pageNo=${pageNo}&pageSize=${pageSize}`);
 }
 
 // 查询用户对指定答案是否点赞或点踩
@@ -340,6 +340,12 @@ export async function getQdetail(id) {
 export async function getComment(params) {
   const { answerId } = params;
   return request(`/api/answer/findByAnswerId/${answerId}`);
+}
+
+// 查看更多评论
+export async function getMoreComment(params) {
+  const { id } = params;
+  return request(`/api/answer/findMoreComment/${id}`);
 }
 
 // 文章列表

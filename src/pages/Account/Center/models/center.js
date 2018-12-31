@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { addTag, deleteTag, myQuestion } from '@/services/api';
+import { addTag, deleteTag, myQuestion, myAnswer } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -34,6 +34,13 @@ export default {
         payload: response,
       });
     },
+    *getMyAnswer({ params }, { call, put }) {
+      const response = yield call(myAnswer, params);
+      put({
+        type: 'myAnswerHandle',
+        payload: response
+      });
+    }
   },
 
   reducers: {
@@ -54,6 +61,12 @@ export default {
         ...state,
         myQuestionRes: payload,
       };
+    },
+    myAnswerHandle(state, { payload }) {
+      return {
+        ...state,
+        myAnswerRes: payload,
+      };        
     }
   },
 };

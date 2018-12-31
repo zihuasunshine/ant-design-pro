@@ -7,11 +7,12 @@ import styles from './index.less';
 const colLayout1 = { xs: 24, sm: 24, md: 24, lg: 20, xl: 18, xxl: 18 };
 const colLayout2 = { xs: 24, sm: 24, md: 24, lg: 4, xl: 6, xxl: 6 };
 
-const ArticleListContent = ({ data, data: { baid, qtitle, quptime }, link }) => (
+const ArticleListContent = ({ data, data: { baid, qtitle, quptime, category_f_name, category_s_name, category_t_name }, link }) => (
   <div className={styles.listContent}>
     <Row gutter={32}>
       <Col {...colLayout1}>
         <div className={styles.description}>
+          <div className={styles.cate}>{category_f_name} > {category_s_name} > {category_t_name}</div>
           <Link className={styles.a} to={{ pathname: link, state: data }}>{qtitle}</Link>
         </div>
       </Col>

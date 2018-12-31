@@ -22,8 +22,7 @@ class AskForms extends PureComponent {
 
   handleSubmit = e => {
     e.preventDefault();
-    if(sessionStorage.getItem('access_token')){
-      const { dispatch, form } = this.props;
+    const { dispatch, form } = this.props;
       form.validateFieldsAndScroll((err, values) => {
         const { detail } = values;
         if (this.imgs.length > 0) values.imgs = this.imgs;
@@ -35,7 +34,7 @@ class AskForms extends PureComponent {
             token: sessionStorage.getItem('access_token'),
           }).then(() => {
             const { question: { addQuestionRes }} = this.props;
-            if(addQuestionRes.code === 200){
+            if(addQuestionRes && addQuestionRes.code === 200){
               router.push('/');
             }else{
   
@@ -43,9 +42,6 @@ class AskForms extends PureComponent {
           });
         }
       });
-    }else {
-      message.info(formatMessage({id: 'not_login'}));
-    }
     
   };
 

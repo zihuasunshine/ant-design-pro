@@ -92,10 +92,12 @@ class Center extends PureComponent {
       if (addTagRes.code === 200) {
         newTags = [...newTags, { id: `${addTagRes.data}`, text: inputValue }];
         this.setState({ newTags });
-      } else {
-        const { msg } = addTagRes;
-        message.error(formatMessage({ id: msg }));
-      }
+        // 重新获取用户信息
+        // dispatch({
+        //   type: 'user/fetchCurrent',
+        //   token: sessionStorage.getItem('access_token'),
+        // })
+      } 
     });
     this.setState({
       inputVisible: false,
@@ -147,7 +149,7 @@ class Center extends PureComponent {
         key: 'waitAnswer',
         tab: (
           <span>
-            待回答 <span style={{ fontSize: 14 }}>(8)</span>
+            待回答 <span style={{ fontSize: 14 }}></span>
           </span>
         ),
       },
@@ -155,7 +157,7 @@ class Center extends PureComponent {
         key: 'myQuestion',
         tab: (
           <span>
-            我的提问 <span style={{ fontSize: 14 }}>(8)</span>
+            我的提问 <span style={{ fontSize: 14 }}></span>
           </span>
         ),
       },
@@ -163,7 +165,7 @@ class Center extends PureComponent {
         key: 'myAnswer',
         tab: (
           <span>
-            我的回答 <span style={{ fontSize: 14 }}>(8)</span>
+            我的回答 <span style={{ fontSize: 14 }}></span>
           </span>
         ),
       },

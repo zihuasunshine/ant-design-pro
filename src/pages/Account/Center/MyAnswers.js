@@ -1,47 +1,66 @@
 import React, { PureComponent } from 'react';
-import { List, Card } from 'antd';
-import moment from 'moment';
+import { List, Icon, Tag } from 'antd';
 import { connect } from 'dva';
-import AvatarList from '@/components/AvatarList';
-import stylesProjects from '../../List/Projects.less';
+import ArticleListContent from '@/components/ArticleListContent';
+import styles from './Questions.less';
 
-@connect(({ list }) => ({
-  list,
+@connect((center) => ({
+  center,
 }))
 class Center extends PureComponent {
+
+  componentDidMount() {
+    const user = JSON.parse(sessionStorage.getItem('user'));
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'center/getMyAnswer',
+      params: {
+        pageNo: 1,
+        pageSize: 10
+      }
+
+    });
+  }
+
   render() {
-    const {
-      list: { list },
-    } = this.props;
+   
+    const IconText = ({ type, text }) => (
+      <span>
+        <Icon type={type} style={{ marginRight: 8 }} />
+        {text}
+      </span>
+    );
     return (
       <List
-        className={stylesProjects.coverCardList}
+        size="large"
+        className={styles.articleList}
         rowKey="id"
-        grid={{ gutter: 24, xxl: 3, xl: 2, lg: 2, md: 2, sm: 2, xs: 1 }}
-        dataSource={list}
+        itemLayout="vertical"
+        dataSource={[]}
         renderItem={item => (
-          <List.Item>
-            <Card
-              className={stylesProjects.card}
-              hoverable
-              cover={<img alt={item.title} src={item.cover} />}
-            >
-              <Card.Meta title={<a>{item.title}</a>} description={item.subDescription} />
-              <div className={stylesProjects.cardItemContent}>
-                <span>{moment(item.updatedAt).fromNow()}</span>
-                <div className={stylesProjects.avatarList}>
-                  <AvatarList size="mini">
-                    {item.members.map(member => (
-                      <AvatarList.Item
-                        key={`${item.id}-avatar-${member.id}`}
-                        src={member.avatar}
-                        tips={member.name}
-                      />
-                    ))}
-                  </AvatarList>
-                </div>
-              </div>
-            </Card>
+          <List.Item
+            key={item.id}
+            actions={[
+              <IconText type="star-o" text={item.star} />,
+              <IconText type="like-o" text={item.like} />,
+              <IconText type="message" text={item.message} />,
+            ]}
+          >
+            <List.Item.Meta
+              title={
+                <a className={styles.listItemMetaTitle} href={item.href}>
+                  {item.title}
+                </a>
+              }
+              description={
+                <span>
+                  <Tag>Ant Design</Tag>
+                  <Tag>设计语言</Tag>
+                  <Tag>蚂蚁金服</Tag>
+                </span>
+              }
+            />
+            <ArticleListContent data={item} />
           </List.Item>
         )}
       />

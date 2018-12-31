@@ -1,9 +1,11 @@
-import { addQuestion, fileUpload, getQdetail, isVote, getComment,vote, comment, perfect, answer } from '@/services/api';
+import { addQuestion, fileUpload, getQdetail, isVote, getComment,getMoreComment,vote, comment, perfect, answer } from '@/services/api';
 
 export default {
   namespace: 'question',
 
-  state: {},
+  state: {
+    moreCommentRes: {}
+  },
 
   effects: {
     *upload({ payload }, { call, put }) {
@@ -38,6 +40,13 @@ export default {
       const response = yield call(getComment, params);
       yield put({
         type: 'getCommentHandle',
+        payload: response
+      });
+    },
+    *getMoreComment({ params }, {call, put}) {
+      const response = yield call(getMoreComment,params);
+      yield put({
+        type: 'getMoreCommentHandle',
         payload: response
       });
     },
@@ -124,6 +133,12 @@ export default {
       return {
         ...state,
         commentRes: payload
+      }
+    },
+    getMoreCommentHandle(state, { payload }) {
+      return {
+        ...state,
+        moreCommentRes: payload
       }
     },
   },
