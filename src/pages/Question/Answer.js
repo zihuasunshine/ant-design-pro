@@ -15,6 +15,8 @@ import bestSrc from '@/assets/best.png';
 
 //const colLayout = { xs: 24, sm: 24, md: 24, lg: 16, xl: 16, xxl: 16 };
 const colLayout = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 };
+const colLayout1 = { xs: 20, sm: 19, md: 19, lg: 22, xl: 22, xxl: 22 };
+const colLayout2 = { xs: 4, sm: 3, md: 3, lg: 22, xl: 2, xxl: 2 };
 const FormItem = Form.Item;
 const controls = [
   'bold',
@@ -357,9 +359,9 @@ class Answer extends PureComponent {
         this.count = 1;
       }
     }
-    const agreeCount = likeCount == 0? (qDetailRes && qDetailRes.data? qDetailRes.data.answer.agreeCount : likeCount) : likeCount;
-    const disagreeCount = dislikeCount == 0? (qDetailRes && qDetailRes.data? qDetailRes.data.answer.againstCount : dislikeCount) : dislikeCount;
-    const commentsCount = commentCount == 0? (qDetailRes && qDetailRes.data? qDetailRes.data.answer.commentCount : commentCount) : commentCount;
+    const agreeCount = likeCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.agreeCount : likeCount) : likeCount;
+    const disagreeCount = dislikeCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.againstCount : dislikeCount) : dislikeCount;
+    const commentsCount = commentCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.commentCount : commentCount) : commentCount;
     const messageList = messages.length == 0?(commentRes && commentRes.data? commentRes.data : messages) : messages;
 
 
@@ -416,7 +418,7 @@ class Answer extends PureComponent {
                 {inputVisible && (
                   <div className={styles.comment_wraper}>
                     <Row>
-                      <Col span={22}>
+                      <Col {...colLayout1}>
                         <Input
                           ref={this.saveInputRef}
                           type="text"
@@ -429,7 +431,7 @@ class Answer extends PureComponent {
                           onPressEnter={this.handleInputConfirm}
                         />
                       </Col>
-                      <Col span={2}>
+                      <Col {...colLayout2}>
                         <Button type='primary' size='large' onClick={() => this.handleComment(inputValue, answer.answerId)}>评论</Button>
                       </Col>
                     </Row>

@@ -30,7 +30,7 @@ class Center extends PureComponent {
   componentDidMount() {
     const { dispatch } = this.props;
     const user = sessionStorage.getItem('user');
-    if(user && JSON.parse(user) && user.id === this.id){
+    if(user && JSON.parse(user) && user.id === this.uid){
       // 当前用户
     }else {
       // 其他用户
@@ -47,7 +47,7 @@ class Center extends PureComponent {
     const { match } = this.props;
     switch (key) {
       case 'waitAnswer':
-        router.push(`${match.url}/waitAnswer`);
+        router.push(`${match.url}/waitAnswer/${this.uid}`);
         break;
       case 'myQuestion':
         router.push(`${match.url}/myQuestion`);

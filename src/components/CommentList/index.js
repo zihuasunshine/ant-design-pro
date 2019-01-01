@@ -5,6 +5,9 @@ import Link from 'umi/link';
 import moment from 'moment';
 import styles from './style.less';
 
+const colLayout1 = { xs: 20, sm: 19, md: 19, lg: 22, xl: 22, xxl: 22 };
+const colLayout2 = { xs: 4, sm: 3, md: 3, lg: 22, xl: 2, xxl: 2 };
+
 const IconText = ({ type, text }) => (
   <span style={{marginLeft: 46}}>
     <Icon type={type} style={{ marginRight: 8 }} />
@@ -104,7 +107,7 @@ class CommentList extends Component {
             {item.id === currentId && (
               <div className={styles.comment_wraper}>
                 <Row>
-                  <Col span={22}>
+                  <Col {...colLayout1}>
                     <Input
                       ref={this.saveInputRef}
                       type="text"
@@ -116,7 +119,7 @@ class CommentList extends Component {
                       onPressEnter={this.handleInputConfirm}
                     />
                   </Col>
-                  <Col span={2}>
+                  <Col {...colLayout2}>
                     <Button type='primary' onClick={() => this.handleComment(item.answerId, item.id)}>评论</Button>
                   </Col>
                 </Row>

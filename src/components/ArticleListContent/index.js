@@ -13,7 +13,7 @@ const ArticleListContent = ({ data, data: { baid, qtitle, quptime, category_f_na
       <Col {...colLayout1}>
         <div className={styles.description}>
           <div className={styles.cate}>{category_f_name} > {category_s_name} > {category_t_name}</div>
-          <Link className={styles.a} to={{ pathname: link, state: data }}>{qtitle}</Link>
+          <Link dangerouslySetInnerHTML={{__html: qtitle}} className={styles.a} to={{ pathname: link, state: data }} />
         </div>
       </Col>
       <Col {...colLayout2} className={styles.align_right}>
