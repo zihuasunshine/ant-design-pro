@@ -32,6 +32,7 @@ class Center extends PureComponent {
 
   handleSerach = value => {
     this.question = value;
+    value? this.qtype= 4 : this.qtype =  this.props.route.query.key;
     this.getQuestionList();
   };
 
@@ -113,7 +114,7 @@ class Center extends PureComponent {
         <div className={styles.page}>
           <Pagination 
             defaultCurrent={1} 
-            total={50}
+            total={list && list.total? list.total : 30}
             onChange={this.handleChange}
           />
         </div>

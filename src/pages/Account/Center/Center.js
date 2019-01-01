@@ -24,19 +24,23 @@ class Center extends PureComponent {
       inputValue: '',
     };
     this.count = 0;
+    this.uid = props.match.params.uid;
   }
 
   componentDidMount() {
     const { dispatch } = this.props;
-    dispatch({
-      type: 'list/fetch',
-      payload: {
-        count: 8,
-      },
-    });
-    dispatch({
-      type: 'project/fetchNotice',
-    });
+    const user = sessionStorage.getItem('user');
+    if(user && JSON.parse(user) && user.id === this.id){
+      // 当前用户
+    }else {
+      // 其他用户
+      dispatch({
+        type: 'center/getOtherUserInfo',
+        params: {
+          uid: this.uid
+        },
+      });
+    }
   }
 
   onTabChange = key => {
@@ -126,7 +130,8 @@ class Center extends PureComponent {
 
   render() {
     const { newTags, inputVisible, inputValue } = this.state;
-    const currentUser = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')): null;
+    const { center: { otherUserRes }} = this.props;
+    const currentUser = otherUserRes && otherUserRes.code === 200? otherUserRes.data : JSON.parse(sessionStorage.getItem('user'));
     const {
       listLoading,
       currentUserLoading,

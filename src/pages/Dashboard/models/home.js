@@ -5,6 +5,7 @@ export default {
 
   state: {
     list: [],
+    category: {}
   },
 
   effects: {
@@ -36,6 +37,12 @@ export default {
         payload: response,
       });
     },
+    *getCategoryParam({ params }, { put }) {
+      yield put({
+        type: 'setCategoryParam',
+        payload: params
+      });
+    }
   },
 
   reducers: {
@@ -63,5 +70,11 @@ export default {
         list: payload,
       };
     },
+    setCategoryParam(state, { payload }) {
+      return {
+        ...state,
+        category: payload
+      }
+    }
   },
 };

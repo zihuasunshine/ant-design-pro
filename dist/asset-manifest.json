@@ -70,11 +70,11 @@
   "/static/black_logo.png": "/static/black_logo.0afbc0ea.png",
   "/index.html": "/index.html",
   "/favicon.png": "/favicon.png",
+  "/icons/icon-128x128.png": "/icons/icon-128x128.png",
   "/icons/icon-192x192.png": "/icons/icon-192x192.png",
   "/icons/icon-512x512.png": "/icons/icon-512x512.png",
-  "/icons/icon-128x128.png": "/icons/icon-128x128.png",
   "/manifest.json": "/manifest.json",
   "/pwacompat.min.js": "/pwacompat.min.js",
-  "/precache-manifest.b8b1b51c3d675f7c947c51c5d2c6e07e.js": "/precache-manifest.b8b1b51c3d675f7c947c51c5d2c6e07e.js",
+  "/precache-manifest.f4b22eea59c758abfcbd3a88c6a3a16e.js": "/precache-manifest.f4b22eea59c758abfcbd3a88c6a3a16e.js",
   "/service-worker.js": "/service-worker.js"
 }

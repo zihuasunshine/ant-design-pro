@@ -250,10 +250,10 @@ export default [
             routes: [
               {
                 path: '/account/center',
-                redirect: '/account/center/waitAnswer',
+                redirect: '/account/center/waitAnswer/:uid',
               },
               {
-                path: '/account/center/waitAnswer',
+                path: '/account/center/waitAnswer/:uid',
                 component: './Account/Center/WaitAnswer',
               },
               {

@@ -52,4 +52,5 @@ export default {
   avatar_update_faild: '头像更换失败',
   has_voted_like: '已经点过赞了哦',
   has_voted_dislike: '已经点过踩了哦',
+  data_is_empty: '没有查询到数据',
 };

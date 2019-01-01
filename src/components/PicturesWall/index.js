@@ -19,7 +19,7 @@ class PicturesWall extends Component {
     });
   };
 
-  handleChange = ({ file, fileList }) => {
+  handleChange = ({ file, fileList, event }) => {
     this.setState({ fileList });
     const { originFileObj } = file;
     const { uploadImg } = this.props;

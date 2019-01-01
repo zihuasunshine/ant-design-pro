@@ -363,3 +363,9 @@ export async function category(params) {
   const { pId } = params;
   return request(pId?`/api/question/category?pid=${pId}`:`/api/question/category`);
 }
+
+// 查询用户
+export async function queryUser(params) {
+  const { uid } = params;
+  return request(`/api/user/${uid}`);
+}

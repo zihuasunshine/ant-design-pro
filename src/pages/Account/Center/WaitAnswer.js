@@ -5,7 +5,7 @@ class Center extends PureComponent {
   render() {
    
     return (
-     <div style={styles.wait_answer}>您还没有待回答的问题</div>
+     <div className={styles.wait_answer}>您还没有待回答的问题</div>
     );
   }
 }

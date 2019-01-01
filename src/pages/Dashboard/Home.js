@@ -2,7 +2,7 @@ import React, { PureComponent, Fragment } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import Link from 'umi/link';
-import { Row, Col, Tabs, Card, Avatar, Select } from 'antd';
+import { Row, Col, Tabs, Card, Avatar, Select, Tag } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './Home.less';
 
@@ -29,7 +29,15 @@ class Home extends PureComponent {
     this.state = {
       options1: [{id: 1, name:'全部问题'}],
       options2: [],
-      options3: []
+      options3: [],
+      options4: [],
+      lastOption: '',
+    },
+    this.question = '',
+    this.qtype = 1,
+    this.pager = {
+      page: 1,
+      size: 10,
     }
   }
 
@@ -39,10 +47,10 @@ class Home extends PureComponent {
     dispatch({
       type: 'home/articleList'
     });
-    this.getCategory(1, 1);
+    this.getCategory(1, {}, 1);
   }
 
-  getCategory = (pId, key) => {
+  getCategory = (pId,option,  key) => {
     const { dispatch } = this.props;
     dispatch({
       type: 'home/category',
@@ -54,11 +62,27 @@ class Home extends PureComponent {
       const { options1, options2, options3 } = this.state;
       if(categoryRes && categoryRes.code === 200){
         const options = categoryRes.data;
-        key === 1? this.setState({['options'+key]:[...options1, ...options]}):this.setState({['options'+key]:options});
-        if(key === 1) {
-          this.setState({options2:[], options3: []});
-        }else if(key === 2) {
-          this.setState({options3: []});
+        // 清空选项判断
+        if(key === 2){
+          this.setState({options2:[], options3:[], options4:[], lastOption:''})
+        }
+        if(key === 3) {
+          this.setState({options3:[], options4:[], lastOption:''})
+        }
+        if(key === 4) {
+          this.setState({lastOption:''})
+        }
+        //===========//
+        if(key===1){
+          this.setState({['options'+key]:[...options1, ...options]});
+        }else{
+          if(options.length > 0){
+            this.setState({['options'+key]:[{id: pId, name: option.props.children},...options]});
+          }else{
+            this.setState({
+              lastOption: option.props.children
+            });
+          }
         }
       }
     });
@@ -102,8 +126,43 @@ class Home extends PureComponent {
   }
 
   // key标识几级变化
-  handleChange = (value, key) => {
-    this.getCategory(value, key);
+  handleChange = (value, option, key) => {
+    this.getCategory(value, option, key);
+    const { dispatch } = this.props;
+    const fieldName = ['category_f', 'category_s', 'category_t'];
+    dispatch({
+      type: 'home/getCategoryParam',
+      params: {
+        [fieldName[key-2]]: value
+      }
+    });
+    dispatch({
+      type: 'home/fetchList',
+      params: {
+        question: this.question,
+        qtype: this.qtype,
+        ...this.pager,
+        category:{
+          [fieldName[key-2]]: value,
+        },
+      },
+    });
+  }
+
+  handleSelect = (value) => {
+    const { dispatch } = this.props
+    const { options2 } = this.state;
+    if(value === 1){
+      dispatch({
+        type: 'home/fetchList',
+        params: {
+          question: this.question,
+          qtype: this.qtype,
+          ...this.pager,
+        },
+      });
+      this.setState({options2:[], options3:[], options4:[], lastOption:''});
+    }
   }
 
   onTabChange = key => {
@@ -125,7 +184,7 @@ class Home extends PureComponent {
 
   render() {
     const { children, home: { articlelistRes }} = this.props;
-    const { options1, options2, options3 } = this.state;
+    const { options1, options2, options3, options4, lastOption } = this.state;
     console.log(options1);
     return (
       <Fragment>
@@ -138,7 +197,10 @@ class Home extends PureComponent {
               <div className={styles.category_box}>
                 {
                   options1.length>0? (
-                    <Select defaultValue={options1[0].id} style={{ width: 120, marginRight:8}} onChange={(value)=>this.handleChange(value, 2)}>
+                    <Select value={options1[0].id} style={{ width: 140, marginRight:8}} 
+                      onChange={(value, option)=>this.handleChange(value, option,2)}
+                      onSelect={this.handleSelect}
+                      >
                       {options1.map(item => {
                         return <Option key={'option'+item.id} value={item.id}>{item.name}</Option>
                       })}
@@ -146,7 +208,7 @@ class Home extends PureComponent {
                 }
                 {
                   options2.length>0?(
-                    <Select defaultValue={options2[0].id} style={{ width: 120, marginRight:8 }} onChange={(value)=>this.handleChange(value, 3)}>
+                    <Select value={options2[0].id} style={{ width: 140, marginRight:8 }} onChange={(value, option)=>this.handleChange(value, option,3)}>
                       {options2.map(item => {
                         return <Option key={'option'+item.id} value={item.id}>{item.name}</Option>
                       })}
@@ -154,11 +216,22 @@ class Home extends PureComponent {
                 }
                 {
                   options3.length>0?(
-                    <Select defaultValue={options3[0].id} style={{ width: 120 }}>
+                    <Select value={options3[0].id} style={{ width: 140, marginRight:8 }} onChange={(value, option)=>this.handleChange(value, option,4)}>
                       {options3.map(item => {
                         return <Option key={'option'+item.id} value={item.id}>{item.name}</Option>
                       })}
                   </Select>):null
+                }
+                 {
+                  options4.length>0?(
+                    <Select value={options3[0].id} style={{ width: 140 }}>
+                      {options3.map(item => {
+                        return <Option key={'option'+item.id} value={item.id}>{item.name}</Option>
+                      })}
+                  </Select>):null
+                }
+                {
+                  lastOption?<Tag className={styles.tag}>{lastOption}</Tag>:null
                 }
               </div>
               <div className={styles.tabs}>

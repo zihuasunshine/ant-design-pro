@@ -40,6 +40,7 @@ class Answer extends PureComponent {
       likeCount: 0,       // 点赞数
       dislikeCount: 0,    // 点踩数
       commentCount: 0,    // 评论数
+      messages: [],    // 评论列表
     }
     this._comments = [];
     this.count = 0;
@@ -99,16 +100,15 @@ class Answer extends PureComponent {
       id: this.id,
     }).then(() => {
       const { question: { qDetailRes }} = this.props;
-      if(qDetailRes.code !== 200) {
-        message.error(formatMessage({id:qDetailRes.msg})+',即将跳转到首页');
+      if(qDetailRes && qDetailRes.code == 200) {
+        const { data: { answer }} = qDetailRes;
+        if(answer) this.isVote(answer.answerId);
+        if(answer) this.getComment(answer.answerId);
+      }else{
         setTimeout(() => {
           router.push('/'); // 返回到首页
         }, 500);
         return;
-      }else{
-        const { data: { answer }} = qDetailRes;
-        if(answer) this.isVote(answer.answerId);
-        if(answer) this.getComment(answer.answerId);
       }
     });
   }
@@ -145,6 +145,18 @@ class Answer extends PureComponent {
       type: 'question/getMoreComment',
       params:{
         id: commentId
+      }
+    }).then(()=> {
+      const { question: { moreCommentRes }} = this.props;
+      if(moreCommentRes && moreCommentRes.code === 200){
+        const { messages } = this.state;
+        let _messages = [...messages];
+        _messages.forEach(item => {
+          if(item.id === this.commentId){
+            item.commentlist = moreCommentRes.data;
+          }
+        });
+        this.setState({messages: _messages});
       }
     });
   }
@@ -222,8 +234,38 @@ class Answer extends PureComponent {
     }).then(() =>{
       const { question: { commentRes }} = this.props;
       if(commentRes && commentRes.code === 200) {
-        this.getComment(answerId);
-        this.setState({inputValue: ''});
+        // 前端追加数据
+        const user = JSON.parse(sessionStorage.getItem('user'));
+        const { messages, commentCount } = this.state;
+        let _commentCount = commentCount;
+        let _messages = [...messages];
+        if(commentId){
+          // 二级评论追加数据
+          _messages.forEach(item => {
+            if(item.id === commentId){
+              ++item.commentsCount;
+              item.commentlist.unshift({
+                addTime: new Date().getTime(),
+                answerId: answerId,
+                userName: user.userName,
+                avatarFile: user.avatarFile,
+                commentsCount: 0,
+                message: inputValue,
+              });
+            }
+          });
+        }else{
+          // 一级评论追加数据
+          _messages.unshift({
+            addTime: new Date().getTime(),
+            answerId: answerId,
+            userName: user.userName,
+            avatarFile: user.avatarFile,
+            commentsCount: 0,
+            message: inputValue,
+          });
+        }
+        this.setState({messages:_messages, inputValue: '', commentCount: ++_commentCount});
       }
     });
 
@@ -300,36 +342,26 @@ class Answer extends PureComponent {
     }
   }
 
-  // 合并评论数据和更多评论数据
-  mergeCommentData = (comments, moreComments) => {
-    let _comments = [...comments];
-    if(moreComments) {
-      comments.forEach(item => {
-        if(item.id === this.commentId){
-          item.commentlist = moreComments;
-        }
-      });
-    }
-    this._comments = _comments;
-    return _comments
-  }
-
   render() {
     const { question: { qDetailRes, isVoteRes, commentRes, moreCommentRes }, form: { getFieldDecorator }} = this.props;
-    const { likeCount, dislikeCount, commentCount} = this.state;
+    const { likeCount, dislikeCount, commentCount, messages} = this.state;
     let answer = {}, question = {};
     if (this.count === 0) {
       if (qDetailRes && qDetailRes.code === 200 && commentRes && commentRes.code === 200) {
         const as = qDetailRes.data.answer;
+        const comments = commentRes.data;
         this.state.likeCount = as.agreeCount;
         this.state.dislikeCount = as.againstCount;
         this.state.commentCount = as.commentCount;
+        this.state.messages = commentRes.data;
         this.count = 1;
       }
     }
     const agreeCount = likeCount == 0? (qDetailRes && qDetailRes.data? qDetailRes.data.answer.agreeCount : likeCount) : likeCount;
     const disagreeCount = dislikeCount == 0? (qDetailRes && qDetailRes.data? qDetailRes.data.answer.againstCount : dislikeCount) : dislikeCount;
     const commentsCount = commentCount == 0? (qDetailRes && qDetailRes.data? qDetailRes.data.answer.commentCount : commentCount) : commentCount;
+    const messageList = messages.length == 0?(commentRes && commentRes.data? commentRes.data : messages) : messages;
+
 
     const isLiked = isVoteRes && isVoteRes.data == 1; // 点过赞
     const isNotCare = isVoteRes && isVoteRes.data == 0; // 没点赞也没有点踩 
@@ -402,7 +434,7 @@ class Answer extends PureComponent {
                       </Col>
                     </Row>
                     <CommentList 
-                      listData={this.mergeCommentData(this._comments, moreCommentRes.data)}
+                      listData={messageList}
                       onHandleComment={this.handleComment}
                       onGetMoreComment={this.getMoreComment}
                     />

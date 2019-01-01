@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Row, Col, List, Avatar, Icon, Input, Button,  } from 'antd';
 import { formatMessage } from 'umi/locale';
+import Link from 'umi/link';
 import moment from 'moment';
 import styles from './style.less';
 
@@ -81,7 +82,7 @@ class CommentList extends Component {
           onChange: (page) => {
             console.log(page);
           },
-          pageSize: 3,
+          pageSize: 8,
         }:false}
         dataSource={listData}
         renderItem={item => (
@@ -95,7 +96,7 @@ class CommentList extends Component {
                 </span>]}
              >
               <List.Item.Meta
-                avatar={<Avatar src={item.avatarFile} />}h
+                avatar={<Link to={`/account/center/waitAnswer/${item.uid}`}><Avatar src={item.avatarFile} /></Link>}
                 title={<div><a>{item.userName}</a><span className={styles.add_time}>{moment(item.addTime).format('YYYY-MM-DD HH:mm')}</span></div>}
                 description={item.message}
               />
@@ -130,7 +131,7 @@ class CommentList extends Component {
                 renderItem={el => (
                   <List.Item key={item.addTime}>
                     <List.Item.Meta
-                      avatar={<Avatar src={el.avatarFile} />}
+                      avatar={<Link to={`/account/center/waitAnswer/${item.uid}`}><Avatar src={el.avatarFile} /></Link>}
                       title={<div><a>{el.userName}</a><span className={styles.add_time}>{moment(el.addTime).format('YYYY-MM-DD mm:ss')}</span></div>}
                       description={el.message}
                     />
