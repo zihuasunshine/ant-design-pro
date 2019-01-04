@@ -53,4 +53,5 @@ export default {
   has_voted_like: '已经点过赞了哦',
   has_voted_dislike: '已经点过踩了哦',
   data_is_empty: '没有查询到数据',
+  request_faild:'请求错误',
 };

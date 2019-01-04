@@ -377,7 +377,7 @@ export async function isMobileExisted(params) {
 }
 
 // 判断用户名是否已存在
-export async function usUserNameExisted(params) {
+export async function isUserNameExisted(params) {
   const { userName } = params;
-  return(`/api/user/checkUserNameExisting/${userName}`);
+  return request(`/api/user/checkUserNameExisting/${userName}`);
 }

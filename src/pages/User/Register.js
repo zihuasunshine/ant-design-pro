@@ -92,45 +92,30 @@ class Register extends Component {
     // 检测手机号是否已经注册过
     validateFields(['resultCode', 'mobile'], (err, values) => {
       if (!err) {
-        dispatch({
-          type: 'register/checkUserMobileExisted',
-          payload:{
-            mobile: values.mobile
+        let count = 59;
+        this.setState({ count });
+        this.interval = setInterval(() => {
+          count -= 1;
+          this.setState({ count });
+          if (count === 0) {
+            clearInterval(this.interval);
           }
+        }, 1000);
+        dispatch({
+          type: 'register/getSMSCode',
+          payload: {
+            ...values,
+            token,
+          },
         }).then(() => {
-          const { register: { checkMobleRes }} = this.props;
-          if(checkMobleRes.code === 200){
-            if(checkMobleRes.data){
-              // 手机号已经注册过
-              notificationTip(formatMessage({id: 'mobile_already_exist'}));
-            }else{
-              let count = 59;
-              this.setState({ count });
-              this.interval = setInterval(() => {
-                count -= 1;
-                this.setState({ count });
-                if (count === 0) {
-                  clearInterval(this.interval);
-                }
-              }, 1000);
-              dispatch({
-                type: 'register/getSMSCode',
-                payload: {
-                  ...values,
-                  token,
-                },
-              }).then(() => {
-                const {
-                  register: { codeRes },
-                } = this.props;
-                if (codeRes.code === 200) {
-                  notificationTip(formatMessage({ id: 'get_code_success' }), true);
-                } else {
-                  this.setState({ count: 0 });
-                  clearInterval(this.interval);
-                }
-              });
-            }
+          const {
+            register: { codeRes },
+          } = this.props;
+          if (codeRes.code === 200) {
+            notificationTip(formatMessage({ id: 'get_code_success' }), true);
+          } else {
+            this.setState({ count: 0 });
+            clearInterval(this.interval);
           }
         });
       }
@@ -194,6 +179,52 @@ class Register extends Component {
       callback();
     }
   };
+
+  checkUserName = (rule, value, callback) => {
+    const { dispatch } = this.props;
+    if(value){
+      dispatch({
+        type: 'register/checkUserNameExisted',
+        payload:{
+          userName: value
+        }
+      }).then(() => {
+        const { register: {checkUserNameRes} } = this.props;
+        if(checkUserNameRes && checkUserNameRes.code === 200){
+          if(checkUserNameRes.data){
+            callback(formatMessage({id: 'user_name_already_exist'}));
+          }else {
+            callback();
+          }
+        }else {
+          callback(formatMessage({id: 'request_faild'}));
+        }
+      });
+    }
+  }
+
+  checkMobile = (rule, value, callback) => {
+    const { dispatch } = this.props;
+    if(/\d{11}$/.test(value)){
+      dispatch({
+        type: 'register/checkUserMobileExisted',
+        payload:{
+          mobile: value
+        }
+      }).then(() => {
+        const { register: {checkMobileRes} } = this.props;
+        if(checkMobileRes && checkMobileRes.code === 200){
+          if(checkMobileRes.data){
+            callback(formatMessage({id: 'mobile_already_exist'}));
+          }else {
+            callback();
+          }
+        }else {
+          callback(formatMessage({id: 'request_faild'}));
+        }
+      });
+    }
+  }
 
   checkPassword = (rule, value, callback) => {
     const { visible, confirmDirty } = this.state;
@@ -280,6 +311,9 @@ class Register extends Component {
                   pattern: /([a-zA-Z0-9\u4e00-\u9fa5]){4,20}$/,
                   message: formatMessage({ id: 'validation.userName.wrong-format' }),
                 },
+                {
+                  validator: this.checkUserName
+                }
               ],
             })(
               <Input
@@ -371,6 +405,9 @@ class Register extends Component {
                   pattern: /^\d{11}$/,
                   message: formatMessage({ id: 'validation.phone-number.wrong-format' }),
                 },
+                {
+                  validator: this.checkMobile
+                }
               ],
             })(
               <Input

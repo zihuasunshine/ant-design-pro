@@ -68,12 +68,12 @@
   "/static/Home.less": "/static/index.f37d278e.jpg",
   "/static/black_logo.png": "/static/black_logo.0afbc0ea.png",
   "/index.html": "/index.html",
-  "/icons/icon-192x192.png": "/icons/icon-192x192.png",
   "/favicon.png": "/favicon.png",
+  "/icons/icon-192x192.png": "/icons/icon-192x192.png",
   "/icons/icon-128x128.png": "/icons/icon-128x128.png",
   "/icons/icon-512x512.png": "/icons/icon-512x512.png",
   "/manifest.json": "/manifest.json",
   "/pwacompat.min.js": "/pwacompat.min.js",
-  "/precache-manifest.d5685993df755420157ffe08f6f5230f.js": "/precache-manifest.d5685993df755420157ffe08f6f5230f.js",
+  "/precache-manifest.79165b01e36441bc50c6fef7f37bb8da.js": "/precache-manifest.79165b01e36441bc50c6fef7f37bb8da.js",
   "/service-worker.js": "/service-worker.js"
 }
