@@ -15,8 +15,8 @@ export default {
         payload: response,
       });
     },
-    *submit({ payload, token }, { call, put }) {
-      const response = yield call(addQuestion, payload, token);
+    *submit({ payload}, { call, put }) {
+      const response = yield call(addQuestion, payload);
       yield put({
         type: 'addQuestionHandle',
         payload: response,
@@ -76,6 +76,14 @@ export default {
       yield put({
         type: 'answerHandle',
         payload: response
+      });
+    },
+    *destory({}, { put }) {
+      yield put({
+        type: 'destroyHandle',
+        payload: {
+          moreCommentRes: {}
+        }
       });
     }
   },
@@ -141,5 +149,10 @@ export default {
         moreCommentRes: payload
       }
     },
+    destroyHandle(state, { payload }) {
+      return {
+       ...payload
+      }
+    }
   },
 };

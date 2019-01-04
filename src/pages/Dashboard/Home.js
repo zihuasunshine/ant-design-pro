@@ -4,6 +4,7 @@ import router from 'umi/router';
 import Link from 'umi/link';
 import { Row, Col, Tabs, Card, Avatar, Select, Tag } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
+import Article from './Articles';
 import styles from './Home.less';
 
 const TabPane = Tabs.TabPane;
@@ -47,46 +48,10 @@ class Home extends PureComponent {
     dispatch({
       type: 'home/articleList'
     });
-    this.getCategory(1, {}, 1);
+    //this.getCategory(1, {}, 1);
   }
 
-  getCategory = (pId,option,  key) => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'home/category',
-      params:{
-        pId
-      }
-    }).then(()=>{
-      const { home: { categoryRes } } = this.props;
-      const { options1, options2, options3 } = this.state;
-      if(categoryRes && categoryRes.code === 200){
-        const options = categoryRes.data;
-        // 清空选项判断
-        if(key === 2){
-          this.setState({options2:[], options3:[], options4:[], lastOption:''})
-        }
-        if(key === 3) {
-          this.setState({options3:[], options4:[], lastOption:''})
-        }
-        if(key === 4) {
-          this.setState({lastOption:''})
-        }
-        //===========//
-        if(key===1){
-          this.setState({['options'+key]:[...options1, ...options]});
-        }else{
-          if(options.length > 0){
-            this.setState({['options'+key]:[{id: pId, name: option.props.children},...options]});
-          }else{
-            this.setState({
-              lastOption: option.props.children
-            });
-          }
-        }
-      }
-    });
-  }
+ 
 
   article = (item) => {
     return (
@@ -125,46 +90,6 @@ class Home extends PureComponent {
     )
   }
 
-  // key标识几级变化
-  handleChange = (value, option, key) => {
-    this.getCategory(value, option, key);
-    const { dispatch } = this.props;
-    const fieldName = ['category_f', 'category_s', 'category_t'];
-    dispatch({
-      type: 'home/getCategoryParam',
-      params: {
-        [fieldName[key-2]]: value
-      }
-    });
-    dispatch({
-      type: 'home/fetchList',
-      params: {
-        question: this.question,
-        qtype: this.qtype,
-        ...this.pager,
-        category:{
-          [fieldName[key-2]]: value,
-        },
-      },
-    });
-  }
-
-  handleSelect = (value) => {
-    const { dispatch } = this.props
-    const { options2 } = this.state;
-    if(value === 1){
-      dispatch({
-        type: 'home/fetchList',
-        params: {
-          question: this.question,
-          qtype: this.qtype,
-          ...this.pager,
-        },
-      });
-      this.setState({options2:[], options3:[], options4:[], lastOption:''});
-    }
-  }
-
   onTabChange = key => {
     const { match } = this.props;
     switch (key) {
@@ -185,55 +110,18 @@ class Home extends PureComponent {
   render() {
     const { children, home: { articlelistRes }} = this.props;
     const { options1, options2, options3, options4, lastOption } = this.state;
-    console.log(options1);
     return (
       <Fragment>
         <GridContent className={styles.userCenter}>
-        <div className={styles.banner}>
-          {this.articles(articlelistRes)}
-        </div>
+        {/*
+          <div className={styles.banner}>
+          { this.articles(articlelistRes)}
+          </div>
+        */}
+       {/*
           <Row gutter={24}>
             <Col lg={24} md={24}>
-              <div className={styles.category_box}>
-                {
-                  options1.length>0? (
-                    <Select value={options1[0].id} style={{ width: 140, marginRight:8}} 
-                      onChange={(value, option)=>this.handleChange(value, option,2)}
-                      onSelect={this.handleSelect}
-                      >
-                      {options1.map(item => {
-                        return <Option key={'option'+item.id} value={item.id}>{item.name}</Option>
-                      })}
-                    </Select>):null
-                }
-                {
-                  options2.length>0?(
-                    <Select value={options2[0].id} style={{ width: 140, marginRight:8 }} onChange={(value, option)=>this.handleChange(value, option,3)}>
-                      {options2.map(item => {
-                        return <Option key={'option'+item.id} value={item.id}>{item.name}</Option>
-                      })}
-                  </Select>):null
-                }
-                {
-                  options3.length>0?(
-                    <Select value={options3[0].id} style={{ width: 140, marginRight:8 }} onChange={(value, option)=>this.handleChange(value, option,4)}>
-                      {options3.map(item => {
-                        return <Option key={'option'+item.id} value={item.id}>{item.name}</Option>
-                      })}
-                  </Select>):null
-                }
-                 {
-                  options4.length>0?(
-                    <Select value={options3[0].id} style={{ width: 140 }}>
-                      {options3.map(item => {
-                        return <Option key={'option'+item.id} value={item.id}>{item.name}</Option>
-                      })}
-                  </Select>):null
-                }
-                {
-                  lastOption?<Tag className={styles.tag}>{lastOption}</Tag>:null
-                }
-              </div>
+              <Article />
               <div className={styles.tabs}>
                 <Tabs onChange={this.onTabChange} type="card">
                   <TabPane tab="新问题" key="new">
@@ -248,7 +136,8 @@ class Home extends PureComponent {
                 </Tabs>
               </div>
             </Col>
-          </Row>
+          </Row>*/}
+          <Article />
         </GridContent>
       </Fragment>
     );

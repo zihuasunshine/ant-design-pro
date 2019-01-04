@@ -9,6 +9,7 @@ class PicturesWall extends Component {
     previewImage: '',
     fileList: [],
   };
+  count = 0;
 
   handleCancel = () => this.setState({ previewVisible: false });
 
@@ -19,11 +20,15 @@ class PicturesWall extends Component {
     });
   };
 
-  handleChange = ({ file, fileList, event }) => {
+  handleChange = ({file, fileList}) => {
+    this.count = this.count+1;
     this.setState({ fileList });
-    const { originFileObj } = file;
-    const { uploadImg } = this.props;
-    uploadImg(originFileObj);
+    if(this.count === 3){
+      const { originFileObj } = file;
+      const { uploadImg } = this.props;
+      uploadImg(originFileObj);
+      this.count = 0;
+    }
   };
 
   render() {
@@ -38,6 +43,7 @@ class PicturesWall extends Component {
     return (
       <div className="clearfix">
         <Upload
+          action=''
           listType="picture-card"
           fileList={fileList}
           onPreview={this.handlePreview}

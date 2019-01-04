@@ -38,6 +38,7 @@ class Answer extends PureComponent {
     this.state = {
       inputVisible: false,
       inputValue: '',
+      isFormVisible: false,
       editorState: BraftEditor.createEditorState(null),
       likeCount: 0,       // 点赞数
       dislikeCount: 0,    // 点踩数
@@ -50,28 +51,16 @@ class Answer extends PureComponent {
     this.id = props.match.params.id;
   }
 
-  extendControls = [
-    {
-      key: 'antd-uploader',
-      type: 'component',
-      component: (
-        <Upload
-          accept="image/*"
-          showUploadList={false}
-          //onChange = {}
-          customRequest={this.uploadHandler}
-        >
-          {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
-          <button type="button" className="control-item button upload-button" data-title="插入图片">
-            <Icon type="picture" theme="filled" />
-          </button>
-        </Upload>
-      )
-    }
-  ]
-
   componentDidMount(){
     this.getQuestionDetail();
+  }
+
+  componentWillUnmount() {
+    // 销毁redeux中的数据
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/destory',
+    });
   }
 
   showInput = () => {
@@ -232,7 +221,6 @@ class Answer extends PureComponent {
         message: inputValue,
         commentId
       },
-      token: sessionStorage.getItem('access_token')
     }).then(() =>{
       const { question: { commentRes }} = this.props;
       if(commentRes && commentRes.code === 200) {
@@ -259,11 +247,13 @@ class Answer extends PureComponent {
         }else{
           // 一级评论追加数据
           _messages.unshift({
+            id: commentRes.data,
             addTime: new Date().getTime(),
             answerId: answerId,
             userName: user.userName,
             avatarFile: user.avatarFile,
             commentsCount: 0,
+            commentlist: [],
             message: inputValue,
           });
         }
@@ -277,7 +267,16 @@ class Answer extends PureComponent {
     this.setState({ editorState })
   }
 
+  handleClick = () =>{
+    this.setState(({isFormVisible})=> {
+      return {
+        isFormVisible: !isFormVisible
+      }
+    });
+  }
+
   uploadHandler = (param) => {
+    debugger;
     if (!param.file) {
       return false;
     }
@@ -346,7 +345,7 @@ class Answer extends PureComponent {
 
   render() {
     const { question: { qDetailRes, isVoteRes, commentRes, moreCommentRes }, form: { getFieldDecorator }} = this.props;
-    const { likeCount, dislikeCount, commentCount, messages} = this.state;
+    const { isFormVisible, likeCount, dislikeCount, commentCount, messages} = this.state;
     let answer = {}, question = {};
     if (this.count === 0) {
       if (qDetailRes && qDetailRes.code === 200 && commentRes && commentRes.code === 200) {
@@ -359,6 +358,24 @@ class Answer extends PureComponent {
         this.count = 1;
       }
     }
+    const extendControls = [
+      {
+        key: 'antd-uploader',
+        type: 'component',
+        component: (
+          <Upload
+            accept="image/*"
+            showUploadList={false}
+            customRequest={this.uploadHandler}
+          >
+            {/* 这里的按钮最好加上type="button"，以避免在表单容器中触发表单提交，用Antd的Button组件则无需如此 */}
+            <button type="button" className="control-item button upload-button" data-title="插入图片">
+              <Icon type="picture" theme="filled" />
+            </button>
+          </Upload>
+        )
+      }
+    ]
     const agreeCount = likeCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.agreeCount : likeCount) : likeCount;
     const disagreeCount = dislikeCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.againstCount : dislikeCount) : dislikeCount;
     const commentsCount = commentCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.commentCount : commentCount) : commentCount;
@@ -381,21 +398,16 @@ class Answer extends PureComponent {
         <div className={styles.main}>
           <Row>
             <Col {...colLayout}>
-              <h4>
-                {question.category_f_name &&
-                  question.category_f_name +
-                    '>' +
-                    question.category_s_name +
-                    '>' +
-                    question.category_t_name}
-              </h4>
-            </Col>
-            <Col {...colLayout}>
               <div className={styles.qtitle}>
                 <Icon type="question-circle" className={styles.qicon} />
                 <span>{question.title}</span>
               </div>
               <div className={styles.qDetail}>{question.detail}</div>
+              <div className={styles.img_wrapper}>
+                {question.imgs && question.imgs.map((img => {
+                  return <img src={img} />
+                }))}
+              </div>
             </Col>
             {answer && answer.answerId ? (
               <Col {...colLayout}>
@@ -447,17 +459,12 @@ class Answer extends PureComponent {
           </Row>
           <Row>
             <Col {...colLayout} className={styles.btn_wrapper}>
-              <Divider dashed={true}>
-                <div className={styles.answer_btn}>
-                  <Icon type="edit" className={styles.icon}/>
-                  <span className={styles.text}>
-                    {answer && answer.answerId ? formatMessage({ id: 'app.settings.perfect' }) : formatMessage({ id: 'app.settings.answer' })}
-                  </span>
-                </div>
-             </Divider>
+              <Button type='primary' size='large' icon='edit' onClick={this.handleClick}>
+                {answer && answer.answerId ? formatMessage({ id: 'app.settings.perfect' }) : formatMessage({ id: 'app.settings.answer' })}
+              </Button>
             </Col>
           </Row>
-          <Row className={styles.form_box}>
+          <Row className={styles.form_box} style={{display: isFormVisible? 'block':'none'}}>
             <Col {...colLayout}>
               <Form onSubmit={(e) => this.handleSubmit(e, question.bestAnswer, question.id)}>
                 {question.bestAnswer? (<FormItem className={styles.formitem}>
@@ -484,7 +491,7 @@ class Answer extends PureComponent {
                       className={styles.my_editor}
                       onChange={this.handleChange}
                       controls={controls}
-                      extendControls={this.extendControls}
+                      extendControls={extendControls}
                     />
                 </FormItem>
                 <div className={styles.align_right}>

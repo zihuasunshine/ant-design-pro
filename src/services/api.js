@@ -369,3 +369,15 @@ export async function queryUser(params) {
   const { uid } = params;
   return request(`/api/user/${uid}`);
 }
+
+// 判断手机号是否已存在
+export async function isMobileExisted(params) {
+  const { mobile } = params;
+  return request(`/api/user/checkUserMobileExisting/${mobile}`);
+}
+
+// 判断用户名是否已存在
+export async function usUserNameExisted(params) {
+  const { userName } = params;
+  return(`/api/user/checkUserNameExisting/${userName}`);
+}

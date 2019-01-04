@@ -206,12 +206,13 @@ export function generateUUID() {
   return uuid;
 }
 
-// 未登录提示
+// 提示
 export function notificationTip(message, isSuccess) {
   notification.info({
     message: message,
     description: '',
-    duration: 2,
+    duration: 3,
+    //placement: 'bottomRight',
     icon: isSuccess?<Icon type="smile" style={{color: '#13C2C2'}}/>:<Icon type="frown" style={{color: 'red'}} />,
   });
 }

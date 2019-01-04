@@ -84,56 +84,57 @@ class Register extends Component {
 
   // 获取手机短信验证码
   onGetCaptcha = () => {
-    let count = 59;
-    this.setState({ count });
     const {
       form: { validateFields },
       dispatch,
     } = this.props;
     const { token } = this.state;
+    // 检测手机号是否已经注册过
     validateFields(['resultCode', 'mobile'], (err, values) => {
       if (!err) {
-        this.interval = setInterval(() => {
-          count -= 1;
-          this.setState({ count });
-          if (count === 0) {
-            clearInterval(this.interval);
-          }
-        }, 1000);
         dispatch({
-          type: 'register/getSMSCode',
-          payload: {
-            ...values,
-            token,
-          },
+          type: 'register/checkUserMobileExisted',
+          payload:{
+            mobile: values.mobile
+          }
         }).then(() => {
-          const {
-            register: { codeRes },
-          } = this.props;
-          if (codeRes.code === 200) {
-            notificationTip(formatMessage({ id: 'get_code_success' }), true);
-          } else {
-            this.setState({ count: 0 });
-            clearInterval(this.interval);
+          const { register: { checkMobleRes }} = this.props;
+          if(checkMobleRes.code === 200){
+            if(checkMobleRes.data){
+              // 手机号已经注册过
+              notificationTip(formatMessage({id: 'mobile_already_exist'}));
+            }else{
+              let count = 59;
+              this.setState({ count });
+              this.interval = setInterval(() => {
+                count -= 1;
+                this.setState({ count });
+                if (count === 0) {
+                  clearInterval(this.interval);
+                }
+              }, 1000);
+              dispatch({
+                type: 'register/getSMSCode',
+                payload: {
+                  ...values,
+                  token,
+                },
+              }).then(() => {
+                const {
+                  register: { codeRes },
+                } = this.props;
+                if (codeRes.code === 200) {
+                  notificationTip(formatMessage({ id: 'get_code_success' }), true);
+                } else {
+                  this.setState({ count: 0 });
+                  clearInterval(this.interval);
+                }
+              });
+            }
           }
         });
       }
     });
-  };
-
-  getPasswordStatus = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    if (value && value.length > 9 && value.length < 13) {
-      return 'ok';
-    }
-    if (value && value.length > 5 && value.length < 13) {
-      return 'pass';
-    }
-    if (value && value.length > 12) {
-      return 'long';
-    }
-    return 'poor';
   };
 
   handleSubmit = e => {
@@ -162,6 +163,21 @@ class Register extends Component {
         });
       }
     });
+  };
+
+  getPasswordStatus = () => {
+    const { form } = this.props;
+    const value = form.getFieldValue('password');
+    if (value && value.length > 9 && value.length < 13) {
+      return 'ok';
+    }
+    if (value && value.length > 5 && value.length < 13) {
+      return 'pass';
+    }
+    if (value && value.length > 12) {
+      return 'long';
+    }
+    return 'poor';
   };
 
   handleConfirmBlur = e => {

@@ -21,6 +21,11 @@
       display: inline-block;
     }
   }
+  .img_wrapper{
+    padding-left: 32px;
+    padding-right: 32px;
+    box-sizing: border-box;
+  }
   .qDetail{
     text-indent: 2.2em;
     margin: 10px 0;
@@ -31,7 +36,10 @@
   }
   .operator{
     margin-bottom: 10px;
-    padding-left: 25px;
+    padding-left: 32px;
+    @media screen and (max-width: @screen-sm) {
+      padding-left: 0;
+    }
     box-sizing: border-box;
     .icon_wrapper{
       font-weight: 550;
@@ -51,25 +59,23 @@
     background: #fafafa;
   }
   .btn_wrapper{
-    .answer_btn{
-      .icon{
-        margin-right: 8px;
-        font-size: 14px;
-        color: #13C2C2;
-      }
-      .text{
-        font-size: 14px;
-        font-weight: 550;
-      }
-      display: inline-block;
-      position: relative;
-      box-shadow: 0 2px 0 rgba(0, 0, 0, 0.015);
-      color: rgba(0, 0, 0, 0.65);
-      background-color: #fff;
+    padding-left: 32px;
+    padding-right: 32px;
+    margin-top: 24px;
+    margin-bottom: 12px;
+    @media screen and (max-width: @screen-sm) {
+      padding-left: 0;
+      padding-right: 0;
     }
   }
   .form_box{
+    padding-left: 32px;
+    padding-right: 32px;
     margin-top: 12px;
+    @media screen and (max-width: @screen-sm) {
+      padding-left: 0;
+      padding-right: 0;
+    }
     .formitem{
       margin-bottom: 0;
     }

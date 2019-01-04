@@ -1,4 +1,4 @@
-import { register, sendSMSCode } from '@/services/api';
+import { register, sendSMSCode, isMobileExisted } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { reloadAuthorized } from '@/utils/Authorized';
 
@@ -10,6 +10,13 @@ export default {
   },
 
   effects: {
+    *checkUserMobileExisted({ payload }, { call, put }) {
+      const response = yield call(isMobileExisted, payload);
+      yield put({
+        type: 'checkMobileHandle',
+        payload: response
+      });
+    },
     *getSMSCode({ payload }, { call, put }) {
       const response = yield call(sendSMSCode, payload);
       yield put({
@@ -39,6 +46,12 @@ export default {
       return {
         ...state,
         registerRes: payload,
+      };
+    },
+    checkMobileHandle(state, { payload }) {
+      return {
+        ...state,
+        checkMobleRes: payload,
       };
     },
   },
