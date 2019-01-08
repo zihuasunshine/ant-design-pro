@@ -24,23 +24,23 @@ class Center extends PureComponent {
       inputValue: '',
     };
     this.count = 0;
-    this.uid = props.match.params.uid;
+    //this.uid = props.match.params.uid;
   }
 
   componentDidMount() {
-    const { dispatch } = this.props;
-    const user = sessionStorage.getItem('user');
-    if(user && JSON.parse(user) && user.id === this.uid){
-      // 当前用户
-    }else {
-      // 其他用户
-      dispatch({
-        type: 'center/getOtherUserInfo',
-        params: {
-          uid: this.uid
-        },
-      });
-    }
+    // const { dispatch } = this.props;
+    // const user = sessionStorage.getItem('user');
+    // if(user && JSON.parse(user) && user.id === this.uid){
+    //   // 当前用户
+    // }else {
+    //   // 其他用户
+    //   dispatch({
+    //     type: 'center/getOtherUserInfo',
+    //     params: {
+    //       uid: this.uid
+    //     },
+    //   });
+    // }
   }
 
   onTabChange = key => {
@@ -150,14 +150,14 @@ class Center extends PureComponent {
     const tags = newTags.length == 0 ? (currentUser ? currentUser.tags : newTags) : newTags;
 
     const operationTabList = [
-      {
-        key: 'waitAnswer',
-        tab: (
-          <span>
-            待回答 <span style={{ fontSize: 14 }}></span>
-          </span>
-        ),
-      },
+      // {
+      //   key: 'waitAnswer',
+      //   tab: (
+      //     <span>
+      //       待回答 <span style={{ fontSize: 14 }}></span>
+      //     </span>
+      //   ),
+      // },
       {
         key: 'myQuestion',
         tab: (

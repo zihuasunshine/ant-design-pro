@@ -78,9 +78,10 @@ class CommentList extends Component {
 
     return (
       <List
+        className={styles.comment_box}
         size='middle'
         itemLayout='verticle'
-        locale={{emptyText:''}}
+        locale={{emptyText:' '}}
         pagination={listData.length>0?{
           onChange: (page) => {
             console.log(page);
@@ -99,7 +100,8 @@ class CommentList extends Component {
                 </span>]}
              >
               <List.Item.Meta
-                avatar={<Link to={`/account/center/waitAnswer/${item.uid}`}><Avatar src={item.avatarFile} /></Link>}
+                // avatar={<Link to={`/account/center/waitAnswer/${item.uid}`}><Avatar src={item.avatarFile} /></Link>}
+                avatar={<Avatar src={item.avatarFile} />}
                 title={<div><a>{item.userName}</a><span className={styles.add_time}>{moment(item.addTime).format('YYYY-MM-DD HH:mm')}</span></div>}
                 description={item.message}
               />
@@ -128,13 +130,14 @@ class CommentList extends Component {
             <div className={styles.sub_comment}>
               <List
                 size='small'
-                locale={{emptyText:''}}
+                locale={{emptyText:' '}}
                 loadMore={item.commentsCount>3 && item.commentlist.length==3?<LoadMore commentId={item.id} />:null}
                 dataSource={item.commentlist}
                 renderItem={el => (
                   <List.Item key={item.addTime}>
                     <List.Item.Meta
-                      avatar={<Link to={`/account/center/waitAnswer/${item.uid}`}><Avatar src={el.avatarFile} /></Link>}
+                      //avatar={<Link to={`/account/center/waitAnswer/${item.uid}`}></Link>}
+                      avatar={<Avatar src={el.avatarFile} />}
                       title={<div><a>{el.userName}</a><span className={styles.add_time}>{moment(el.addTime).format('YYYY-MM-DD mm:ss')}</span></div>}
                       description={el.message}
                     />

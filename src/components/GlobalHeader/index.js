@@ -28,7 +28,8 @@ export default class GlobalHeader extends PureComponent {
       <div className={styles.header}>
         {isMobile && (
           <Link to="/" className={styles.logo} key="logo">
-            <img src={logo} alt="logo" width="32" />
+            {/*<img src={logo} alt="logo" width="32" />*/}
+            <em className={styles.logo_text}>小白考研</em>
           </Link>
         )}
         <span className={styles.trigger} onClick={this.toggle}>

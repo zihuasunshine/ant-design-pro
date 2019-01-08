@@ -8,6 +8,7 @@ const SiderMenuWrapper = React.memo(props => {
   const flatMenuKeys = getFlatMenuKeys(menuData);
   return isMobile ? (
     <Drawer
+      closable={false}
       visible={!collapsed}
       placement="left"
       onClose={() => onCollapse(true)}
