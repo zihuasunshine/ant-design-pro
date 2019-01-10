@@ -173,7 +173,6 @@ export function request(url, option) {
  * @param {*} option 
  */
 export function securityRequest(url, option) {
-
   const newOptions = handleParams(url, option);
   const token = sessionStorage.getItem('access_token');
   //const token = '4bbab859-7797-4881-a802-d04bd5641f00';

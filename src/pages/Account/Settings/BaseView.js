@@ -30,24 +30,30 @@ const validatorGeographic = (rule, value, callback) => {
 }))
 @Form.create()
 class BaseView extends Component {
+
+  state = {
+    avatar: '',
+  }
+
   componentDidMount() {
+    this.getAvatarURL();
     this.setBaseInfo();
   }
 
   // 上传图片
   uploadImg = img => {
     const { dispatch } = this.props;
+    const file = dataURLtoFile(img);
     dispatch({
       type: 'baseView/uploadAvatar',
       params: {
-        token: sessionStorage.getItem('access_token'),
-        file: dataURLtoFile(img),
+        file: file,
       },
     }).then(() => {
       const {
         baseView: { uploadImgRes },
       } = this.props;
-      if (uploadImgRes.code === 200) {
+      if(uploadImgRes && uploadImgRes.code === 200) {
         notificationTip(formatMessage({id: 'avatar_update_success'}),true);
         dispatch({
           type: 'user/fetchCurrent',
@@ -55,6 +61,7 @@ class BaseView extends Component {
         }).then(() => {
           this.setBaseInfo();
         });
+        this.setState({ avatar: img });
       } else {
         notificationTip(formatMessage({id: 'avatar_update_faild'}));
       }
@@ -91,11 +98,16 @@ class BaseView extends Component {
         geographic
           ? (params.province = geographic.province.label ? geographic.province.label : '')
           : '';
+        geographic
+          ? (params.provinceCode = geographic.province.key ? geographic.province.key : '')
+          : '';
         geographic ? (params.city = geographic.city.label ? geographic.city.label : '') : '';
+        geographic ? (params.cityCode = geographic.city.key ? geographic.city.key : '') : '';
         postgraduateTime ? (params.postgraduateTime = postgraduateTime) : '';
         undergraduateSchool ? (params.undergraduateSchool = undergraduateSchool) : '';
         applicationSchool ? (params.applicationSchool = applicationSchool) : '';
         applicationProfession ? (params.applicationProfession = applicationProfession) : '';
+        console.log(geographic);
         dispatch({
           type: 'baseView/submit',
           payload: {
@@ -105,7 +117,7 @@ class BaseView extends Component {
         }).then(() => {
           // 重新获取数据赋值
           const { baseView: { updateRes }} = this.props;
-          if(updateRes.code === 200){
+          if( updateRes && updateRes.code === 200){
             notificationTip(formatMessage({id: 'user_info_update_success'}),true);
             dispatch({
               type: 'user/fetchCurrent',
@@ -152,12 +164,14 @@ class BaseView extends Component {
   };
 
   getAvatarURL() {
+    let url = '';
     const currentUser = sessionStorage.getItem('user');
     if (currentUser) {
-      return JSON.parse(currentUser).avatarFile;
+      url =  JSON.parse(currentUser).avatarFile;
+    }else {
+      url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png';
     }
-    const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png';
-    return url;
+    this.setState({ avatar: url });
   }
 
   getViewDom = ref => {
@@ -168,6 +182,7 @@ class BaseView extends Component {
     const {
       form: { getFieldDecorator },
     } = this.props;
+    const { avatar } = this.state;
     return (
       <div className={styles.baseView} ref={this.getViewDom}>
         <div className={styles.left}>
@@ -323,7 +338,7 @@ class BaseView extends Component {
           </Form>
         </div>
         <div className={styles.right}>
-          <AvatarView avatar={this.getAvatarURL()} onUploadImg={this.uploadImg} />
+          <AvatarView avatar={avatar} onUploadImg={this.uploadImg} />
         </div>
       </div>
     );

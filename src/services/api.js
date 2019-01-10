@@ -237,7 +237,7 @@ export async function fileUpload(params) {
 
 // 更新头像
 export async function uploadAvatar(params) {
-  const { token, file } = params;
+  const { file } = params;
   const formData = new FormData();
   formData.append('file', file);
   return securityRequest(`/api/file/uploadAvatar`, {

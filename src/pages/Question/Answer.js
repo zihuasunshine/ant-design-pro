@@ -10,6 +10,7 @@ import { ImageUtils } from 'braft-finder'
 import { notificationTip } from  '@/utils/utils';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Row, Col, Icon, Button, Input, Avatar, message, Form, Divider, Upload } from 'antd';
+import moment from 'moment';
 import styles from './Answer.less';
 import bestSrc from '@/assets/best.png';
 
@@ -401,6 +402,10 @@ class Answer extends PureComponent {
               <div className={styles.qtitle}>
                 <Icon type="question-circle" className={styles.qicon} />
                 <span>{question.title}</span>
+              </div>
+              <div className={styles.qTime}>
+                <span>提问时间：{moment(question.addTime).format('YYYY-MM-DD')}</span>
+                <span className={styles.view_wrapper}><Icon type="eye" className={styles.view}/>{question.viewCount}</span>
               </div>
               <div className={styles.qDetail}>{question.detail}</div>
               <div className={styles.img_wrapper}>
