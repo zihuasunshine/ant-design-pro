@@ -407,7 +407,7 @@ class Answer extends PureComponent {
                 <span>提问时间：{moment(question.addTime).format('YYYY-MM-DD')}</span>
                 <span className={styles.view_wrapper}><Icon type="eye" className={styles.view}/>{question.viewCount}</span>
               </div>
-              <div className={styles.qDetail}>{question.detail}</div>
+              <div className={styles.qDetail} dangerouslySetInnerHTML={{__html: question.detail}}/>
               <div className={styles.img_wrapper}>
                 {question.imgs && question.imgs.map((img => {
                   return <img src={img} />
@@ -420,7 +420,7 @@ class Answer extends PureComponent {
                   <img alt="best" src={bestSrc} />
                   <h3 className={styles.title}>最佳答案</h3>
                 </div>
-                <div className={styles.answer} dangerouslySetInnerHTML={{__html: answer.answerContent}}></div>
+                <div className={styles.answer} dangerouslySetInnerHTML={{__html: answer.answerContent}}/>
                 <div className={styles.operator}>
                   <span className={styles.icon_wrapper} onClick={() => this.handleVote(1,answer.answerId)}>
                     <Icon type="like" theme={isLiked?'filled':'' } className={styles.icon}/>{agreeCount}

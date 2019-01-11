@@ -381,3 +381,17 @@ export async function isUserNameExisted(params) {
   const { userName } = params;
   return request(`/api/user/checkUserNameExisting/${userName}`);
 }
+
+// 获取省份
+export async function getProvince() {
+  return request(`/api/xzqh/provinces`);
+}
+
+// 获取调剂信息
+export async function getAdjustData(params) {
+  let strParams = Object.keys(params).length > 0 ? '?' : '';
+  for (let key in params) {
+    strParams += key + '=' + params[key] + '&';
+  }
+  return request(`/api/schInfo/tjxx${strParams.slice(0, strParams.length - 1)}`);
+}

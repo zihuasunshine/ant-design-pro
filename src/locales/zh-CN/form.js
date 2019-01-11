@@ -47,4 +47,12 @@ export default {
   'form.old-password.placeholder': '旧密码',
   'form.reason.placeholder': '为什么完善',
   'form.answer.placeholder': '说说你的答案~',
+  //===调剂===//
+  'form.yx.label': '高校名称',
+  'form.yx.placeholder': '请输入高校名称',
+  'form.zy.label': '专业名称',
+  'form.zy.placeholder': '请输入专业名称',
+  'form.sf.label': '省份',
+  'form.sf.placeholder': '所在省份',
+  'form.yxsx.label': '高校类型',
 };

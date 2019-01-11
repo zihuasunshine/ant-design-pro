@@ -5,6 +5,7 @@ export default {
   'menu.dashboard.monitor': '监控页',
   'menu.dashboard.workplace': '工作台',
   'menu.question': '问题',
+  'menu.adjust': '调剂',
   'menu.question.askQuestion': '我要提问',
   'menu.form': '表单页',
   'menu.form.basicform': '基础表单',

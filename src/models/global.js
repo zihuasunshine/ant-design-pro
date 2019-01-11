@@ -1,4 +1,4 @@
-import { queryNotices } from '@/services/api';
+import { queryNotices, getProvince } from '@/services/api';
 
 export default {
   namespace: 'global',
@@ -9,6 +9,13 @@ export default {
   },
 
   effects: {
+    *getProvince(_, { call, put }) {
+      const response = yield call(getProvince);
+      yield put({
+        type: 'provinceHandle',
+        payload:response
+      });
+    },
     *fetchNotices(_, { call, put, select }) {
       const data = yield call(queryNotices);
       yield put({
@@ -86,6 +93,12 @@ export default {
         notices: state.notices.filter(item => item.type !== payload),
       };
     },
+    provinceHandle(state, { payload }) {
+      return {
+        ...state,
+        provinceRes: payload
+      }
+    }
   },
 
   subscriptions: {

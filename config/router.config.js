@@ -28,15 +28,14 @@ export default [
           {
             path: '/home',
             //name: 'center',
-            component: './Dashboard/Home',
+            component: './Index/Home',
           },
           {
             path: '/article/:id',
-            component: './Dashboard/ArticleDetail'
+            component: './Index/ArticleDetail'
           },
         ]
       },
-      // forms
       {
         icon: 'question-circle',
         name: 'question',
@@ -60,23 +59,10 @@ export default [
         ],
       },
       {
-        path: '/profile',
-        //name: 'profile',
-        icon: 'profile',
-        routes: [
-          // profile
-          {
-            path: '/profile/basic',
-            name: 'basic',
-            component: './Profile/BasicProfile',
-          },
-          {
-            path: '/profile/advanced',
-            name: 'advanced',
-            authority: ['admin'],
-            component: './Profile/AdvancedProfile',
-          },
-        ],
+        icon: 'retweet',
+        name: 'adjust',
+        path: '/adjust',
+        component: './Adjust',
       },
       {
         //name: 'account',
