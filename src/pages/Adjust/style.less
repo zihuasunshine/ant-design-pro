@@ -1,3 +1,5 @@
+@import '~antd/lib/style/themes/default.less';
+
 .form_wrapper {
   padding: 24px 12px;
   background: #fff;
@@ -9,6 +11,64 @@
   }
 }
 .result_wrapper{
-  padding: 24px 12px;
+  padding: 0 12px;
   background: #fff;
+}
+.detail_box{
+  img{
+    max-width: 100%;
+  }
+  background: #fff;
+  .detail_wrapper{
+    padding: 24px 16px;
+    background: #fff;
+    overflow: hidden;
+    box-sizing: border-box;
+    .tag_wrapper{
+      margin-bottom: 24px;
+    }
+    .content{
+      table{
+        font-size: 16px !important;
+        @media screen and (max-width: @screen-sm) {
+          font-size: 14px !important;
+          font-family: inherit !important;
+        }
+      }
+    }
+    .align_right{
+      text-align: right;
+    }
+  }
+  .title{
+    padding: 24px 0 14px 16px;
+  }
+  .baseinfo_wrapper{
+    margin-bottom: 36px;
+    .baseinfo{
+      padding: 16px;
+      padding-left: 0;
+      font-size: 16px;
+      border-bottom: 1px solid #eee;
+      @media screen and (max-width: @screen-sm) {
+        font-size: 14px;
+      }
+      .label{
+        color: #aaa;
+      }
+      .value{
+        color: #666;
+        margin-left: 24px;
+      }
+    }
+  }
+  .recommend_wrapper{
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+    a{
+      display: block;
+      margin-bottom: 12px;
+    }
+  }
 }

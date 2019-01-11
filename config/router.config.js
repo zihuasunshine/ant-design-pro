@@ -62,7 +62,16 @@ export default [
         icon: 'retweet',
         name: 'adjust',
         path: '/adjust',
-        component: './Adjust',
+        routes: [
+          {
+            path: '/adjust',
+            component: './Adjust',
+          },
+          {
+            path: '/adjust/detail/:id',
+            component: './Adjust/Detail'
+          },
+        ]
       },
       {
         //name: 'account',

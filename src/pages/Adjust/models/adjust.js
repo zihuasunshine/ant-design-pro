@@ -1,4 +1,4 @@
-import { getAdjustData } from '@/services/api';
+import { getAdjustData, getAdjustDetail, getAdjustRecommended } from '@/services/api';
 
 export default {
   namespace: 'adjust',
@@ -31,7 +31,20 @@ export default {
         loading: false
       });
     },
-  
+    *getDetail({ params }, { call, put }) {
+      const response = yield call(getAdjustDetail, params);
+      yield put({
+        type: 'adjustDetailHandle',
+        payload: response,
+      });
+    },
+    *getAdjustRecommended({ params }, { call, put}) {
+      const response = yield call(getAdjustRecommended, params);
+      yield put({
+        type: 'recommendHandle',
+        payload: response,
+      });
+    }
   },
 
   reducers: {
@@ -41,6 +54,18 @@ export default {
         adjustDataRes: payload,
         loading,
         params
+      };
+    },
+    adjustDetailHandle(state, { payload }) {
+      return {
+        ...state,
+        adjustDetailRes: payload,
+      };
+    },
+    recommendHandle(state, { payload }) {
+      return {
+        ...state,
+        recommendRes: payload,
       };
     },
     loadingHandle(state, { loading }) {
@@ -54,6 +79,6 @@ export default {
         ...state,
         current
       }
-    }
+    },
   },
 };

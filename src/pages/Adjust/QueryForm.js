@@ -33,7 +33,10 @@ const itemLayout = {
 class QueryForm extends Component {
 
   componentDidMount() {
-    const { dispatch } = this.props;
+    const { dispatch, state, form: { setFieldsValue } } = this.props;
+    for(let key in state){
+      setFieldsValue({[key]: state[key]});
+    }
     dispatch({
       type: 'global/getProvince'
     });

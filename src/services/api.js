@@ -395,3 +395,15 @@ export async function getAdjustData(params) {
   }
   return request(`/api/schInfo/tjxx${strParams.slice(0, strParams.length - 1)}`);
 }
+
+// 获取调剂信息详情
+export async function getAdjustDetail(params) {
+  const { id } = params;
+  return request(`/api/schInfo/${id}`);
+}
+
+// 调剂信息详情页推荐列表
+export async function getAdjustRecommended(params) {
+  const { id } = params;
+  return request(`/api/schInfo/recommendedList?id=${id}`);
+}

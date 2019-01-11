@@ -9,7 +9,8 @@ import moment from 'moment';
 class Result extends Component {
 
   componentDidMount() {
-    this.getAdjustData({});
+    const { state } = this.props;
+    this.getAdjustData(state?state:{});
   }
 
   componentWillUnmount() {
@@ -64,7 +65,7 @@ class Result extends Component {
     dataIndex: 'title',
     key: 'title',
     render: (text, record, index) => {
-      return <a href="#" title={text}>{text.length>30?text.slice(0,30)+'...':text}</a>
+      return <a href={`/adjust/detail/${record.id}`} title={text}>{text.length>30?text.slice(0,30)+'...':text}</a>
     }
   }, {
     title: '发布时间',
