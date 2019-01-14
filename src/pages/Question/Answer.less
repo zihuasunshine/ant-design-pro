@@ -33,12 +33,21 @@
       margin-left: 36px;
       .view{
         color: #13C2C2;
+        margin-right: 4px;
       }
     }
   }
   .qDetail{
     text-indent: 2.2em;
     margin: 10px 0;
+    @media screen and (max-width: @screen-sm) {
+      text-indent: 0;
+      padding-left: 8px;
+      padding-right: 8px;
+    }
+    img{
+      max-width: 100%;
+    }
   }
   .answer{
     text-indent: 2.2em;
