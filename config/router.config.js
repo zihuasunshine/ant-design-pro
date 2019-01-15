@@ -74,6 +74,21 @@ export default [
         ]
       },
       {
+        icon: 'form',
+        name: 'cpa',
+        path: '/cpa',
+        routes: [
+          {
+            path: '/cpa',
+            component: './CPA',
+          },
+          {
+            path: '/adjust/detail/:id',
+            component: './Adjust/Detail'
+          },
+        ]
+      },
+      {
         //name: 'account',
         icon: 'user',
         path: '/account',

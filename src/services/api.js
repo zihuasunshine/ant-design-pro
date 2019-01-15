@@ -407,3 +407,14 @@ export async function getAdjustRecommended(params) {
   const { id } = params;
   return request(`/api/schInfo/recommendedList?id=${id}`);
 }
+
+// 专业评估类别
+export async function getCpaTypes() {
+  return request(`/api/cpa/list`);
+}
+
+// 专业评估信息
+export async function getCpaList(params) {
+  const { code } = params;
+  return request(`/api/cpa?code=${code}`);
+}

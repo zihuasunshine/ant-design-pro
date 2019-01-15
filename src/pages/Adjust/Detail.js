@@ -79,7 +79,7 @@ class Adjust extends Component {
               </Row>
               <div className={styles.content} dangerouslySetInnerHTML={{__html: detail.content}}/>
               <div className={styles.align_right}>
-                <i>--微信公众号【小白考研】（微信号：ikaoyaner）整理提供</i>
+                <i>——微信公众号【小白考研】整理提供，调剂信息仅供参考</i>
               </div>
             </div>
           </Col>
