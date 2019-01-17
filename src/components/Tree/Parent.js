@@ -5,12 +5,13 @@ import styles from './style.less';
 class Parent extends Component {
 
   render() {
+    const { label } = this.props;
     return (
       <div className={styles.p_wrapper}>
         <div className={styles.parent}>
           <Icon type="plus" className={styles.icon} />
-            <span className={styles.p_text}>高校类型</span>
-          <Icon type="down" />
+          <span className={styles.p_text}>{label}</span>
+          <Icon type="down" className={styles.down}/>
         </div>
       </div>
     )

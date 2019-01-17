@@ -15,7 +15,7 @@ const rightLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 18, xxl: 18};
 class CPA extends Component {
 
   columns = [{
-    title: '评估档次',
+    title: '评估结果',
     dataIndex: 'level',
     key: 'level',
     align: 'center'

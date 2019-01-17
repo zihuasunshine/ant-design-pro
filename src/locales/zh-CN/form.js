@@ -55,4 +55,6 @@ export default {
   'form.sf.label': '省份',
   'form.sf.placeholder': '所在省份',
   'form.yxsx.label': '高校类型',
+  //===学科评估===//
+  'form.school.placeholder': '请输入高校全称',
 };

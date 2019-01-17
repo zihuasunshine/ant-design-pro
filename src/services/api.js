@@ -418,3 +418,20 @@ export async function getCpaList(params) {
   const { code } = params;
   return request(`/api/cpa?code=${code}`);
 }
+
+// 学科评估类别
+export async function getPgTypes() {
+  return request(`/api/pgjg/categories`);
+}
+
+// 学科评估按学科id查询列表
+export async function getPgjgListById(params) {
+  const { id } = params;
+  return request(`/api/pgjg?id=${id}`);
+}
+
+// 学科评估按学校名称查询列表
+export async function getPgjgListBySchool(params) {
+  const { name } = params;
+  return request(`/api/pgjg/sch?name=${name}`);
+}

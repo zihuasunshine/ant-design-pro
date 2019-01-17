@@ -75,17 +75,24 @@ export default [
       },
       {
         icon: 'form',
+        name: 'pgjg',
+        path: '/pgjg',
+        routes: [
+          {
+            path: '/pgjg',
+            component: './PGJG',
+          }
+        ]
+      },
+      {
+        icon: 'form',
         name: 'cpa',
         path: '/cpa',
         routes: [
           {
             path: '/cpa',
             component: './CPA',
-          },
-          {
-            path: '/adjust/detail/:id',
-            component: './Adjust/Detail'
-          },
+          }
         ]
       },
       {

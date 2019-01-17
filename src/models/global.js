@@ -1,4 +1,4 @@
-import { queryNotices, getProvince, getCpaTypes } from '@/services/api';
+import { queryNotices, getProvince, getCpaTypes, getPgTypes } from '@/services/api';
 
 export default {
   namespace: 'global',
@@ -9,6 +9,13 @@ export default {
   },
 
   effects: {
+    *getPgjgTypes(_, { call, put }) {
+      const response = yield call(getPgTypes);
+      yield put({
+        type: 'pgjgTypesHandel',
+        payload: response
+      });
+    },
     *getCpaTypes(_, { call, put }) {
       const response = yield call(getCpaTypes);
       yield put({
@@ -110,6 +117,12 @@ export default {
       return {
         ...state,
         typeRes: payload
+      }
+    },
+    pgjgTypesHandel(state, { payload }) {
+      return {
+        ...state,
+        pgjgTypeRes: payload
       }
     },
   },
