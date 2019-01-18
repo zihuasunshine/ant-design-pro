@@ -4,16 +4,10 @@ import { join } from 'path';
 
 class Child extends Component {
 
-  state = {
-    currentValue: this.props.defaultValue
-  }
-
-  handleChildClick = (value) =>{
-    const { onSelect } = this.props;
-    onSelect && onSelect(value);
-    this.setState({
-      currentValue: value
-    });
+  handleChildClick = (item) =>{
+    const { onSelect, setDefalutValue } = this.props;
+    onSelect && onSelect(item);
+    setDefalutValue && setDefalutValue(item);
   }
 
   renderChildren = (data, currentValue) => {
@@ -22,7 +16,7 @@ class Child extends Component {
       return (
         <div 
           className={[styles.child, selected?styles.selected:''].join(" ")} key={`child${item.id}`} 
-          onClick={() => {this.handleChildClick(item.value)}}
+          onClick={() => {this.handleChildClick(item)}}
         >
           <span className={styles.c_text}>{item.label}</span>
         </div>
@@ -31,12 +25,11 @@ class Child extends Component {
   }
 
   render() {
-    const { data } = this.props;
-    const { currentValue } = this.state;
+    const { data, defaultValue } = this.props;
 
     return (
       <div className={styles.c_wrapper}>
-        {this.renderChildren(data, currentValue)}
+        {this.renderChildren(data, defaultValue)}
       </div>
     )
   }

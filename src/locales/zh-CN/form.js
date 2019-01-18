@@ -57,4 +57,5 @@ export default {
   'form.yxsx.label': '高校类型',
   //===学科评估===//
   'form.school.placeholder': '请输入高校全称',
+  'form.schoolKey.placeholder': '请输入高校名称关键词',
 };

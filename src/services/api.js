@@ -435,3 +435,9 @@ export async function getPgjgListBySchool(params) {
   const { name } = params;
   return request(`/api/pgjg/sch?name=${name}`);
 }
+
+// 高校查询
+export async function getUniversityInfo(params) {
+  const { key, word } = params;
+  return request(`/api/school?k=${key}&w=${word}`);
+}

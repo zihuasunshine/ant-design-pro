@@ -74,6 +74,17 @@ export default [
         ]
       },
       {
+        icon: 'search',
+        name: 'university',
+        path: '/university',
+        routes: [
+          {
+            path: '/university',
+            component: './University',
+          }
+        ]
+      },
+      {
         icon: 'form',
         name: 'pgjg',
         path: '/pgjg',

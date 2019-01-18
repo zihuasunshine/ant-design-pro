@@ -5,8 +5,8 @@ import { formatMessage } from 'umi/locale';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import styles from './style.less';
 
-const leftLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 6, xxl: 6};
-const rightLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 18, xxl: 18};
+const leftLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 5, xxl: 5};
+const rightLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 19, xxl: 19};
 
 @connect(({ pgjg }) => ({
   pgjg
@@ -17,8 +17,6 @@ class School extends Component {
 
   columns = [{
     title: '序号',
-    dataIndex: 'level',
-    key: 'level',
     align: 'center',
     render: (text, record, index) => {
       return <span>{index+1}</span>

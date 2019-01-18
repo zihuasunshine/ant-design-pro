@@ -5,14 +5,18 @@ import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import Child from '@/components/Tree/Child';
 import styles from './style.less';
 
-const leftLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 6, xxl: 6};
-const rightLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 18, xxl: 18};
+const leftLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 5, xxl: 5};
+const rightLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 19, xxl: 19};
 
 @connect(({ global, cpa }) => ({
   global,
   cpa
 }))
 class CPA extends Component {
+
+  state = {
+    defaultValue: '0351' 
+  }
 
   columns = [{
     title: '评估结果',
@@ -41,13 +45,21 @@ class CPA extends Component {
     });
   }
 
-  handleSelect = (value) => {
+  handleSelect = (item) => {
+    const { value } = item;
     const { dispatch } = this.props;
     dispatch({
       type: 'cpa/getCpaList',
       params: {
         code: value
       }
+    });
+  }
+
+  setDefalutValue = (item) => {
+    const { value } = item;
+    this.setState({
+      defaultValue: value
     });
   }
 
@@ -80,7 +92,7 @@ class CPA extends Component {
    }
 
   render() {
-
+    const { defaultValue } = this.state;
     const { global: { typeRes }, cpa: { cpaDataRes } } = this.props;
     const types = typeRes && typeRes.code === 200? typeRes.data : [];
     const dataSource = cpaDataRes && cpaDataRes.code === 200? this.convertData(cpaDataRes.data.dataList) : [];
@@ -94,9 +106,10 @@ class CPA extends Component {
             <Col {...leftLayout}>
               <div className={styles.left}>
                 <Child 
-                  defaultValue='0351' 
+                  defaultValue={defaultValue}
                   data={this.convertTypes(types)} 
                   onSelect={this.handleSelect}
+                  setDefalutValue={this.setDefalutValue}
                 />
               </div>
             </Col>

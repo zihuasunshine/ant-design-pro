@@ -5,8 +5,8 @@ import Parent from '@/components/Tree/Parent';
 import Child from '@/components/Tree/Child';
 import styles from './style.less';
 
-const leftLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 6, xxl: 6};
-const rightLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 18, xxl: 18};
+const leftLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 5, xxl: 5};
+const rightLayout = {xs: 24, sm:24, md: 24,lg: 24, xl: 19, xxl: 19};
 
 @connect(({ global, pgjg }) => ({
   global,
@@ -17,13 +17,12 @@ class Subject extends Component {
   code = '';
 
   state = {
-    code: ''
+    code: '',
+    defaultValue: 1,
   }
 
   columns = [{
     title: '序号',
-    dataIndex: 'level',
-    key: 'level',
     align: 'center',
     render: (text, record, index) => {
       return <span>{index+1}</span>
@@ -63,7 +62,8 @@ class Subject extends Component {
     });
   }
 
-  handleSelect = (value) => {
+  handleSelect = (item) => {
+    const { value } = item;
     const { dispatch } = this.props;
     dispatch({
       type: 'pgjg/getPgjgListById',
@@ -73,9 +73,19 @@ class Subject extends Component {
     });
   }
 
+  setDefalutValue = (item) => {
+    const { value } = item;
+    this.setState({
+      defaultValue: value
+    });
+  }
+
+
   handleClick = (code) => {
-    this.setState({code: this.code === code? '':code});
-    this.code = code;
+    this.setState({code: this.code === code? '':code}, () => {
+      const { code } = this.state;
+      this.code = code;
+    });
   }
 
   convertTypes = (data) => {
@@ -90,7 +100,7 @@ class Subject extends Component {
     return types;
    }
 
-  renderTree = (data) => {
+  renderTree = (defaultValue, data) => {
     const { code } = this.state;
     return data.map( item => {
       return (
@@ -100,9 +110,10 @@ class Subject extends Component {
           </div>
           <div className={item.code === code? styles.show:styles.hide}>
             <Child 
-              defaultValue='1' 
+              defaultValue={defaultValue}
               data={this.convertTypes(item.childen)} 
               onSelect={this.handleSelect}
+              setDefalutValue={this.setDefalutValue}
             /> 
           </div>
         </Fragment>
@@ -111,6 +122,7 @@ class Subject extends Component {
   }
 
   render() {
+    const { defaultValue } = this.state;
     const { global: { pgjgTypeRes }, pgjg: { pgjgList1Res } } = this.props;
     const pgjgType = pgjgTypeRes && pgjgTypeRes.code === 200 ? pgjgTypeRes.data : [];
     const pgjgList = pgjgList1Res && pgjgList1Res.code === 200 ? pgjgList1Res.data.details : [];
@@ -122,7 +134,7 @@ class Subject extends Component {
         <Row gutter={16}>
           <Col {...leftLayout}>
             <div className={styles.left}>
-            { this.renderTree(pgjgType) }
+            { this.renderTree(defaultValue, pgjgType) }
             </div>
           </Col>
           <Col {...rightLayout}>
