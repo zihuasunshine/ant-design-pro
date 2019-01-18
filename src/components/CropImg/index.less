@@ -8,30 +8,51 @@
 .after-img {
   width: 300px;
 }
-
+.img_wrapper{
+  position: relative;
+  height: 30px;
+  background: #13C2C2;
+  cursor: pointer;
+  color: #fff;
+  text-align: center;
+  line-height: 30px;
+  &:after {
+    display: inline-block;
+    content: '更换头像';
+  }
+  .view_wrapper{
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #F1F1F1;
+  }
+}
 .avatar_wrapper{
   width: 144px;
   text-align: center;
-}
-.avatar_title {
-  height: 22px;
-  font-size: @font-size-base;
-  color: @heading-color;
-  line-height: 22px;
-  margin-bottom: 8px;
-  text-align: left;
-}
-.avatar {
-  width: 144px;
-  height: 144px;
-  margin-bottom: 12px;
-  overflow: hidden;
-  img {
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
+  .avatar_title {
+    height: 22px;
+    font-size: @font-size-base;
+    color: @heading-color;
+    line-height: 22px;
+    margin-bottom: 8px;
+    text-align: left;
+  }
+  .avatar {
+    width: 144px;
+    height: 144px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+    }
   }
 }
+
 .button_view {
   width: 144px;
   text-align: center;
