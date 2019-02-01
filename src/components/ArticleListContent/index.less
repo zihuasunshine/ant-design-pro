@@ -1,9 +1,15 @@
 @import '~antd/lib/style/themes/default.less';
 
 .listContent {
+  border-bottom: 1px solid #f7f7f7;
+  margin-bottom: 12px;
   .description {
     line-height: 22px;
     //max-width: 720px;
+    .a{
+      color: #333;
+      font-weight: bold;
+    }
     .cate{
       color: #aaa;
       margin-bottom: 6px;
@@ -12,8 +18,16 @@
       }
     }
   }
+  .content{
+    width: 100%;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    color: #aaa;
+  }
   .align_right{
     text-align: right;
+    font-size: 13px;
     color: #aaa;
   }
   .extra {
@@ -38,7 +52,7 @@
 .a{
   color: #666;
   &:hover{
-    color: #13C2C2;
+    color: #139BEA;
   }
 }
 @media screen and (max-width: @screen-xs) {

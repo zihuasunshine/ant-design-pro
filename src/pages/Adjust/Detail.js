@@ -47,8 +47,8 @@ class Adjust extends Component {
           <Col {...colLayout1}>
             <div className={styles.detail_wrapper}>
               <div className={styles.tag_wrapper}>
-                <Tag className={styles.tag} color='#13C2C2'><Link to={{pathname:'/adjust', state:{yx: detail.yxmc}}}>{detail.yxmc}调剂信息</Link></Tag>
-                <Tag className={styles.tag} color='#13C2C2'><Link to={{pathname:'/adjust', state:{zy: detail.zymc}}}>与{detail.zymc}相关调剂信息</Link></Tag>
+                <Tag className={styles.tag} color='#139BEA'><Link to={{pathname:'/adjust', state:{yx: detail.yxmc}}}>{detail.yxmc}调剂信息</Link></Tag>
+                <Tag className={styles.tag} color='#139BEA'><Link to={{pathname:'/adjust', state:{zy: detail.zymc}}}>与{detail.zymc}相关调剂信息</Link></Tag>
               </div>
               <h2>{detail.title}</h2>
               <Row className={styles.baseinfo_wrapper}>

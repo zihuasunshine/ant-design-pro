@@ -25,8 +25,8 @@
   "/15.async.js": "/15.async.js",
   "/16.chunk.css": "/16.chunk.css",
   "/16.async.js": "/16.async.js",
+  "/17.chunk.css": "/17.chunk.css",
   "/17.async.js": "/17.async.js",
-  "/18.chunk.css": "/18.chunk.css",
   "/18.async.js": "/18.async.js",
   "/19.chunk.css": "/19.chunk.css",
   "/19.async.js": "/19.async.js",
@@ -36,6 +36,7 @@
   "/21.async.js": "/21.async.js",
   "/22.chunk.css": "/22.chunk.css",
   "/22.async.js": "/22.async.js",
+  "/23.chunk.css": "/23.chunk.css",
   "/23.async.js": "/23.async.js",
   "/24.async.js": "/24.async.js",
   "/25.async.js": "/25.async.js",
@@ -60,11 +61,10 @@
   "/icons/icon-512x512.png": "/icons/icon-512x512.png",
   "/index.html": "/index.html",
   "/manifest.json": "/manifest.json",
-  "/precache-manifest.1a2282e63463b1f59863a7a54c338999.js": "/precache-manifest.1a2282e63463b1f59863a7a54c338999.js",
+  "/precache-manifest.41bbeb02b1c06040f9c71716a1029cd4.js": "/precache-manifest.41bbeb02b1c06040f9c71716a1029cd4.js",
   "/pwacompat.min.js": "/pwacompat.min.js",
   "/service-worker.js": "/service-worker.js",
   "/static/black_logo.png": "/static/black_logo.0afbc0ea.png",
-  "/static/Home.less": "/static/index.f37d278e.jpg",
-  "/static/UserLayout.less": "/static/user_bg.0bd4a903.jpg",
-  "/static/white_logo.png": "/static/white_logo.b59e94cb.png"
+  "/static/img_0.png": "/static/img_0.a053e05b.png",
+  "/static/UserLayout.less": "/static/user_bg.0bd4a903.jpg"
 }

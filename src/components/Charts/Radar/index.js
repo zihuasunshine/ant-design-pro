@@ -81,7 +81,7 @@ class Radar extends Component {
       '#2FC25B',
       '#8543E0',
       '#F04864',
-      '#13C2C2',
+      '#139BEA',
       '#fa8c16',
       '#a0d911',
     ];

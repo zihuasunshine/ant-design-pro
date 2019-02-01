@@ -1,4 +1,4 @@
-import { queryNotices, getProvince, getCpaTypes, getPgTypes } from '@/services/api';
+import { queryNotices, getProvince, getCpaTypes, getPgTypes, queryUser } from '@/services/api';
 
 export default {
   namespace: 'global',
@@ -9,6 +9,13 @@ export default {
   },
 
   effects: {
+    *getOtherUserInfo({ params }, { call, put }) {
+      const response = yield call(queryUser, params);
+      yield put({
+        type: 'getOtherUserInfoHandle',
+        payload: response
+      });
+    },
     *getPgjgTypes(_, { call, put }) {
       const response = yield call(getPgTypes);
       yield put({
@@ -89,6 +96,12 @@ export default {
   },
 
   reducers: {
+    getOtherUserInfoHandle(state, { payload }) {
+      return {
+        ...state,
+        otherUserRes: payload,
+      };        
+    },
     changeLayoutCollapsed(state, { payload }) {
       return {
         ...state,

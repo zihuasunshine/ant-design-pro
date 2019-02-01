@@ -1,3 +1,8 @@
+//const width = window.screen.availWidth;
+//const isMobile = width < 599? true : false;
+//console.log(this);
+//import { isMobile } from '@/utils/utils';
+
 export default [
   // user
   {
@@ -28,7 +33,8 @@ export default [
           {
             path: '/home',
             //name: 'center',
-            component: './Index/Home',
+            //component: './Index/Home',
+            component: './Index',
           },
           {
             path: '/article/:id',

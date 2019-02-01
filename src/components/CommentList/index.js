@@ -5,8 +5,8 @@ import Link from 'umi/link';
 import moment from 'moment';
 import styles from './style.less';
 
-const colLayout1 = { xs: 20, sm: 19, md: 19, lg: 22, xl: 22, xxl: 22 };
-const colLayout2 = { xs: 4, sm: 3, md: 3, lg: 22, xl: 2, xxl: 2 };
+const colLayout1 = { xs: 24, sm: 18, md: 19, lg: 20, xl: 21, xxl: 21 };
+const colLayout2 = { xs: 24, sm: 6, md: 5, lg: 4, xl: 3, xxl: 3 };
 
 const IconText = ({ type, text }) => (
   <span style={{marginLeft: 46}}>
@@ -52,6 +52,10 @@ class CommentList extends Component {
     this.setState({ currentId: id});
   }
 
+  hideCommentBox = () => {
+    this.setState({currentId: ''});
+  }
+
   handleComment = (answerId, commentId) => {
     const { inputValue } = this.state;
     const { onHandleComment } = this.props;
@@ -90,7 +94,7 @@ class CommentList extends Component {
         }:false}
         dataSource={listData}
         renderItem={item => (
-          <div>
+          <div className={styles.list_wrapper}>
             <List.Item
               key={item.addTime}
               actions={[
@@ -101,19 +105,19 @@ class CommentList extends Component {
              >
               <List.Item.Meta
                 // avatar={<Link to={`/account/center/waitAnswer/${item.uid}`}><Avatar src={item.avatarFile} /></Link>}
-                avatar={<Avatar src={item.avatarFile} />}
+                avatar={<Avatar src={item.avatarFile}/>}
                 title={<div><a>{item.userName}</a><span className={styles.add_time}>{moment(item.addTime).format('YYYY-MM-DD HH:mm')}</span></div>}
                 description={item.message}
               />
             </List.Item>
             {item.id === currentId && (
               <div className={styles.comment_wraper}>
-                <Row>
+                <Row gutter={8}>
                   <Col {...colLayout1}>
                     <Input
                       ref={this.saveInputRef}
                       type="text"
-                      style={{ width: '98%' }}
+                      style={{ width: '100%' }}
                       value={inputValue}
                       placeholder={formatMessage({id: 'rate_to_best_answer'})}
                       onChange={this.handleInputChange}
@@ -121,15 +125,21 @@ class CommentList extends Component {
                       onPressEnter={this.handleInputConfirm}
                     />
                   </Col>
-                  <Col {...colLayout2}>
-                    <Button type='primary' onClick={() => this.handleComment(item.answerId, item.id)}>评论</Button>
+                  <Col {...colLayout2} className={styles.comment_btn_wrapper}>
+                    <span className={styles.cancle_comment} onClick={this.hideCommentBox}>取消</span>
+                    <Button 
+                      className={styles.comment}
+                      type='primary' 
+                      onClick={() => this.handleComment(item.answerId, item.id)}
+                    >
+                        评论
+                      </Button>
                   </Col>
                 </Row>
               </div>
             )}
             <div className={styles.sub_comment}>
               <List
-                size='small'
                 locale={{emptyText:' '}}
                 loadMore={item.commentsCount>3 && item.commentlist.length==3?<LoadMore commentId={item.id} />:null}
                 dataSource={item.commentlist}
@@ -137,7 +147,7 @@ class CommentList extends Component {
                   <List.Item key={item.addTime}>
                     <List.Item.Meta
                       //avatar={<Link to={`/account/center/waitAnswer/${item.uid}`}></Link>}
-                      avatar={<Avatar src={el.avatarFile} />}
+                      avatar={<Avatar src={el.avatarFile} size='small'/>}
                       title={<div><a>{el.userName}</a><span className={styles.add_time}>{moment(el.addTime).format('YYYY-MM-DD mm:ss')}</span></div>}
                       description={el.message}
                     />

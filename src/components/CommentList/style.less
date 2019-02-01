@@ -1,20 +1,40 @@
+@import '~antd/lib/style/themes/default.less';
+
 .comment_box{
-  .add_time{
-    margin-left: 24px;
-    font-size: 12px;
-    color: #999;
-    font-weight: normal;
-  }
-  .sub_comment{
-   padding-left: 48px;
-   box-sizing: border-box;
-  }
-  .comment_wraper{
-    padding-left: 48px;
-    box-sizing: border-box;
-    margin-top: 10px;
-  }
-  .ant-list-empty-text{
-    padding: 0;
+  .list_wrapper{
+    .add_time{
+      margin-left: 24px;
+      font-size: 12px;
+      color: #999;
+      font-weight: normal;
+    }
+    .sub_comment{
+     padding-left: 40px;
+     box-sizing: border-box;
+    }
+    .comment_wraper{
+      padding-left: 40px;
+      box-sizing: border-box;
+      margin-top: 10px;
+      .comment_btn_wrapper{
+        text-align: right;
+        @media screen and (max-width: @screen-sm){
+          margin-top: 12px;
+        }
+        .cancle_comment{
+          font-size: 16px;
+          color: #aaa;
+          cursor: pointer;
+        }
+        .comment{
+          margin-left: 12px;
+          width: 72px;
+          border-radius: 20px;
+        }
+      }
+    }
+    .ant-list-empty-text{
+      padding: 0;
+    }
   }
 }

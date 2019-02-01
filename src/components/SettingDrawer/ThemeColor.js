@@ -32,7 +32,7 @@ const ThemeColor = ({ colors, title, value, onChange }) => {
       },
       {
         key: 'cyan',
-        color: '#13C2C2',
+        color: '#139BEA',
       },
       {
         key: 'green',

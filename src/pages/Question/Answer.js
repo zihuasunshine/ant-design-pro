@@ -12,13 +12,15 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Row, Col, Icon, Button, Input, Avatar, message, Form, Divider, Upload } from 'antd';
 import moment from 'moment';
 import styles from './Answer.less';
-import bestSrc from '@/assets/best.png';
+//import bestSrc from '@/assets/best.png';
+import bestSrc from '@/assets/xbkyaner.png';
 
 //const colLayout = { xs: 24, sm: 24, md: 24, lg: 16, xl: 16, xxl: 16 };
 const colLayout = { xs: 24, sm: 24, md: 24, lg: 24, xl: 24, xxl: 24 };
-const colLayout1 = { xs: 20, sm: 19, md: 19, lg: 22, xl: 22, xxl: 22 };
-const colLayout2 = { xs: 4, sm: 3, md: 3, lg: 22, xl: 2, xxl: 2 };
+const colLayout1 = { xs: 24, sm: 18, md: 19, lg: 20, xl: 21, xxl: 21 };
+const colLayout2 = { xs: 24, sm: 6, md: 5, lg: 4, xl: 3, xxl: 3 };
 const FormItem = Form.Item;
+const TextArea = Input.TextArea;
 const controls = [
   'bold',
   'italic',
@@ -29,7 +31,8 @@ const controls = [
   'separator',
 ];
 
-@connect(({ question }) => ({
+@connect(({ global, question }) => ({
+  global,
   question,
 }))
 @Form.create()
@@ -94,6 +97,14 @@ class Answer extends PureComponent {
       const { question: { qDetailRes }} = this.props;
       if(qDetailRes && qDetailRes.code == 200) {
         const { data: { answer }} = qDetailRes;
+        if(answer) {
+          dispatch({
+            type: 'global/getOtherUserInfo',
+            params: {
+              uid: answer.uid
+            }
+          });
+        }
         if(answer) this.isVote(answer.answerId);
         if(answer) this.getComment(answer.answerId);
       }else{
@@ -223,8 +234,8 @@ class Answer extends PureComponent {
         commentId
       },
     }).then(() =>{
-      const { question: { commentRes }} = this.props;
-      if(commentRes && commentRes.code === 200) {
+      const { question: { commentedRes }} = this.props;
+      if(commentedRes && commentedRes.code === 200) {
         // 前端追加数据
         const user = JSON.parse(sessionStorage.getItem('user'));
         const { messages, commentCount } = this.state;
@@ -248,7 +259,7 @@ class Answer extends PureComponent {
         }else{
           // 一级评论追加数据
           _messages.unshift({
-            id: commentRes.data,
+            id: commentedRes.data,
             addTime: new Date().getTime(),
             answerId: answerId,
             userName: user.userName,
@@ -277,7 +288,6 @@ class Answer extends PureComponent {
   }
 
   uploadHandler = (param) => {
-    debugger;
     if (!param.file) {
       return false;
     }
@@ -299,6 +309,22 @@ class Answer extends PureComponent {
     });
   }
 
+  // 请求完善或请求回答
+  handlePlease = (answerId) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/perfectAnswer',
+      params: {
+        answerId,
+        reason: formatMessage({id: 'app.setting.user.please.answer'}),
+        perfectAnswer: ''
+      },
+    }).then(() => {
+      notificationTip(formatMessage({id: 'app.setting.admin.answer'}), true);
+    });
+  }
+
+  // 完善或回答问题
   handleSubmit = (e, answerId, questionId) =>{
     e.preventDefault();
     const { dispatch, form: { validateFields }} = this.props;
@@ -345,7 +371,7 @@ class Answer extends PureComponent {
   }
 
   render() {
-    const { question: { qDetailRes, isVoteRes, commentRes, moreCommentRes }, form: { getFieldDecorator }} = this.props;
+    const { question: { qDetailRes, isVoteRes, commentRes, moreCommentRes }, form: { getFieldDecorator }, global: { otherUserRes }} = this.props;
     const { isFormVisible, likeCount, dislikeCount, commentCount, messages} = this.state;
     let answer = {}, question = {};
     if (this.count === 0) {
@@ -377,11 +403,15 @@ class Answer extends PureComponent {
         )
       }
     ]
+
+    // 管理员
+    
+    const answerAvatar = !otherUserRes || otherUserRes && otherUserRes.code === 200 && otherUserRes.data.uid === 8? bestSrc : otherUserRes.data.avatarFile;
+    const answerUser = !otherUserRes || otherUserRes && otherUserRes.code === 200 && otherUserRes.data.uid === 8? '小白考研' : (otherUserRes.data.nickname || otherUserRes.data.userName);
     const agreeCount = likeCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.agreeCount : likeCount) : likeCount;
     const disagreeCount = dislikeCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.againstCount : dislikeCount) : dislikeCount;
     const commentsCount = commentCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.commentCount : commentCount) : commentCount;
     const messageList = messages.length == 0?(commentRes && commentRes.data? commentRes.data : messages) : messages;
-
 
     const isLiked = isVoteRes && isVoteRes.data == 1; // 点过赞
     const isNotCare = isVoteRes && isVoteRes.data == 0; // 没点赞也没有点踩 
@@ -399,13 +429,15 @@ class Answer extends PureComponent {
         <div className={styles.main}>
           <Row>
             <Col {...colLayout}>
-              <div className={styles.qtitle}>
-                <Icon type="question-circle" className={styles.qicon} />
-                <span>{question.title}</span>
-              </div>
-              <div className={styles.qTime}>
-                <span>提问时间：{moment(question.addTime).format('YYYY-MM-DD')}</span>
-                <span className={styles.view_wrapper}><Icon type="eye" className={styles.view}/>{question.viewCount}</span>
+              <div className={styles.qdetailInfo}>
+                <div className={styles.qtitle}>
+                  <Icon type="question" className={styles.qicon} />
+                  <span>{question.title}</span>
+                </div>
+                <div className={styles.qTime}>
+                  <span>#提问时间：{moment(question.addTime).format('YYYY-MM-DD')}</span>
+                  <span className={styles.view_wrapper}><Icon type="eye" className={styles.view}/>{question.viewCount}</span>
+                </div>
               </div>
               <div className={styles.qDetail} dangerouslySetInnerHTML={{__html: question.detail}}/>
               <div className={styles.img_wrapper}>
@@ -417,13 +449,13 @@ class Answer extends PureComponent {
             {answer && answer.answerId ? (
               <Col {...colLayout}>
                 <div className={styles.title_wrapper}>
-                  <img alt="best" src={bestSrc} />
-                  <h3 className={styles.title}>最佳答案</h3>
+                  <img className={styles.answer_avatar} src={answerAvatar} />
+                  <h3 className={styles.title}>{answerUser}</h3>
                 </div>
                 <div className={styles.answer} dangerouslySetInnerHTML={{__html: answer.answerContent}}/>
                 <div className={styles.operator}>
                   <span className={styles.icon_wrapper} onClick={() => this.handleVote(1,answer.answerId)}>
-                    <Icon type="like" theme={isLiked?'filled':'' } className={styles.icon}/>{agreeCount}
+                    <Icon type="like" theme={isLiked?'filled':'' } className={isLiked?styles.iconSelected:styles.icon}/>{agreeCount}
                   </span>
                   <span className={styles.icon_wrapper} onClick={() => this.handleVote(-1,answer.answerId)}>
                     <Icon type="dislike" theme={isDislike?'filled':''} className={styles.icon}/>{disagreeCount}
@@ -432,26 +464,45 @@ class Answer extends PureComponent {
                     <Icon type="message" className={styles.icon}/>{commentsCount}
                   </span>
                 </div>
+                <Row className={styles.answer_btn}>
+                  <Col span={11} className={styles.answer_center} onClick={() => {this.handlePlease(answer.answerId )}}>
+                    <Icon type="user-add" className={styles.icon}/>
+                    {answer && answer.answerId ? formatMessage({ id: 'app.settings.pleasePerfect' }) : formatMessage({ id: 'app.settings.pleaseAnswer' })}
+                  </Col>
+                  <Col span={2} className={styles.answer_center}>
+                    <Divider type="vertical" />
+                  </Col>
+                  <Col span={11} className={styles.answer_center} onClick={this.handleClick}>
+                    <Icon type="form" className={styles.icon}/>
+                    {answer && answer.answerId ? formatMessage({ id: 'app.settings.perfect' }) : formatMessage({ id: 'app.settings.answer' })}
+                  </Col>
+                </Row>
                 {inputVisible && (
                   <div className={styles.comment_wraper}>
-                    <Row>
-                      <Col {...colLayout1}>
-                        <Input
+                    <div className={styles.flex_wrapper}>
+                      <img className={styles.flex_left} src={answerAvatar} />
+                      <div className={styles.flex_right}>
+                        <TextArea
                           ref={this.saveInputRef}
                           type="text"
-                          size="large"
-                          style={{ width: '98%' }}
+                          rows={3}
                           value={inputValue}
                           placeholder={formatMessage({id: 'rate_to_best_answer'})}
                           onChange={this.handleInputChange}
                           //onBlur={this.handleInputConfirm}
                           onPressEnter={this.handleInputConfirm}
                         />
-                      </Col>
-                      <Col {...colLayout2}>
-                        <Button type='primary' size='large' onClick={() => this.handleComment(inputValue, answer.answerId)}>评论</Button>
-                      </Col>
-                    </Row>
+                        <div className={styles.comment_btn_wrapper}>
+                          <Button 
+                            type='primary' 
+                            className={styles.comment}
+                            onClick={() => this.handleComment(inputValue, answer.answerId)}
+                          >
+                            评论
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                     <CommentList 
                       listData={messageList}
                       onHandleComment={this.handleComment}
@@ -462,17 +513,10 @@ class Answer extends PureComponent {
               </Col>
             ) : null}
           </Row>
-          <Row>
-            <Col {...colLayout} className={styles.btn_wrapper}>
-              <Button type='primary' size='large' icon='edit' onClick={this.handleClick}>
-                {answer && answer.answerId ? formatMessage({ id: 'app.settings.perfect' }) : formatMessage({ id: 'app.settings.answer' })}
-              </Button>
-            </Col>
-          </Row>
           <Row className={styles.form_box} style={{display: isFormVisible? 'block':'none'}}>
             <Col {...colLayout}>
               <Form onSubmit={(e) => this.handleSubmit(e, question.bestAnswer, question.id)}>
-                {question.bestAnswer? (<FormItem className={styles.formitem}>
+                {/*question.bestAnswer? (<FormItem className={styles.formitem}>
                   {getFieldDecorator('reason', {
                     rules: [
                       {
@@ -487,7 +531,7 @@ class Answer extends PureComponent {
                     />
                   )}
                 </FormItem>):null
-                }
+                */}
                 <FormItem>
                   <BraftEditor
                       value={editorState}
@@ -500,7 +544,9 @@ class Answer extends PureComponent {
                     />
                 </FormItem>
                 <div className={styles.align_right}>
-                  <Button htmlType="submit" type="primary">{formatMessage({id: 'app.settings.submit.answer'})}</Button>
+                  <Button htmlType="submit" type="primary" className={styles.submit}>
+                    {formatMessage({id: 'app.settings.submit.answer'})}
+                  </Button>
                 </div>
               </Form>
             </Col>

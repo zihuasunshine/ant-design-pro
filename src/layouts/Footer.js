@@ -5,7 +5,7 @@ import GlobalFooter from '@/components/GlobalFooter';
 const year = new Date().getFullYear();
 const { Footer } = Layout;
 const FooterView = () => (
-  <Footer style={{ padding: 0 }}>
+  <Footer style={{ padding: 0, background: '#004B80' }}>
     <GlobalFooter
       /*links={[
         {
@@ -28,7 +28,7 @@ const FooterView = () => (
         },
       ]}*/
       copyright={
-        <div style={{color: 'rgba(0,0,0,.9)'}}>
+        <div style={{color: 'rgba(255,255,255,.9)'}}>
           Copyright <Icon type="copyright" /> {year} 小白考研
         </div>
       }

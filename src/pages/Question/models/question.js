@@ -134,7 +134,7 @@ export default {
     commentHandle(state, { payload }) {
       return {
         ...state,
-        commentRes: payload
+        commentedRes: payload
       }
     },
     getCommentHandle(state, { payload }) {

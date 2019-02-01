@@ -4,6 +4,7 @@ import Link from 'umi/link';
 import Debounce from 'lodash-decorators/debounce';
 import styles from './index.less';
 import RightContent from './RightContent';
+import logo_text from '@/assets/logo_text.png';
 
 export default class GlobalHeader extends PureComponent {
   componentWillUnmount() {
@@ -28,8 +29,8 @@ export default class GlobalHeader extends PureComponent {
       <div className={styles.header}>
         {isMobile && (
           <Link to="/" className={styles.logo} key="logo">
-            {/*<img src={logo} alt="logo" width="32" />*/}
-            <em className={styles.logo_text}>小白考研</em>
+            <img src={logo_text} alt="logo" width='84'/>
+            {/*<em className={styles.logo_text}>小白考研</em>*/}
           </Link>
         )}
         <span className={styles.trigger} onClick={this.toggle}>

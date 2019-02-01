@@ -4,7 +4,6 @@ export default {
   namespace: 'home',
 
   state: {
-    list: [],
     category: {}
   },
 
@@ -31,10 +30,12 @@ export default {
       });
     },
     *fetchList({ params }, { call, put }) {
+      const { flag } = params;
       const response = yield call(search, params);
       yield put({
         type: 'saveList',
         payload: response,
+        flag,
       });
     },
     *getCategoryParam({ params }, { put }) {
@@ -64,10 +65,16 @@ export default {
         articleDetailRes: payload,
       };
     },
-    saveList(state, { payload }) {
+    saveList(state, { payload, flag }) {
+      if(flag){
+        const { listRes } = state;
+        const preList = listRes && listRes.code === 200? listRes.data:[];
+        const nowList = payload && payload.code === 200? payload.data:[];
+        payload.data = payload && payload.code === 200?  [...preList, ...nowList]:[...preList];
+      }
       return {
         ...state,
-        list: payload,
+        listRes: payload,
       };
     },
     setCategoryParam(state, { payload }) {

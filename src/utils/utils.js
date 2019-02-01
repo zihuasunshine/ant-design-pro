@@ -213,8 +213,14 @@ export function notificationTip(message, isSuccess) {
     description: '',
     duration: 3,
     //placement: 'bottomRight',
-    icon: isSuccess?<Icon type="smile" style={{color: '#13C2C2'}}/>:<Icon type="frown" style={{color: 'red'}} />,
+    icon: isSuccess?<Icon type="smile" style={{color: '#139BEA'}}/>:<Icon type="frown" style={{color: 'red'}} />,
   });
+}
+
+// 设备宽度是否为手机设备宽度
+export function isMobile() {
+  const width = window.screen.availWidth;
+  return width < 599;
 }
 
 // 给官方演示站点用，用于关闭真实开发环境不需要使用的特性

@@ -73,7 +73,11 @@ export default {
   'app.settings.notification.todo-description': '待办任务将以站内信的形式通知',
   'app.settings.open': '开',
   'app.settings.close': '关',
+  'app.settings.pleaseAnswer': '请求回答',
+  'app.settings.pleasePerfect': '请求完善',
   'app.settings.answer': '我来回答',
   'app.settings.perfect': '我来完善',
   'app.settings.submit.answer': '提交答案',
+  'app.setting.user.please.answer': '注意：用户请求回答或者完善这个问题',
+  'app.setting.admin.answer': '已提醒管理员回答这个问题，耐心等待哦',
 };
