@@ -64,6 +64,14 @@ class Index extends Component {
     this.getQuestionList({...this.params, flag: false});
   };
 
+  // 手机端点击搜索
+  handleMobileSerach = () =>{
+    const value = this.input.state.value;
+    this.params.question = value;
+    this.params.qtype = value?4:1;
+    this.getQuestionList({...this.params, flag: false});
+  }
+
   // 查看更多
   handleLoadMore = () => {
     ++this.params.page;
@@ -161,9 +169,11 @@ class Index extends Component {
           }
         </Media>*/}
         <div className={styles.search_wrapper}>
-          <Search
-            onSearch={this.handleSerach}
+          <Input 
+            style={{borderRadius: 20}}
+            ref={(input) => {this.input = input}}
           />
+          <Icon type='search' className={styles.search} onClick={this.handleMobileSerach}/>
         </div>
         <div className={styles.title_wrapper}>
           <Media query="(max-width: 599px)">
@@ -186,8 +196,8 @@ class Index extends Component {
         </Media>
         <div className={styles.list_wrapper}>
           {
-            questionList.map(item => {
-              return <ArticleListContent data={item} link={`/question/answer/${item.id}`} />
+            questionList.map((item, index)=> {
+              return <ArticleListContent key={index} data={item} link={`/question/answer/${item.id}`} />
             })
           }
         </div>

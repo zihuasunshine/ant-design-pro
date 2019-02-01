@@ -168,7 +168,7 @@ class Answer extends PureComponent {
     const { dispatch, question: { isVoteRes } } = this.props;
     // 先查询是否点过赞 点过踩
     if(isVoteRes){
-      // 登陆过
+      // 登录过
       const isVote = isVoteRes.data;
       this.handleVoteTip(isVote, voteValue, answerId);
     }else {
@@ -404,7 +404,7 @@ class Answer extends PureComponent {
       }
     ]
 
-    // 管理员
+    const currentUser = sessionStorage.getItem('user')? JSON.parse(sessionStorage.getItem('user')):null;
     
     const answerAvatar = !otherUserRes || otherUserRes && otherUserRes.code === 200 && otherUserRes.data.uid === 8? bestSrc : otherUserRes.data.avatarFile;
     const answerUser = !otherUserRes || otherUserRes && otherUserRes.code === 200 && otherUserRes.data.uid === 8? '小白考研' : (otherUserRes.data.nickname || otherUserRes.data.userName);
@@ -480,7 +480,7 @@ class Answer extends PureComponent {
                 {inputVisible && (
                   <div className={styles.comment_wraper}>
                     <div className={styles.flex_wrapper}>
-                      <img className={styles.flex_left} src={answerAvatar} />
+                      {currentUser?<img className={styles.flex_left} src={currentUser.avatarFile} />:<Avatar size={32} icon="user" />}
                       <div className={styles.flex_right}>
                         <TextArea
                           ref={this.saveInputRef}

@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/21.chunk.css"
   },
   {
-    "revision": "24c44ea0362a1e48f76e",
+    "revision": "17ee35e232af6d78ecd2",
     "url": "/vendors.chunk.css"
   },
   {
@@ -24,19 +24,19 @@ self.__precacheManifest = [
     "url": "/static/black_logo.0afbc0ea.png"
   },
   {
-    "revision": "0bd4a903136ad85473ac689976300fd1",
-    "url": "/static/user_bg.0bd4a903.jpg"
+    "revision": "54a92ef58383ff4250b8bd31ff78f057",
+    "url": "/static/user_bg.54a92ef5.jpg"
   },
   {
-    "revision": "24c44ea0362a1e48f76e",
+    "revision": "17ee35e232af6d78ecd2",
     "url": "/vendors.async.js"
   },
   {
-    "revision": "bdfbfc5bc6850c5dbce8",
+    "revision": "44f40ff0d5e51b32f4b9",
     "url": "/umi.js"
   },
   {
-    "revision": "bdfbfc5bc6850c5dbce8",
+    "revision": "44f40ff0d5e51b32f4b9",
     "url": "/umi.css"
   },
   {
@@ -60,16 +60,16 @@ self.__precacheManifest = [
     "url": "/icons/icon-192x192.png"
   },
   {
+    "revision": "347329d0982682b42d40c8162817a940",
+    "url": "/icons/icon-128x128.png"
+  },
+  {
     "revision": "694c4300be571fdd4d8b6abbe14d2e3f",
     "url": "/favicon1.png"
   },
   {
     "revision": "723e4067a93a8749d90866cb721263c0",
     "url": "/favicon.png"
-  },
-  {
-    "revision": "347329d0982682b42d40c8162817a940",
-    "url": "/icons/icon-128x128.png"
   },
   {
     "revision": "6e986545304fa0773ab0af79cde9bfdd",
@@ -116,11 +116,11 @@ self.__precacheManifest = [
     "url": "/18.async.js"
   },
   {
-    "revision": "04510d1b5c74594effb8",
+    "revision": "d08575a16800c8615378",
     "url": "/19.chunk.css"
   },
   {
-    "revision": "04510d1b5c74594effb8",
+    "revision": "d08575a16800c8615378",
     "url": "/19.async.js"
   },
   {
@@ -236,19 +236,19 @@ self.__precacheManifest = [
     "url": "/14.async.js"
   },
   {
-    "revision": "3de7dceab1265b91ab43",
+    "revision": "62e636fdcf74503c8d3b",
     "url": "/13.chunk.css"
   },
   {
-    "revision": "3de7dceab1265b91ab43",
+    "revision": "62e636fdcf74503c8d3b",
     "url": "/13.async.js"
   },
   {
-    "revision": "c9ecbf5186c3811e029b",
+    "revision": "d5ac76c215d8c1b29660",
     "url": "/12.chunk.css"
   },
   {
-    "revision": "c9ecbf5186c3811e029b",
+    "revision": "d5ac76c215d8c1b29660",
     "url": "/12.async.js"
   },
   {

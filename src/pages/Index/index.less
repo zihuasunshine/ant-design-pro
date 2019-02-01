@@ -14,12 +14,19 @@
   }
 }
 .search_wrapper{
+  position: relative;
   width: 90%;
   margin: 16px auto;
   display: none;
+  .search{
+    position: absolute;
+    top: 10px;
+    right: 16px;
+  }
   @media screen and (max-width: @screen-xs){
     display: block;
   }
+  
 }
 .show_more{
   font-size: 12px;

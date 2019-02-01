@@ -152,17 +152,17 @@ export async function register(params) {
   });
 }
 
-// 登陆获取短信验证码
+// 登录获取短信验证码
 export async function getLoginCode(params) {
   const { mobile, resultCode, token } = params;
   return request(`/api/login/sendSMS/${mobile}?token=${token}&resultCode=${resultCode}`);
 }
 
-// 账号密码登陆
+// 账号密码登录
 export async function login(params) {
   const { type } = params;
   if (type === 'account') {
-    // 账号密码登陆
+    // 账号密码登录
     const { userName, password } = params;
     return request(
       `/api/oauth/token?client_id=app&client_secret=app_secure&grant_type=password&username=${userName}&password=${password}`,
@@ -171,7 +171,7 @@ export async function login(params) {
       }
     );
   } else {
-    // 短信验证码登陆
+    // 短信验证码登录
     const { mobile, captcha } = params;
     return request(
       `/api/oauth/token?client_id=app&client_secret=app_secure&grant_type=password&username=${mobile}&password=${captcha}&loginWay=1`,
@@ -205,7 +205,7 @@ export async function modifyPassword(params) {
   );
 }
 
-// 获取当前登陆用户信息
+// 获取当前登录用户信息
 export async function currentUser() {
   return securityRequest(`/api/user/currentUser`);
 }
