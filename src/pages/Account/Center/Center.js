@@ -19,7 +19,7 @@ class Center extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
-      newTags: props.currentUser ? props.currentUser.tags : [],
+      newTags: [],
       inputVisible: false,
       inputValue: '',
     };
@@ -41,6 +41,14 @@ class Center extends PureComponent {
     //     },
     //   });
     // }
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/fetchCurrent',
+      token: sessionStorage.getItem('access_token'),
+    }).then(() => {
+      const currentUser = JSON.parse(sessionStorage.getItem('user'));
+      this.setState({newTags: currentUser.tags});
+    });
   }
 
   onTabChange = key => {
@@ -94,7 +102,7 @@ class Center extends PureComponent {
         center: { addTagRes },
       } = this.props;
       if (addTagRes.code === 200) {
-        newTags = [...newTags, { id: `${addTagRes.data}`, text: inputValue }];
+        newTags = [{ id: `${addTagRes.data}`, text: inputValue }, ...newTags];
         this.setState({ newTags });
         // 重新获取用户信息
         // dispatch({
