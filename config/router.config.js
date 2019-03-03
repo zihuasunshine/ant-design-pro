@@ -24,61 +24,62 @@ export default [
     Routes: ['src/pages/Authorized'],
     authority: ['admin', 'user'],
     routes: [
-      {path: '/', redirect: '/home'},
-      {
-        name: 'home',
-        icon: 'home',
-        path: '/home',
-        routes: [
-          {
-            path: '/home',
-            //name: 'center',
-            //component: './Index/Home',
-            component: './Index',
-          },
-          {
-            path: '/article/:id',
-            component: './Index/ArticleDetail'
-          },
-        ]
-      },
-      {
-        icon: 'question-circle',
-        name: 'question',
-        path: '/question',
-        routes: [
-          {
-            path: '/question',
-            //name: 'center',
-            component: './Question/Ask',
-          },
-          {
-            path: '/question/ask',
-            //name: 'askQuestion',
-            component: './Question/Ask',
-          },
-          {
-            path: '/question/answer/:id',
-            //name: 'askQuestion',
-            component: './Question/Answer',
-          },
-        ],
-      },
-      {
-        icon: 'retweet',
-        name: 'adjust',
-        path: '/adjust',
-        routes: [
-          {
-            path: '/adjust',
-            component: './Adjust',
-          },
-          {
-            path: '/adjust/detail/:id',
-            component: './Adjust/Detail'
-          },
-        ]
-      },
+      {path: '/', redirect: '/university'},
+      // {path: '/', redirect: '/home'},
+      // {
+      //   name: 'home',
+      //   icon: 'home',
+      //   path: '/home',
+      //   routes: [
+      //     {
+      //       path: '/home',
+      //       //name: 'center',
+      //       //component: './Index/Home',
+      //       component: './Index',
+      //     },
+      //     {
+      //       path: '/article/:id',
+      //       component: './Index/ArticleDetail'
+      //     },
+      //   ]
+      // },
+      // {
+      //   icon: 'question-circle',
+      //   name: 'question',
+      //   path: '/question',
+      //   routes: [
+      //     {
+      //       path: '/question',
+      //       //name: 'center',
+      //       component: './Question/Ask',
+      //     },
+      //     {
+      //       path: '/question/ask',
+      //       //name: 'askQuestion',
+      //       component: './Question/Ask',
+      //     },
+      //     {
+      //       path: '/question/answer/:id',
+      //       //name: 'askQuestion',
+      //       component: './Question/Answer',
+      //     },
+      //   ],
+      // },
+      // {
+      //   icon: 'retweet',
+      //   name: 'adjust',
+      //   path: '/adjust',
+      //   routes: [
+      //     {
+      //       path: '/adjust',
+      //       component: './Adjust',
+      //     },
+      //     {
+      //       path: '/adjust/detail/:id',
+      //       component: './Adjust/Detail'
+      //     },
+      //   ]
+      // },
       {
         icon: 'search',
         name: 'university',
