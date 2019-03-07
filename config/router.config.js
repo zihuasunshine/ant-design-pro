@@ -33,8 +33,6 @@ export default [
       //   routes: [
       //     {
       //       path: '/home',
-      //       //name: 'center',
-      //       //component: './Index/Home',
       //       component: './Index',
       //     },
       //     {
@@ -50,17 +48,14 @@ export default [
       //   routes: [
       //     {
       //       path: '/question',
-      //       //name: 'center',
       //       component: './Question/Ask',
       //     },
       //     {
       //       path: '/question/ask',
-      //       //name: 'askQuestion',
       //       component: './Question/Ask',
       //     },
       //     {
       //       path: '/question/answer/:id',
-      //       //name: 'askQuestion',
       //       component: './Question/Answer',
       //     },
       //   ],
@@ -110,6 +105,28 @@ export default [
           {
             path: '/cpa',
             component: './CPA',
+          }
+        ]
+      },
+      {
+        icon: 'line-chart',
+        name: 'score',
+        path: '/score',
+        routes: [
+          {
+            path: '/score',
+            component: './Score/NationalLine',
+          }
+        ]
+      },
+      {
+        icon: 'line-chart',
+        name: 'reexamine',
+        path: '/reexamine',
+        routes: [
+          {
+            path: '/reexamine',
+            component: './Score/CrossedLine'
           }
         ]
       },

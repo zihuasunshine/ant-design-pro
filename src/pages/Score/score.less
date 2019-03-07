@@ -1,0 +1,102 @@
+@import '~antd/lib/style/themes/default.less';
+
+.year_wrapper{
+  display: flex;
+  margin-top: 16px;
+  margin-bottom: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+  .year{
+    padding: 6px 16px;
+    margin: 8px 16px;
+    background: #139BEA;
+    a{
+      font-size: 16px;
+      color: #eee;
+      &:hover{
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.tag_wrapper, .table_wrapper{
+  @media screen and (max-width: @screen-sm) {
+   padding: 16px;
+  }
+  .tag{
+    margin-top: 8px;
+    padding: 4px 12px;
+    box-sizing: content-box;
+    font-size: 14px;
+  }
+}
+
+.col_wrapper{
+  margin-top: 16px;
+  margin-bottom: 48px;
+  @media screen and (max-width: @screen-sm) {
+    padding: 16px;
+    margin-bottom: 24px;
+  }
+  .col{
+    margin-top: 16px;
+  }
+  .title{
+    font-size: 15px;
+    font-weight: bold;
+    color: #139BEA;
+    text-align: center;
+  }
+}
+.col_l_wrapper{
+  margin-bottom: 24px;
+}
+.img_wrapper{
+  img{
+    width: 100%;
+  }
+}
+.table{
+  width: 100%;
+  margin-bottom: 48px;
+  border-bottom: 1px solid #eee;
+  border-right: 1px solid #eee;
+  tr > td {
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+    padding: 16px;
+  }
+}
+.card_wrapper{
+  background: #eee;
+  margin-bottom: 12px;
+  padding: 8px;
+  .page_wrapper{
+    margin-top: 12px;
+    margin-bottom: 12px;
+    text-align: center;
+    .page{
+      display: inline-block;
+      width: 24px;
+      height: 24px;
+      margin: 0 8px;
+      border-radius: 50%;
+      border: 1px solid #aaa;
+      cursor: pointer;
+    }
+    .selected{
+      background: #139BEA;
+      border-width: 0;
+      color: #eee;
+    }
+  }
+  .card{
+    height: 168px;
+    margin-top: 8px;
+    a{
+      display: inline-block;
+      margin-right: 12px;
+    }
+  }
+}

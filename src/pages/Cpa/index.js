@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'dva';
 import { Row, Col, Table } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
+import DataSource from '@/components/dataSource';
 import Child from '@/components/Tree/Child';
 import styles from './style.less';
 
@@ -127,6 +128,7 @@ class CPA extends Component {
             </Col>
           </Row>
         </div>
+        <DataSource />
       </GridContent>
     );
   }

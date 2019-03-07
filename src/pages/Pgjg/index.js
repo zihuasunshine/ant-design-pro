@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { connect } from 'dva';
 import { Tabs } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
+import DataSource from '@/components/dataSource';
 import Subject from './Subject';
 import School from './School';
 import styles from './style.less';
@@ -28,6 +29,7 @@ class CPA extends Component {
             </TabPane>
           </Tabs>
         </div>
+        <DataSource />
       </GridContent>
     );
   }

@@ -7,6 +7,8 @@ export default {
   'menu.question': '问题',
   'menu.adjust': '调剂',
   'menu.university': '高校查询',
+  'menu.score': '国家线',
+  'menu.reexamine': '34所复试线',
   'menu.cpa': '专业评估(专硕)',
   'menu.pgjg': '学科评估(学硕)',
   'menu.question.askQuestion': '我要提问',

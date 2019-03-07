@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import { formatMessage } from 'umi/locale';
 import { Row, Col, Table, Input, Button } from 'antd';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
+import DataSource from '@/components/dataSource';
 import Parent from '@/components/Tree/Parent';
 import Child from '@/components/Tree/Child';
 import styles from './style.less';
@@ -287,6 +288,7 @@ class University extends Component {
             </Col>
           </Row>
         </div>
+        <DataSource />
       </GridContent>
     );
   }
