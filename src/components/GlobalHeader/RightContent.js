@@ -147,12 +147,12 @@ export default class GlobalHeaderRight extends PureComponent {
           </Tooltip>
         */}
         {/*登录注册*/}
-        {/*!sessionStorage.getItem('access_token') ? (
+        {!sessionStorage.getItem('access_token') ? (
           <div className={styles.login_wrapper}>
             <Link to={'/user/login?redirect=' + window.location.href}>{formatMessage({id: 'app.login.login'})}</Link>
             <Link to="/user/register">{formatMessage({id: 'app.register.register'})}</Link>
           </div>
-        ) : null*/}
+        ) : null}
 
         {/*通知功能先隐藏*/}
         {/*<NoticeIcon

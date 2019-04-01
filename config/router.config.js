@@ -24,42 +24,42 @@ export default [
     Routes: ['src/pages/Authorized'],
     authority: ['admin', 'user'],
     routes: [
-      {path: '/', redirect: '/university'},
-      // {path: '/', redirect: '/home'},
-      // {
-      //   name: 'home',
-      //   icon: 'home',
-      //   path: '/home',
-      //   routes: [
-      //     {
-      //       path: '/home',
-      //       component: './Index',
-      //     },
-      //     {
-      //       path: '/article/:id',
-      //       component: './Index/ArticleDetail'
-      //     },
-      //   ]
-      // },
-      // {
-      //   icon: 'question-circle',
-      //   name: 'question',
-      //   path: '/question',
-      //   routes: [
-      //     {
-      //       path: '/question',
-      //       component: './Question/Ask',
-      //     },
-      //     {
-      //       path: '/question/ask',
-      //       component: './Question/Ask',
-      //     },
-      //     {
-      //       path: '/question/answer/:id',
-      //       component: './Question/Answer',
-      //     },
-      //   ],
-      // },
+      //{path: '/', redirect: '/university'},
+      {path: '/', redirect: '/home'},
+      {
+        name: 'home',
+        icon: 'home',
+        path: '/home',
+        routes: [
+          {
+            path: '/home',
+            component: './Index',
+          },
+          {
+            path: '/article/:id',
+            component: './Index/ArticleDetail'
+          },
+        ]
+      },
+      {
+        icon: 'question-circle',
+        name: 'question',
+        path: '/question',
+        routes: [
+          {
+            path: '/question',
+            component: './Question/Ask',
+          },
+          {
+            path: '/question/ask',
+            component: './Question/Ask',
+          },
+          {
+            path: '/question/answer/:id',
+            component: './Question/Answer',
+          },
+        ],
+      },
       // {
       //   icon: 'retweet',
       //   name: 'adjust',
