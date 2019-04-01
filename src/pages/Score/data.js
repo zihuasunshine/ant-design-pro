@@ -145,6 +145,10 @@ export const columns2 = [{
 }];
 
 export const XSDataEqual01 = [{
+  name: '2019',
+  a: 42,
+  b: 39
+}, {
   name: '2018',
   a: 39,
   b: 36
@@ -160,13 +164,13 @@ export const XSDataEqual01 = [{
   name: '2015',
   a: 37,
   b: 34
-}, {
-  name: '2014',
-  a: 40,
-  b: 37
 }];
 
 export const XSDataOver01 = [{
+  name: '2019',
+  a: 63,
+  b: 59
+}, {
   name: '2018',
   a: 59,
   b: 54
@@ -182,13 +186,13 @@ export const XSDataOver01 = [{
   name: '2015',
   a: 56,
   b: 51
-}, {
-  name: '2014',
-  a: 60,
-  b: 59
 }];
 
 export const XSDataEqual02 = [{
+  name: '2019',
+  a: 49,
+  b: 46
+}, {
   name: '2018',
   a: 44,
   b: 41
@@ -204,13 +208,13 @@ export const XSDataEqual02 = [{
   name: '2015',
   a: 45,
   b: 42
-}, {
-  name: '2014',
-  a: 45,
-  b: 42
 }];
 
 export const XSDataOver02 = [{
+  name: '2019',
+  a: 74,
+  b: 69
+}, {
   name: '2018',
   a: 66,
   b: 62
@@ -226,13 +230,13 @@ export const XSDataOver02 = [{
   name: '2015',
   a: 68,
   b: 63
-}, {
-  name: '2014',
-  a: 68,
-  b: 63
 }];
 
 export const XSDataEqual03 = [{
+  name: '2019',
+  a: 44,
+  b: 41
+}, {
   name: '2018',
   a: 42,
   b: 39
@@ -248,13 +252,13 @@ export const XSDataEqual03 = [{
   name: '2015',
   a: 42,
   b: 39
-}, {
-  name: '2014',
-  a: 44,
-  b: 41
 }];
 
 export const XSDataOver03 = [{
+  name: '2019',
+  a: 66,
+  b: 62
+}, {
   name: '2018',
   a: 63,
   b: 59
@@ -270,13 +274,13 @@ export const XSDataOver03 = [{
   name: '2015',
   a: 63,
   b: 59
-}, {
-  name: '2014',
-  a: 66,
-  b: 62
 }];
 
 export const XSDataEqual04 = [{
+  name: '2019',
+  a: 44,
+  b: 41
+}, {
   name: '2018',
   a: 44,
   b: 41
@@ -292,13 +296,13 @@ export const XSDataEqual04 = [{
   name: '2015',
   a: 44,
   b: 41
-}, {
-  name: '2014',
-  a: 42,
-  b: 39
 }];
 
 export const XSDataOver04 = [{
+  name: '2019',
+  a: 132,
+  b: 123
+}, {
   name: '2018',
   a: 132,
   b: 123
@@ -314,13 +318,13 @@ export const XSDataOver04 = [{
   name: '2015',
   a: 132,
   b: 123
-}, {
-  name: '2014',
-  a: 132,
-  b: 117
 }];
 
 export const XSDataEqual05 = [{
+  name: '2019',
+  a: 51,
+  b: 48
+}, {
   name: '2018',
   a: 55,
   b: 52
@@ -336,13 +340,13 @@ export const XSDataEqual05 = [{
   name: '2015',
   a: 52,
   b: 49
-}, {
-  name: '2014',
-  a: 55,
-  b: 52
 }];
 
 export const XSDataOver05 = [{
+  name: '2019',
+  a: 77,
+  b: 72
+}, {
   name: '2018',
   a: 83,
   b: 78
@@ -358,13 +362,13 @@ export const XSDataOver05 = [{
   name: '2015',
   a: 78,
   b: 74
-}, {
-  name: '2014',
-  a: 83,
-  b: 78
 }];
 
 export const XSDataEqual06 = [{
+  name: '2019',
+  a: 44,
+  b: 41
+}, {
   name: '2018',
   a: 43,
   b: 40
@@ -380,13 +384,13 @@ export const XSDataEqual06 = [{
   name: '2015',
   a: 42,
   b: 39
-}, {
-  name: '2014',
-  a: 42,
-  b: 39
 }];
 
 export const XSDataOver06 = [{
+  name: '2019',
+  a: 132,
+  b: 123
+}, {
   name: '2018',
   a: 129,
   b: 120
@@ -402,13 +406,13 @@ export const XSDataOver06 = [{
   name: '2015',
   a: 126,
   b: 117
-}, {
-  name: '2014',
-  a: 126,
-  b: 117
 }];
 
 export const XSDataEqual07 = [{
+  name: '2019',
+  a: 41,
+  b: 38
+}, {
   name: '2018',
   a: 38,
   b: 35
@@ -424,13 +428,13 @@ export const XSDataEqual07 = [{
   name: '2015',
   a: 36,
   b: 33
-}, {
-  name: '2014',
-  a: 38,
-  b: 35
 }];
 
 export const XSDataOver07 = [{
+  name: '2019',
+  a: 62,
+  b: 57
+}, {
   name: '2018',
   a: 57,
   b: 53
@@ -446,13 +450,13 @@ export const XSDataOver07 = [{
   name: '2015',
   a: 54,
   b: 50
-}, {
-  name: '2014',
-  a: 57,
-  b: 53
 }];
 
 export const XSDataEqual08 = [{
+  name: '2019',
+  a: 39,
+  b: 36
+}, {
   name: '2018',
   a: 34,
   b: 31
@@ -468,13 +472,13 @@ export const XSDataEqual08 = [{
   name: '2015',
   a: 38,
   b: 35
-}, {
-  name: '2014',
-  a: 38,
-  b: 35
 }];
 
 export const XSDataOver08 = [{
+  name: '2019',
+  a: 59,
+  b: 54
+}, {
   name: '2018',
   a: 51,
   b: 47
@@ -490,13 +494,13 @@ export const XSDataOver08 = [{
   name: '2015',
   a: 57,
   b: 53
-}, {
-  name: '2014',
-  a: 57,
-  b: 53
 }];
 
 export const XSDataEqual09 = [{
+  name: '2019',
+  a: 34,
+  b: 31
+}, {
   name: '2018',
   a: 34,
   b: 31
@@ -510,15 +514,15 @@ export const XSDataEqual09 = [{
   b: 31
 }, {
   name: '2015',
-  a: 34,
-  b: 31
-}, {
-  name: '2014',
   a: 34,
   b: 31
 }];
 
 export const XSDataOver09 = [{
+  name: '2019',
+  a: 51,
+  b: 47
+}, {
   name: '2018',
   a: 51,
   b: 47
@@ -534,13 +538,13 @@ export const XSDataOver09 = [{
   name: '2015',
   a: 51,
   b: 47
-}, {
-  name: '2014',
-  a: 51,
-  b: 47
 }];
 
 export const XSDataEqual10 = [{
+  name: '2019',
+  a: 43,
+  b: 40
+}, {
   name: '2018',
   a: 40,
   b: 37
@@ -556,13 +560,13 @@ export const XSDataEqual10 = [{
   name: '2015',
   a: 39,
   b: 36
-}, {
-  name: '2014',
-  a: 38,
-  b: 35
 }];
 
 export const XSDataOver10 = [{
+  name: '2019',
+  a: 129,
+  b: 120
+}, {
   name: '2018',
   a: 120,
   b: 111
@@ -578,13 +582,13 @@ export const XSDataOver10 = [{
   name: '2015',
   a: 117,
   b: 108
-}, {
-  name: '2014',
-  a: 114,
-  b: 105
 }];
 
 export const XSDataEqual11 = [{
+  name: '2019',
+  a: 37,
+  b: 34
+}, {
   name: '2018',
   a: 37,
   b: 34
@@ -600,13 +604,13 @@ export const XSDataEqual11 = [{
   name: '2015',
   a: 39,
   b: 36
-}, {
-  name: '2014',
-  a: 38,
-  b: 35
 }];
 
 export const XSDataOver11 = [{
+  name: '2019',
+  a: 56,
+  b: 51
+}, {
   name: '2018',
   a: 56,
   b: 51
@@ -622,13 +626,13 @@ export const XSDataOver11 = [{
   name: '2015',
   a: 59,
   b: 54
-}, {
-  name: '2014',
-  a: 57,
-  b: 53
 }];
 
 export const XSDataEqual12 = [{
+  name: '2019',
+  a: 49,
+  b: 46
+}, {
   name: '2018',
   a: 44,
   b: 41
@@ -644,13 +648,13 @@ export const XSDataEqual12 = [{
   name: '2015',
   a: 46,
   b: 43
-}, {
-  name: '2014',
-  a: 48,
-  b: 45
 }];
 
 export const XSDataOver12 = [{
+  name: '2019',
+  a: 74,
+  b: 69
+}, {
   name: '2018',
   a: 66,
   b: 62
@@ -666,13 +670,13 @@ export const XSDataOver12 = [{
   name: '2015',
   a: 69,
   b: 65
-}, {
-  name: '2014',
-  a: 72,
-  b: 68
 }];
 
 export const XSDataEqual13 = [{
+  name: '2019',
+  a: 38,
+  b: 35
+}, {
   name: '2018',
   a: 36,
   b: 33
@@ -688,13 +692,13 @@ export const XSDataEqual13 = [{
   name: '2015',
   a: 34,
   b: 31
-}, {
-  name: '2014',
-  a: 34,
-  b: 31
 }];
 
 export const XSDataOver13 = [{
+  name: '2019',
+  a: 57,
+  b: 53
+}, {
   name: '2018',
   a: 54,
   b: 50
@@ -710,13 +714,13 @@ export const XSDataOver13 = [{
   name: '2015',
   a: 51,
   b: 47
-}, {
-  name: '2014',
-  a: 51,
-  b: 47
 }];
 
 export const XSDataEqual14 = [{
+  name: '2019',
+  a: 35,
+  b: 32
+}, {
   name: '2018',
   a: 34,
   b: 31
@@ -730,15 +734,15 @@ export const XSDataEqual14 = [{
   b: 31
 }, {
   name: '2015',
-  a: 34,
-  b: 31
-}, {
-  name: '2014',
   a: 34,
   b: 31
 }];
 
 export const XSDataOver14 = [{
+  name: '2019',
+  a: 105,
+  b: 96
+}, {
   name: '2018',
   a: 102,
   b: 93
@@ -754,13 +758,13 @@ export const XSDataOver14 = [{
   name: '2015',
   a: 102,
   b: 93
-}, {
-  name: '2014',
-  a: 102,
-  b: 93
 }];
 
 export const XSDataEqual15 = [{
+  name: '2019',
+  a: 35,
+  b: 32
+}, {
   name: '2018',
   a: 34,
   b: 31
@@ -776,13 +780,13 @@ export const XSDataEqual15 = [{
   name: '2015',
   a: 36,
   b: 33
-}, {
-  name: '2014',
-  a: 37,
-  b: 34
 }];
 
 export const XSDataOver15 = [{
+  name: '2019',
+  a: 53,
+  b: 48
+}, {
   name: '2018',
   a: 51,
   b: 47
@@ -798,13 +802,13 @@ export const XSDataOver15 = [{
   name: '2015',
   a: 54,
   b: 50
-}, {
-  name: '2014',
-  a: 56,
-  b: 51
 }];
 
 export const XSDataEqual16 = [{
+  name: '2019',
+  a: 42,
+  b: 39
+}, {
   name: '2018',
   a: 39,
   b: 36
@@ -820,13 +824,13 @@ export const XSDataEqual16 = [{
   name: '2015',
   a: 38,
   b: 35
-}, {
-  name: '2014',
-  a: 37,
-  b: 34
 }];
 
 export const XSDataOver16 = [{
+  name: '2019',
+  a: 126,
+  b: 117
+}, {
   name: '2018',
   a: 117,
   b: 108
@@ -842,13 +846,13 @@ export const XSDataOver16 = [{
   name: '2015',
   a: 114,
   b: 105
-}, {
-  name: '2014',
-  a: 111,
-  b: 102
 }];
 
 export const XSDataEqual17 = [{
+  name: '2019',
+  a: 30,
+  b: 30
+}, {
   name: '2018',
   a: 30,
   b: 30
@@ -862,15 +866,15 @@ export const XSDataEqual17 = [{
   b: 30
 }, {
   name: '2015',
-  a: 30,
-  b: 30
-}, {
-  name: '2014',
   a: 30,
   b: 30
 }];
 
 export const XSDataOver17 = [{
+  name: '2019',
+  a: 45,
+  b: 45
+}, {
   name: '2018',
   a: 45,
   b: 45
@@ -886,13 +890,13 @@ export const XSDataOver17 = [{
   name: '2015',
   a: 45,
   b: 45
-}, {
-  name: '2014',
-  a: 45,
-  b: 45
 }];
 
 export const ZSDataEqual01 = [{
+  name: '2019',
+  a: 49,
+  b: 46
+}, {
   name: '2018',
   a: 44,
   b: 41
@@ -908,13 +912,13 @@ export const ZSDataEqual01 = [{
   name: '2015',
   a: 45,
   b: 42
-}, {
-  name: '2014',
-  a: 45,
-  b: 42
 }];
 
 export const ZSDataOver01 = [{
+  name: '2019',
+  a: 74,
+  b: 69
+}, {
   name: '2018',
   a: 66,
   b: 62
@@ -930,13 +934,13 @@ export const ZSDataOver01 = [{
   name: '2015',
   a: 68,
   b: 63
-}, {
-  name: '2014',
-  a: 68,
-  b: 63
 }];
 
 export const ZSDataEqual02 = [{
+  name: '2019',
+  a: 42,
+  b: 37
+}, {
   name: '2018',
   a: 42,
   b: 37
@@ -952,13 +956,13 @@ export const ZSDataEqual02 = [{
   name: '2015',
   a: 40,
   b: 35
-}, {
-  name: '2014',
-  a: 41,
-  b: 36
 }];
 
 export const ZSDataOver02 = [{
+  name: '2019',
+  a: 84,
+  b: 74
+}, {
   name: '2018',
   a: 84,
   b: 74
@@ -974,16 +978,16 @@ export const ZSDataOver02 = [{
   name: '2015',
   a: 80,
   b: 70
-}, {
-  name: '2014',
-  a: 82,
-  b: 72
 }];
 
 export const ZSDataEqual03 = [{
+  name: '2019',
+  a: 44,
+  b: 41
+}, {
   name: '2018',
-  a: 42,
-  b: 39
+  a: 44,
+  b: 41
 }, {
   name: '2017',
   a: 44,
@@ -996,13 +1000,13 @@ export const ZSDataEqual03 = [{
   name: '2015',
   a: 42,
   b: 39
-}, {
-  name: '2014',
-  a: 44,
-  b: 41
 }];
 
-export const ZSDataOver03 = [{
+export const ZSDataOver03 = [ {
+  name: '2019',
+  a: 66,
+  b: 62
+}, {
   name: '2018',
   a: 63,
   b: 59
@@ -1018,13 +1022,13 @@ export const ZSDataOver03 = [{
   name: '2015',
   a: 63,
   b: 59
-}, {
-  name: '2014',
-  a: 66,
-  b: 62
 }];
 
 export const ZSDataEqual04 = [{
+  name: '2019',
+  a: 44,
+  b: 41
+}, {
   name: '2018',
   a: 44,
   b: 41
@@ -1040,13 +1044,13 @@ export const ZSDataEqual04 = [{
   name: '2015',
   a: 44,
   b: 41
-}, {
-  name: '2014',
-  a: 42,
-  b: 39
 }];
 
 export const ZSDataOver04 = [{
+  name: '2019',
+  a: 66,
+  b: 62
+}, {
   name: '2018',
   a: 66,
   b: 62
@@ -1062,13 +1066,13 @@ export const ZSDataOver04 = [{
   name: '2015',
   a: 66,
   b: 62
-}, {
-  name: '2014',
-  a: 63,
-  b: 59
 }];
 
 export const ZSDataEqual05 = [{
+  name: '2019',
+  a: 44,
+  b: 41
+}, {
   name: '2018',
   a: 44,
   b: 41
@@ -1084,13 +1088,13 @@ export const ZSDataEqual05 = [{
   name: '2015',
   a: 44,
   b: 41
-}, {
-  name: '2014',
-  a: 42,
-  b: 39
 }];
 
 export const ZSDataOver05 = [{
+  name: '2019',
+  a: 132,
+  b: 123
+}, {
   name: '2018',
   a: 132,
   b: 123
@@ -1106,13 +1110,13 @@ export const ZSDataOver05 = [{
   name: '2015',
   a: 132,
   b: 123
-}, {
-  name: '2014',
-  a: 126,
-  b: 117
 }];
 
 export const ZSDataEqual06 = [{
+  name: '2019',
+  a: 35,
+  b: 32
+}, {
   name: '2018',
   a: 34,
   b: 31
@@ -1126,15 +1130,15 @@ export const ZSDataEqual06 = [{
   b: 31
 }, {
   name: '2015',
-  a: 34,
-  b: 31
-}, {
-  name: '2014',
   a: 34,
   b: 31
 }];
 
 export const ZSDataOver06 = [{
+  name: '2019',
+  a: 105,
+  b: 96
+}, {
   name: '2018',
   a: 102,
   b: 93
@@ -1150,13 +1154,13 @@ export const ZSDataOver06 = [{
   name: '2015',
   a: 102,
   b: 93
-}, {
-  name: '2014',
-  a: 102,
-  b: 93
 }];
 
 export const ZSDataEqual07 = [{
+  name: '2019',
+  a: 51,
+  b: 48
+}, {
   name: '2018',
   a: 55,
   b: 52
@@ -1172,13 +1176,13 @@ export const ZSDataEqual07 = [{
   name: '2015',
   a: 52,
   b: 39
-}, {
-  name: '2014',
-  a: 55,
-  b: 52
 }];
 
 export const ZSDataOver07 = [{
+  name: '2019',
+  a: 77,
+  b: 72
+}, {
   name: '2018',
   a: 83,
   b: 78
@@ -1194,13 +1198,13 @@ export const ZSDataOver07 = [{
   name: '2015',
   a: 78,
   b: 74
-}, {
-  name: '2014',
-  a: 83,
-  b: 78
 }];
 
 export const ZSDataEqual08 = [{
+  name: '2019',
+  a: 44,
+  b: 41
+}, {
   name: '2018',
   a: 43,
   b: 40
@@ -1216,13 +1220,13 @@ export const ZSDataEqual08 = [{
   name: '2015',
   a: 42,
   b: 39
-}, {
-  name: '2014',
-  a: 42,
-  b: 39
 }];
 
 export const ZSDataOver08 = [{
+  name: '2019',
+  a: 132,
+  b: 123
+}, {
   name: '2018',
   a: 129,
   b: 120
@@ -1238,13 +1242,13 @@ export const ZSDataOver08 = [{
   name: '2015',
   a: 126,
   b: 117
-}, {
-  name: '2014',
-  a: 126,
-  b: 117
 }];
 
 export const ZSDataEqual09 = [{
+  name: '2019',
+  a: 39,
+  b: 36
+}, {
   name: '2018',
   a: 34,
   b: 31
@@ -1260,13 +1264,13 @@ export const ZSDataEqual09 = [{
   name: '2015',
   a: 38,
   b: 35
-}, {
-  name: '2014',
-  a: 38,
-  b: 35
 }];
 
 export const ZSDataOver09 = [{
+  name: '2019',
+  a: 59,
+  b: 54
+}, {
   name: '2018',
   a: 51,
   b: 47
@@ -1282,13 +1286,13 @@ export const ZSDataOver09 = [{
   name: '2015',
   a: 57,
   b: 53
-}, {
-  name: '2014',
-  a: 57,
-  b: 53
 }];
 
 export const ZSDataEqual10 = [{
+  name: '2019',
+  a: 34,
+  b: 31
+}, {
   name: '2018',
   a: 34,
   b: 31
@@ -1302,15 +1306,15 @@ export const ZSDataEqual10 = [{
   b: 31
 }, {
   name: '2015',
-  a: 34,
-  b: 31
-}, {
-  name: '2014',
   a: 34,
   b: 31
 }];
 
 export const ZSDataOver10 = [{
+  name: '2019',
+  a: 51,
+  b: 47
+}, {
   name: '2018',
   a: 51,
   b: 47
@@ -1326,13 +1330,13 @@ export const ZSDataOver10 = [{
   name: '2015',
   a: 51,
   b: 47
-}, {
-  name: '2014',
-  a: 51,
-  b: 47
 }];
 
 export const ZSDataEqual11 = [{
+  name: '2019',
+  a: 43,
+  b: 40
+}, {
   name: '2018',
   a: 40,
   b: 37
@@ -1348,13 +1352,13 @@ export const ZSDataEqual11 = [{
   name: '2015',
   a: 39,
   b: 36
-}, {
-  name: '2014',
-  a: 38,
-  b: 35
 }];
 
 export const ZSDataOver11 = [{
+  name: '2019',
+  a: 129,
+  b: 120
+}, {
   name: '2018',
   a: 120,
   b: 111
@@ -1370,13 +1374,13 @@ export const ZSDataOver11 = [{
   name: '2015',
   a: 117,
   b: 108
-}, {
-  name: '2014',
-  a: 114,
-  b: 105
 }];
 
 export const ZSDataEqual12 = [{
+  name: '2019',
+  a: 42,
+  b: 39
+}, {
   name: '2018',
   a: 39,
   b: 36
@@ -1392,13 +1396,13 @@ export const ZSDataEqual12 = [{
   name: '2015',
   a: 38,
   b: 35
-}, {
-  name: '2014',
-  a: 37,
-  b: 34
 }];
 
 export const ZSDataOver12 = [{
+  name: '2019',
+  a: 126,
+  b: 117
+}, {
   name: '2018',
   a: 117,
   b: 108
@@ -1414,13 +1418,13 @@ export const ZSDataOver12 = [{
   name: '2015',
   a: 114,
   b: 105
-}, {
-  name: '2014',
-  a: 111,
-  b: 102
 }];
 
 export const ZSDataEqual13 = [{
+  name: '2019',
+  a: 42,
+  b: 37
+}, {
   name: '2018',
   a: 42,
   b: 37
@@ -1436,13 +1440,13 @@ export const ZSDataEqual13 = [{
   name: '2015',
   a: 40,
   b: 35
-}, {
-  name: '2014',
-  a: 41,
-  b: 36
 }];
 
-export const ZSDataOver13 = [{
+export const ZSDataOver13 = [ {
+  name: '2019',
+  a: 84,
+  b: 74
+}, {
   name: '2018',
   a: 84,
   b: 74
@@ -1458,10 +1462,6 @@ export const ZSDataOver13 = [{
   name: '2015',
   a: 80,
   b: 70
-}, {
-  name: '2014',
-  a: 82,
-  b: 72
 }];
 
 export const ZSDataEqual14 = [{
@@ -1481,7 +1481,7 @@ export const ZSDataEqual14 = [{
   a: 34,
   b: 31
 }, {
-  name: '2014',
+  name: '2019',
   a: 34,
   b: 31
 }];
@@ -1503,12 +1503,16 @@ export const ZSDataOver14 = [{
   a: 51,
   b: 47
 }, {
-  name: '2014',
-  a: 51,
-  b: 47
+  name: '2019',
+  a: 38,
+  b: 35
 }];
 
 export const ZSDataEqual15 = [{
+  name: '2019',
+  a: 35,
+  b: 32
+}, {
   name: '2018',
   a: 34,
   b: 31
@@ -1524,13 +1528,13 @@ export const ZSDataEqual15 = [{
   name: '2015',
   a: 36,
   b: 33
-}, {
-  name: '2014',
-  a: 37,
-  b: 34
 }];
 
 export const ZSDataOver15 = [{
+  name: '2019',
+  a: 53,
+  b: 48
+}, {
   name: '2018',
   a: 51,
   b: 47
@@ -1546,13 +1550,13 @@ export const ZSDataOver15 = [{
   name: '2015',
   a: 54,
   b: 50
-}, {
-  name: '2014',
-  a: 56,
-  b: 51
 }];
 
 export const ZSDataEqual16 = [{
+  name: '2019',
+  a: 30,
+  b: 30
+}, {
   name: '2018',
   a: 30,
   b: 30
@@ -1566,15 +1570,15 @@ export const ZSDataEqual16 = [{
   b: 30
 }, {
   name: '2015',
-  a: 30,
-  b: 30
-}, {
-  name: '2014',
   a: 30,
   b: 30
 }];
 
 export const ZSDataOver16 = [{
+  name: '2019',
+  a: 45,
+  b: 45
+}, {
   name: '2018',
   a: 45,
   b: 45
@@ -1588,10 +1592,6 @@ export const ZSDataOver16 = [{
   b: 45
 }, {
   name: '2015',
-  a: 45,
-  b: 45
-}, {
-  name: '2014',
   a: 45,
   b: 45
 }];

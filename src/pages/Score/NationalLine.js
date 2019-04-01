@@ -223,6 +223,7 @@ class NationalLine extends Component {
     return (
       <GridContent>
         <ul className={styles.year_wrapper}>
+          <li className={styles.year}><a href="https://yz.chsi.com.cn/kyzx/kydt/201903/20190312/1772265387.html" target="_blank">2019</a></li>
           <li className={styles.year}><a href="https://yz.chsi.com.cn/kyzx/kydt/201803/20180316/1669704798.html" target="_blank">2018</a></li>
           <li className={styles.year}><a href="https://yz.chsi.com.cn/kyzx/kydt/201703/20170315/1591045016.html" target="_blank">2017</a></li>
           <li className={styles.year}><a href="https://yz.chsi.com.cn/kyzx/zcdh/201603/20160311/1525041539.html" target="_blank">2016</a></li>
@@ -230,7 +231,6 @@ class NationalLine extends Component {
           <li className={styles.year}><a href="https://yz.chsi.com.cn/kyzx/kydt/201403/20140318/828601850.html" target="_blank">2014</a></li>
           <li className={styles.year}><a href="https://yz.chsi.com.cn/kyzx/kydt/201303/20130326/404415686.html" target="_blank">2013</a></li>
           <li className={styles.year}><a href="https://yz.chsi.com.cn/kyzx/kydt/201203/20120330/296907941.html" target="_blank">2012</a></li>
-          <li className={styles.year}><a href="https://yz.chsi.com.cn/kyzx/kydt/201103/20110329/179769688.html" target="_blank">2011</a></li>
         </ul>
         <Tabs>
           <TabPane tab='国家线趋势图-学术硕士'>
