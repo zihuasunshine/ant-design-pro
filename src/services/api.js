@@ -191,7 +191,7 @@ export async function sendVerifyCode(params) {
 // 找回密码
 export async function doReset(params) {
   const { mobile, verifycode, password } = params;
-  return securityRequest(`/api/pwd/reset/doReset/${mobile}/${verifycode}/${password}`);
+  return request(`/api/pwd/reset/doReset/${mobile}/${verifycode}/${password}`);
 }
 
 // 修改密码

@@ -1,6 +1,7 @@
 export default {
   'app.login.userName': '用户名',
   'app.login.password': '密码',
+  'app.login.next': '下一步',
   'app.login.message-invalid-credentials': '账户或密码错误（admin/ant.design）',
   'app.login.message-invalid-verification-code': '验证码错误',
   'app.login.tab-login-credentials': '账户密码登录',
@@ -41,6 +42,7 @@ export default {
   'validation.goal.required': '请输入目标描述',
   'validation.standard.required': '请输入衡量标准',
   //===新增====//
+  'validation.register.required': '请填写完整信息',
   'validation.resultCode.required': '请输入图形验证码',
   'app.register-result.login': '马上登录',
   'validation.question.title.required': '请输入问题',

@@ -3,6 +3,7 @@ import { connect } from 'dva';
 import router from 'umi/router';
 import { formatMessage, FormattedMessage } from 'umi/locale';
 import { Form, Input, Button, Card, message } from 'antd';
+import { notificationTip } from  '@/utils/utils';
 import PicturesWall from '@/components/PicturesWall';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
@@ -36,6 +37,7 @@ class AskForms extends PureComponent {
           }).then(() => {
             const { question: { addQuestionRes }} = this.props;
             if(addQuestionRes && addQuestionRes.code === 200){
+              notificationTip(formatMessage({id: 'app.setting.user.ask.success'}), true);
               router.push('/');
             }else{
   

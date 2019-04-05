@@ -79,5 +79,8 @@ export default {
   'app.settings.perfect': '我来完善',
   'app.settings.submit.answer': '提交答案',
   'app.setting.user.please.answer': '注意：用户请求回答或者完善这个问题',
-  'app.setting.admin.answer': '已提醒管理员回答这个问题，耐心等待哦',
+  'app.setting.user.answer': '用户自己回答这个问题',
+  'app.setting.user.ask.success': '问题已经提交成功，小白正在抓紧解答',
+  'app.setting.answer.check': '答案已提交至小白后台进行审核，耐心等待哦',
+  'app.setting.admin.answer': '已提醒小白回答这个问题，耐心等待哦',
 };

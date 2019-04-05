@@ -10,6 +10,7 @@ import HeaderSearch from '../HeaderSearch';
 import HeaderDropdown from '../HeaderDropdown';
 import SelectLang from '../SelectLang';
 import Login from '@/pages/User/Login';
+import Register from '@/pages/User/Register';
 import styles from './index.less';
 
 const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'; // 默认头像
@@ -18,6 +19,14 @@ const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png
   login
 }))
 export default class GlobalHeaderRight extends PureComponent {
+
+  componentDidMount() {
+    const access_token = localStorage.getItem('access_token');
+    const refresh_token = localStorage.getItem('refresh_token');
+    const user = sessionStorage.getItem('usr');
+    access_token && refresh_token && !user? this.getCurrentUserInfo() : '';
+  }
+
   getNoticeData() {
     const { notices = [] } = this.props;
     if (notices.length === 0) {
@@ -72,18 +81,37 @@ export default class GlobalHeaderRight extends PureComponent {
   };
 
   handleCancle = () =>{
+    debugger;
     const { dispatch } = this.props;
     dispatch({
-      type: 'login/setLoginModelVisible',
+      type: 'login/setModalType',
       visible: false
     });
   }
 
+  // 弹出框类型(login, register)
+  setModalType = (type) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'login/setModalType',
+      visible: true,
+      modalType: type
+    });
+  }
+
+  // 获取当前登录人信息
+  getCurrentUserInfo = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'user/fetchCurrent'
+    })
+  }
+  
   render() {
     const currentUser = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')): null;
     const {
       //currentUser,
-      login: { loginModalVisible },
+      login: { modalVisible, modalType },
       fetchingNotices,
       onNoticeVisibleChange,
       onMenuClick,
@@ -147,10 +175,12 @@ export default class GlobalHeaderRight extends PureComponent {
           </Tooltip>
         */}
         {/*登录注册*/}
-        {!sessionStorage.getItem('access_token') ? (
+        {!localStorage.getItem('access_token') ? (
           <div className={styles.login_wrapper}>
-            <Link to={'/user/login?redirect=' + window.location.href}>{formatMessage({id: 'app.login.login'})}</Link>
-            <Link to="/user/register">{formatMessage({id: 'app.register.register'})}</Link>
+            <span onClick={() => this.setModalType('login')}>{formatMessage({id: 'app.login.login'})}</span>
+            <span onClick={() => this.setModalType('regster')}>{formatMessage({id: 'app.register.register'})}</span>
+            {/*<Link to={'/user/login?redirect=' + window.location.href}>{formatMessage({id: 'app.login.login'})}</Link>
+            <Link to="/user/register"></Link>*/}
           </div>
         ) : null}
 
@@ -196,7 +226,7 @@ export default class GlobalHeaderRight extends PureComponent {
             emptyImage="https://gw.alipayobjects.com/zos/rmsportal/HsIsxMZiWKrNUavQUXqx.svg"
           />
         </NoticeIcon>*/}
-        {sessionStorage.getItem('access_token') ? (
+        {localStorage.getItem('access_token') ? (
           <HeaderDropdown overlay={menu}>
             <span className={`${styles.action} ${styles.account}`}>
               <Avatar
@@ -213,12 +243,14 @@ export default class GlobalHeaderRight extends PureComponent {
         ) : null}
         {/*<SelectLang className={styles.action} />*/}
         <Modal
-          width={430}
+          maskStyle={{background: 'rgba(0,0,0,.3)'}}
+          destroyOnClose={true}
+          width={375}
           onCancel={this.handleCancle }
-          visible={loginModalVisible}
+          visible={modalVisible}
           footer={null}
         >
-          <Login dialogCls={true}/>
+          {modalType === 'login'? <Login/> : <Register/>}
         </Modal>
       </div>
     );

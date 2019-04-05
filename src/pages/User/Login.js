@@ -73,12 +73,27 @@ class LoginPage extends Component {
         } = this.props;
         if (!loginRes.error) {
           dispatch({
+            type: 'login/setModalType',
+            visible: false,
+            modalType: 'login'
+          });
+          dispatch({
             type: 'user/fetchCurrent'
           })
         } 
       })
     }
   };
+
+  // 注册
+  handleRegister = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'login/setModalType',
+      visible: true,
+      modalType: 'register'
+    });
+  }
 
   // 请求当前用户currentUser
   getCurrentUser = () => {
@@ -123,15 +138,11 @@ class LoginPage extends Component {
   );
 
   render() {
-    const { login, submitting, style, dialogCls } = this.props;
+    const { login, submitting, style } = this.props;
     const { type, autoLogin, src } = this.state;
     return (
-      <div className={dialogCls?styles.dialog_main:styles.main} style={style}>
-        <div className={styles.header}>
-          <Link to="/">
-            <img alt="logo" className={styles.logo} src={logo} />
-          </Link>
-        </div>
+      <div className={styles.main} style={style}>
+        <div className={styles.header}>{formatMessage({id: 'app.login.login'})}</div>
         <Login
           defaultActiveKey={type}
           onTabChange={this.onTabChange}
@@ -234,9 +245,9 @@ class LoginPage extends Component {
             <Link style={{ float: 'left' }} to="/user/findpwd">
               <FormattedMessage id="app.login.forgot-password" />
             </Link>
-            <Link className={styles.register} to="/user/register">
+            <span className={styles.register} onClick={this.handleRegister}>
               <FormattedMessage id="app.login.signup" />
-            </Link>
+            </span>
           </div>
         </Login>
       </div>

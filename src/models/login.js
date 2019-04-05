@@ -10,19 +10,20 @@ export default {
 
   state: {
     status: undefined,
-    loginModalVisible: false,
+    modalVisible: false,
+    modalType: '',
     loginRes: {}
   },
 
   effects: {
-    *setLoginModelVisible({ visible }, {  put }) {
+    *setModalType({ modalType, visible }, {  put }) {
       yield put({
         type: 'changeModalVisible',
-        payload: visible
+        payload: {modalType, visible}
       });
     },
     *login({ payload }, { call, put }) {
-      const { type, dialogCls } = payload;
+      const { type } = payload;
       const response = yield call(login, payload);
       yield put({
         type: 'changeLoginStatus',
@@ -30,33 +31,33 @@ export default {
       });
       // Login successfully
       if (!response.error) {
-        sessionStorage.setItem('access_token', response.access_token);
-        sessionStorage.setItem('refresh_token', response.refresh_token);
-        if(dialogCls){
-          // 弹窗登录 页面不跳转
-          yield put({
-            type: 'changeModalVisible',
-            payload: false
-          });
-        }else {
-          reloadAuthorized();
-          const urlParams = new URL(window.location.href);
-          const params = getPageQuery();
-          let { redirect } = params;
-          if (redirect) {
-            const redirectUrlParams = new URL(redirect);
-            if (redirectUrlParams.origin === urlParams.origin) {
-              redirect = redirect.substr(urlParams.origin.length);
-              if (redirect.match(/^\/.*#/)) {
-                redirect = redirect.substr(redirect.indexOf('#') + 1);
-              }
-            } else {
-              window.location.href = redirect;
-              return;
-            }
-          }
-          yield put(routerRedux.replace(redirect || '/'));
-        }
+        localStorage.setItem('access_token', response.access_token);
+        localStorage.setItem('refresh_token', response.refresh_token);
+        // if(dialogCls){
+        //   // 弹窗登录 页面不跳转
+        //   yield put({
+        //     type: 'changeModalVisible',
+        //     payload: false
+        //   });
+        // }else {
+        //   reloadAuthorized();
+        //   const urlParams = new URL(window.location.href);
+        //   const params = getPageQuery();
+        //   let { redirect } = params;
+        //   if (redirect) {
+        //     const redirectUrlParams = new URL(redirect);
+        //     if (redirectUrlParams.origin === urlParams.origin) {
+        //       redirect = redirect.substr(urlParams.origin.length);
+        //       if (redirect.match(/^\/.*#/)) {
+        //         redirect = redirect.substr(redirect.indexOf('#') + 1);
+        //       }
+        //     } else {
+        //       window.location.href = redirect;
+        //       return;
+        //     }
+        //   }
+        //   yield put(routerRedux.replace(redirect || '/'));
+        // }
       }
     },
 
@@ -108,9 +109,11 @@ export default {
       };
     },
     changeModalVisible(state, { payload }) {
+      const { visible, modalType } = payload;
       return {
         ...state,
-        loginModalVisible: payload
+        modalVisible: visible,
+        modalType
       }
     },
   },

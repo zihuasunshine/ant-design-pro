@@ -1,25 +1,29 @@
 @import '~antd/lib/style/themes/default.less';
 
+.findpwd_main {
+  width: 375px;
+  padding: 20px;
+  margin: 0 auto;
+}
+.findpwd_main,
 .main {
-  position: absolute;
-  bottom: 50px;
-  right: 20%;
-  width: 368px;
-  padding: 25px;
-  background: #fff;
+  background: #fff; 
   @media screen and (max-width: @screen-sm) {
-    position: static;
-    width: 95%;
     margin: 0 auto;
   }
   :global {
     .ant-form-item {
-      margin-bottom: 24px;
+      margin-bottom: 12px;
     }
   }
   .header{
+    margin-bottom: 20px;
     text-align: center;
-    margin: 10px auto 20px auto;
+    font-size: 18px;
+    font-weight: bold;
+  }
+  .next_button {
+    text-align: center;
   }
   h3 {
     font-size: 16px;
@@ -42,6 +46,8 @@
   .login {
     float: right;
     line-height: @btn-height-lg;
+    cursor: pointer;
+    color: #139BEA;
   }
 }
 

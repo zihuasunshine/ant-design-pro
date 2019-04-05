@@ -7,6 +7,7 @@ import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } fro
 import styles from './Register.less';
 import hash from 'hash.js';
 import { imgCodeURL } from '@/services/api';
+import { notificationTip, generateUUID } from '@/utils/utils';
 import logo from '@/assets/black_logo.png';
 
 const FormItem = Form.Item;
@@ -127,6 +128,7 @@ class FindPassword extends Component {
   };
 
   handleSubmit = e => {
+    debugger;
     e.preventDefault();
     const { form, dispatch } = this.props;
     form.validateFields({ force: true }, (err, values) => {
@@ -144,7 +146,7 @@ class FindPassword extends Component {
           if (findpwdRes.code === 200) {
             notificationTip(formatMessage({ id: 'findpwd_success' }), true);
             router.push({
-              pathname: '/user/login',
+              pathname: '/',
             });
           } else {
 
@@ -222,7 +224,7 @@ class FindPassword extends Component {
   };
 
   refreshCode = () => {
-    const token = hash.sha256().digest('hex');
+    const token = generateUUID();
     this.setState({
       token: token,
       src: imgCodeURL + '?token=' + token,
@@ -234,12 +236,8 @@ class FindPassword extends Component {
     const { getFieldDecorator } = form;
     const { count, prefix, help, visible, src } = this.state;
     return (
-      <div className={styles.main}>
-        <div className={styles.header}>
-          <Link to="/">
-            <img alt="logo" className={styles.logo} src={logo} />
-          </Link>
-        </div>
+      <div className={styles.findpwd_main}>
+        <div className={styles.header}>{formatMessage({id: 'app.findpwd.findpwd'})} </div>
         <Form onSubmit={this.handleSubmit}>
           <FormItem help={help}>
             <Popover
@@ -376,8 +374,8 @@ class FindPassword extends Component {
             >
               <FormattedMessage id="app.findpwd.findpwd" />
             </Button>
-            <Link className={styles.login} to="/User/Login">
-              <FormattedMessage id="app.register.sign-in" />
+            <Link className={styles.login} to="/">
+              <FormattedMessage id="app.register-result.back-home" />
             </Link>
           </FormItem>
         </Form>

@@ -174,7 +174,7 @@ export function request(url, option) {
  */
 export function securityRequest(url, option) {
   const newOptions = handleParams(url, option);
-  const token = sessionStorage.getItem('access_token');
+  const token = localStorage.getItem('access_token');
   //const token = '4bbab859-7797-4881-a802-d04bd5641f00';
   if(token){
     // 已登录
@@ -186,8 +186,9 @@ export function securityRequest(url, option) {
   }else{
    // 弹出登录框
    window.g_app._store.dispatch({
-      type: 'login/setLoginModelVisible',
-      visible: true
+      type: 'login/setModalType',
+      visible: true,
+      modalType: 'login',
     });
     return;
   }

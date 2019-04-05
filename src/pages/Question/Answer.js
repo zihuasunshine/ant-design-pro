@@ -320,7 +320,10 @@ class Answer extends PureComponent {
         perfectAnswer: ''
       },
     }).then(() => {
-      notificationTip(formatMessage({id: 'app.setting.admin.answer'}), true);
+      const { question: { pAnswerRes } } = this.props;
+      if( pAnswerRes && pAnswerRes.code === 200){
+        notificationTip(formatMessage({id: 'app.setting.admin.answer'}), true);
+      }
     });
   }
 
@@ -338,14 +341,18 @@ class Answer extends PureComponent {
             type: 'question/perfectAnswer',
             params: {
               answerId,
-              reason: values.reason,
+              reason: formatMessage({id: 'app.setting.user.answer'}),
               perfectAnswer: editorState.toHTML()
             },
           }).then(() => {
-            // 跳转到首页
-            router.push({
-              pathname: '/'
-            });
+            const { question: { pAnswerRes } } = this.props;
+            if( pAnswerRes && pAnswerRes.code === 200){
+              notificationTip(formatMessage({id: 'app.setting.answer.check'}), true);
+              // 跳转到首页
+              router.push({
+                pathname: '/'
+              });
+            }
           });
         }
       });

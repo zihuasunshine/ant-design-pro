@@ -70,8 +70,8 @@ class HeaderView extends PureComponent {
     }
     if (key === 'logout') {
       // 清除会话缓存
-      sessionStorage.removeItem('access_token');
-      sessionStorage.removeItem('refresh_token');
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
       sessionStorage.removeItem('user');
       dispatch({
         type: 'login/logout',

@@ -19,6 +19,7 @@ export default {
     },
     *submit({ payload }, { call, put }) {
       const response = yield call(doReset, payload);
+      debugger;
       yield put({
         type: 'resetHandle',
         payload: response,

@@ -5,7 +5,7 @@ import Link from 'umi/link';
 import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
 import styles from './Register.less';
-import { generateUUID, notificationTip } from '@/utils/utils';
+import { generateUUID, notificationTip, isMobile } from '@/utils/utils';
 import { imgCodeURL } from '@/services/api';
 import logo from '@/assets/black_logo.png';
 
@@ -58,6 +58,7 @@ class Register extends Component {
       help: '',
       prefix: '86',
       src: '',
+      isNextStep: false,
     };
   }
 
@@ -65,18 +66,18 @@ class Register extends Component {
     this.refreshCode();
   }
 
-  componentDidUpdate() {
-    const { form, register } = this.props;
-    const account = form.getFieldValue('mail');
-    if (register.status === 'ok') {
-      router.push({
-        pathname: '/user/register-result',
-        state: {
-          account,
-        },
-      });
-    }
-  }
+  // componentDidUpdate() {
+  //   const { form, register } = this.props;
+  //   const account = form.getFieldValue('mail');
+  //   if (register.status === 'ok') {
+  //     router.push({
+  //       pathname: '/user/register-result',
+  //       state: {
+  //         account,
+  //       },
+  //     });
+  //   }
+  // }
 
   componentWillUnmount() {
     clearInterval(this.interval);
@@ -182,13 +183,14 @@ class Register extends Component {
 
   checkUserName = (rule, value, callback) => {
     const { dispatch } = this.props;
-    if(value){
+    if(value && /([a-zA-Z0-9\u4e00-\u9fa5]){4,20}$/.test(value)){
+      debugger;
       dispatch({
         type: 'register/checkUserNameExisted',
         payload:{
           userName: value
         }
-      }).then(() => {
+      })/*.then(() => {
         const { register: {checkUserNameRes} } = this.props;
         if(checkUserNameRes && checkUserNameRes.code === 200){
           if(checkUserNameRes.data){
@@ -199,13 +201,13 @@ class Register extends Component {
         }else {
           callback(formatMessage({id: 'request_faild'}));
         }
-      });
+      });*/
     }
   }
 
   checkMobile = (rule, value, callback) => {
     const { dispatch } = this.props;
-    if(/\d{11}$/.test(value)){
+    if(value && /\d{11}$/.test(value)){
       dispatch({
         type: 'register/checkUserMobileExisted',
         payload:{
@@ -261,6 +263,16 @@ class Register extends Component {
     });
   };
 
+  // 登录
+  handleLogin = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'login/setModalType',
+      visible: true,
+      modalType: 'login'
+    });
+  }
+
   renderPasswordProgress = () => {
     const { form } = this.props;
     const value = form.getFieldValue('password');
@@ -289,16 +301,11 @@ class Register extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible, src } = this.state;
-    console.log(src);
+    const { count, prefix, help, visible, src, isNextStep } = this.state;
 
     return (
       <div className={styles.main}>
-        <div className={styles.header}>
-          <Link to="/">
-            <img alt="logo" className={styles.logo} src={logo} />
-          </Link>
-        </div>
+        <div className={styles.header}>{formatMessage({id: 'app.login.signup'})}</div>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
             {getFieldDecorator('userName', {
@@ -341,7 +348,11 @@ class Register extends Component {
               {getFieldDecorator('password', {
                 rules: [
                   {
-                    validator: this.checkPassword,
+                    required: true,
+                    message: formatMessage({ id: 'validation.password.required' }),
+                  },
+                  {
+                    validator: isMobile()?'':this.checkPassword   // 移动端不进行检查
                   },
                 ],
               })(
@@ -352,25 +363,6 @@ class Register extends Component {
                 />
               )}
             </Popover>
-          </FormItem>
-          <FormItem>
-            {getFieldDecorator('confirm', {
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage({ id: 'validation.confirm-password.required' }),
-                },
-                {
-                  validator: this.checkConfirm,
-                },
-              ],
-            })(
-              <Input
-                size="large"
-                type="password"
-                placeholder={formatMessage({ id: 'form.confirm-password.placeholder' })}
-              />
-            )}
           </FormItem>
           <FormItem>
             <Row gutter={8}>
@@ -457,9 +449,9 @@ class Register extends Component {
             >
               <FormattedMessage id="app.register.register" />
             </Button>
-            <Link className={styles.login} to="/User/Login">
+            <span className={styles.login} onClick={this.handleLogin}>
               <FormattedMessage id="app.register.sign-in" />
-            </Link>
+            </span>
           </FormItem>
         </Form>
       </div>
