@@ -2,6 +2,8 @@ import React, { PureComponent } from 'react';
 import { Select, Spin } from 'antd';
 import { connect } from 'dva';
 import styles from './GeographicView.less';
+import { city } from './geographic/city';
+import { province } from './geographic/province';
 
 const { Option } = Select;
 
@@ -10,41 +12,34 @@ const nullSlectItem = {
   key: '',
 };
 
-@connect(({ geographic }) => {
-  const { province, isLoading, city } = geographic;
-  return {
-    province,
-    city,
-    isLoading,
-  };
-})
 class GeographicView extends PureComponent {
-  componentDidMount = () => {
-    const { dispatch } = this.props;
-    dispatch({
-      type: 'geographic/fetchProvince',
-    });
-  };
 
-  componentDidUpdate(props) {
-    const { dispatch, value } = this.props;
+  state = {
+    provinceOption: [],
+    citiOption: []
+  }
 
-    if (!props.value && !!value && !!value.province) {
-      dispatch({
-        type: 'geographic/fetchCity',
-        payload: value.province.key,
-      });
+  componentDidMount() {
+    const { value } = this.props;
+    
+  }
+
+  static getDerivedStateFromProps(props, state) {
+    const { value } = props;
+    const provinceOption = province;
+    const cityOption = value? city[value.province.key] : []
+    console.log(cityOption);
+    return {
+      provinceOption, cityOption
     }
   }
 
-  getProvinceOption() {
-    const { province } = this.props;
-    return this.getOption(province);
+  getProvinceOption(provinceOption) {
+    return this.getOption(provinceOption);
   }
 
-  getCityOption = () => {
-    const { city } = this.props;
-    return this.getOption(city);
+  getCityOption = (cityOption) => {
+    return this.getOption(cityOption);
   };
 
   getOption = list => {
@@ -63,14 +58,13 @@ class GeographicView extends PureComponent {
   };
 
   selectProvinceItem = item => {
-    const { dispatch, onChange } = this.props;
-    dispatch({
-      type: 'geographic/fetchCity',
-      payload: item.key,
-    });
+    const {  onChange } = this.props;
     onChange({
       province: item,
       city: nullSlectItem,
+    });
+    this.setState({
+      cityOption: city[item.key]
     });
   };
 
@@ -98,8 +92,9 @@ class GeographicView extends PureComponent {
   }
 
   render() {
+    const { provinceOption, cityOption } = this.state;
     const { province, city } = this.conversionObject();
-    const { isLoading } = this.props;
+    const isLoading = false;
     return (
       <Spin spinning={isLoading} wrapperClassName={styles.row}>
         <Select
@@ -109,7 +104,7 @@ class GeographicView extends PureComponent {
           showSearch
           onSelect={this.selectProvinceItem}
         >
-          {this.getProvinceOption()}
+          {this.getProvinceOption(provinceOption)}
         </Select>
         <Select
           className={styles.item}
@@ -118,7 +113,7 @@ class GeographicView extends PureComponent {
           showSearch
           onSelect={this.selectCityItem}
         >
-          {this.getCityOption()}
+          {this.getCityOption(cityOption)}
         </Select>
       </Spin>
     );

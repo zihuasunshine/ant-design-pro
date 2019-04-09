@@ -119,6 +119,7 @@ class CPA extends Component {
                 <h3 className={styles.title}>{name}</h3>
                 <p dangerouslySetInnerHTML={{__html: info}}/>
                 <Table
+                  rowKey={ record => record.schoolCode}
                   bordered={true}
                   columns={this.columns}
                   dataSource={dataSource}

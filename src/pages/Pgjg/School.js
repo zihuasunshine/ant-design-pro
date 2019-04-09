@@ -98,6 +98,7 @@ class School extends Component {
             <div className={styles.right}>
               <h3 className={styles.title}>{this.name}</h3>
               <Table
+                rowKey={ record => record.schoolCode}
                 bordered={true}
                 columns={this.columns}
                 dataSource={pgjgList}

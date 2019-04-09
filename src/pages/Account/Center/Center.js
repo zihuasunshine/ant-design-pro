@@ -54,14 +54,17 @@ class Center extends PureComponent {
   onTabChange = key => {
     const { match } = this.props;
     switch (key) {
-      case 'waitAnswer':
-        router.push(`${match.url}/waitAnswer/${this.uid}`);
+      case 'myPlease':
+        router.push(`${match.url}/myPlease`);
         break;
       case 'myQuestion':
         router.push(`${match.url}/myQuestion`);
         break;
       case 'myAnswer':
         router.push(`${match.url}/myAnswer`);
+        break;
+      case 'myAttention':
+        router.push(`${match.url}/myAttention`);
         break;
       default:
         break;
@@ -182,6 +185,23 @@ class Center extends PureComponent {
           </span>
         ),
       },
+      {
+        key: 'myPlease',
+        tab: (
+          <span>
+            请求完善 <span style={{ fontSize: 14 }}></span>
+          </span>
+        ),
+      },
+      {
+        key: 'myAttention',
+        tab: (
+          <span>
+            我的关注 <span style={{ fontSize: 14 }}></span>
+          </span>
+        ),
+      },
+
     ];
 
     return (

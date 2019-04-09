@@ -444,6 +444,8 @@ class Answer extends PureComponent {
                 <div className={styles.qTime}>
                   <span>#提问时间：{moment(question.addTime).format('YYYY-MM-DD')}</span>
                   <span className={styles.view_wrapper}><Icon type="eye" className={styles.view}/>{question.viewCount}</span>
+                  <span className={styles.heart_wrapper}><Icon type="heart" className={styles.heart}/>{question.viewCount}</span>
+                  <span className={styles.heart_wrapper}><Icon type="share-alt" className={styles.heart}/></span>
                 </div>
               </div>
               <div className={styles.qDetail} dangerouslySetInnerHTML={{__html: question.detail}}/>

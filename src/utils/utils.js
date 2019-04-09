@@ -211,7 +211,7 @@ export function notificationTip(message, isSuccess) {
   notification.info({
     message: message,
     description: '',
-    duration: 3,
+    duration: 4,
     //placement: 'bottomRight',
     icon: isSuccess?<Icon type="smile" style={{color: '#139BEA'}}/>:<Icon type="frown" style={{color: 'red'}} />,
   });

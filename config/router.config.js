@@ -145,16 +145,20 @@ export default [
                 redirect: '/account/center/myQuestion',
               },
               {
-                path: '/account/center/waitAnswer',
-                component: './Account/Center/WaitAnswer',
+                path: '/account/center/myPlease',
+                component: './Account/Center/MyPlease',
               },
               {
                 path: '/account/center/myQuestion',
-                component: './Account/Center/Questions',
+                component: './Account/Center/MyQuestions',
               },
               {
                 path: '/account/center/myAnswer',
                 component: './Account/Center/MyAnswers',
+              },
+              {
+                path: '/account/center/myAttention',
+                component: './Account/Center/MyAttention',
               },
             ],
           },
