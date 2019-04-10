@@ -144,7 +144,7 @@ class AskForms extends PureComponent {
               </FormItem>
             </div>
             <div className={styles.submit_btn_wrapper}>
-              <Button type="primary" htmlType="submit" size='large' loading={submitting}>
+              <Button type="primary" htmlType="submit" loading={submitting}>
                 {localStorage.getItem('access_token')? <FormattedMessage id="form.submit"/>: <FormattedMessage id="form.login.submit"/>}
               </Button>
             </div>

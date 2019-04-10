@@ -220,16 +220,16 @@ self.__precacheManifest = [
     "url": "/38.async.js"
   },
   {
-    "revision": "c23aa881b8d0e959f6c0aeb5ae7e4baa",
-    "url": "/icons/icon-192x192.png"
+    "revision": "694c4300be571fdd4d8b6abbe14d2e3f",
+    "url": "/favicon1.png"
   },
   {
     "revision": "347329d0982682b42d40c8162817a940",
     "url": "/icons/icon-128x128.png"
   },
   {
-    "revision": "694c4300be571fdd4d8b6abbe14d2e3f",
-    "url": "/favicon1.png"
+    "revision": "c23aa881b8d0e959f6c0aeb5ae7e4baa",
+    "url": "/icons/icon-192x192.png"
   },
   {
     "revision": "723e4067a93a8749d90866cb721263c0",
@@ -256,11 +256,11 @@ self.__precacheManifest = [
     "url": "/6.async.js"
   },
   {
-    "revision": "1044e100203a121f7b4d",
+    "revision": "6a8bd52706a09a1323af",
     "url": "/7.chunk.css"
   },
   {
-    "revision": "1044e100203a121f7b4d",
+    "revision": "6a8bd52706a09a1323af",
     "url": "/7.async.js"
   },
   {
