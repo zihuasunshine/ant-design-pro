@@ -2,11 +2,12 @@ import React, { PureComponent } from 'react';
 import { connect } from 'dva';
 import router from 'umi/router';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Form, Input, Button, Card, message } from 'antd';
+import { Form, Input, Button, Card, message, Divider, Icon } from 'antd';
 import { notificationTip } from  '@/utils/utils';
 import PicturesWall from '@/components/PicturesWall';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import PageHeaderWrapper from '@/components/PageHeaderWrapper';
+import styles from './Ask.less';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
@@ -74,14 +75,10 @@ class AskForms extends PureComponent {
     } = this.props;
 
     const formItemLayout = {
-      labelCol: {
-        xs: { span: 24 },
-        sm: { span: 7 },
-      },
       wrapperCol: {
         xs: { span: 24 },
-        sm: { span: 12 },
-        md: { span: 10 },
+        sm: { span: 24 },
+        md: { span: 24 },
       },
     };
 
@@ -94,24 +91,29 @@ class AskForms extends PureComponent {
 
     return (
       <GridContent>
-        <Card bordered={false}>
-            <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
+        <Card className={styles.ask_wrapper} bordered={false}>
+          <div className={styles.title_wrapper}>
+            <Icon type="question-circle" className={styles.icon}/>
+            <span className={styles.text}>{formatMessage({id: 'form.question'})}</span>
+          </div>
+          <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
+            <FormItem
+              {...formItemLayout}
+              //label={<FormattedMessage id="form.question.title.label" />}
+            >
+              {getFieldDecorator('title', {
+                rules: [
+                  {
+                    required: true,
+                    message: formatMessage({ id: 'validation.question.title.required' }),
+                  },
+                ],
+              })(<Input size='large' placeholder={formatMessage({ id: 'form.question.title.placeholder' })} />)}
+            </FormItem>
+            <div className={styles.detail_wrapper}>
               <FormItem
                 {...formItemLayout}
-                label={<FormattedMessage id="form.question.title.label" />}
-              >
-                {getFieldDecorator('title', {
-                  rules: [
-                    {
-                      required: true,
-                      message: formatMessage({ id: 'validation.question.title.required' }),
-                    },
-                  ],
-                })(<Input placeholder={formatMessage({ id: 'form.question.title.placeholder' })} />)}
-              </FormItem>
-              <FormItem
-                {...formItemLayout}
-                label={<FormattedMessage id="form.question.detail.label" />}
+                //label={<FormattedMessage id="form.question.detail.label" />}
               >
                 {getFieldDecorator('detail', {
                   rules: [
@@ -122,25 +124,32 @@ class AskForms extends PureComponent {
                   ],
                 })(
                   <TextArea
-                    style={{ minHeight: 32 }}
+                    className={styles.textArea}
                     placeholder={formatMessage({ id: 'form.question.detail.placeholder' })}
-                    rows={4}
+                    autosize={false}
+                    rows={6}
                   />
                 )}
               </FormItem>
+              <Divider dashed/>
               <FormItem
                 {...formItemLayout}
-                label={<FormattedMessage id="form.question.imgs.label" />}
+                //label={<FormattedMessage id="form.question.imgs.label" />}
               >
-                {getFieldDecorator('imgs', {})(<PicturesWall count={5} uploadImg={this.uploadImg} />)}
+                {getFieldDecorator('imgs', {})(
+                  <div className={styles.picture_wrapper}>
+                    <PicturesWall count={5} uploadImg={this.uploadImg} />
+                  </div>
+                )}
               </FormItem>
-              <FormItem {...submitFormLayout} style={{ marginTop: 32 }}>
-                <Button type="primary" htmlType="submit" loading={submitting}>
-                  {sessionStorage.getItem('access_token')? <FormattedMessage id="form.submit"/>: <FormattedMessage id="form.login.submit"/>}
-                </Button>
-              </FormItem>
-            </Form>
-          </Card>
+            </div>
+            <div className={styles.submit_btn_wrapper}>
+              <Button type="primary" htmlType="submit" size='large' loading={submitting}>
+                {localStorage.getItem('access_token')? <FormattedMessage id="form.submit"/>: <FormattedMessage id="form.login.submit"/>}
+              </Button>
+            </div>
+          </Form>
+        </Card>
       </GridContent>
     );
   }

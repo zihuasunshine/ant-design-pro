@@ -3,6 +3,7 @@ export default {
   'form.captcha.second': '秒',
   'form.optional': '（选填）',
   'form.submit': '提交',
+  'form.question': '提问',
   'form.login.submit': '登录提交',
   'form.save': '保存',
   'form.email.placeholder': '邮箱',
