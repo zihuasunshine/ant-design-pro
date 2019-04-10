@@ -1,6 +1,6 @@
 import React, { PureComponent } from 'react';
 import { FormattedMessage, formatMessage } from 'umi/locale';
-import { Spin, Tag, Menu, Icon, Avatar, Tooltip, Modal } from 'antd';
+import { Spin, Tag, Menu, Icon, Avatar, Tooltip, Modal, BackTop } from 'antd';
 import Link from 'umi/link';
 import { connect } from 'dva' 
 import moment from 'moment';
@@ -9,14 +9,15 @@ import NoticeIcon from '../NoticeIcon';
 import HeaderSearch from '../HeaderSearch';
 import HeaderDropdown from '../HeaderDropdown';
 import SelectLang from '../SelectLang';
+import Suggest from './Suggest';
 import Login from '@/pages/User/Login';
 import Register from '@/pages/User/Register';
 import styles from './index.less';
 
 const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'; // 默认头像
 
-@connect(({ login }) => ({
-  login
+@connect(({ global, login }) => ({
+  global, login
 }))
 export default class GlobalHeaderRight extends PureComponent {
 
@@ -99,6 +100,15 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   }
 
+  // 显示意见反馈弹框
+  setSuggestModalVisible = (visible) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'global/setSuggestModal',
+      suggestModalVisible: visible
+    });
+  }
+
   // 获取当前登录人信息
   getCurrentUserInfo = () => {
     const { dispatch } = this.props;
@@ -112,6 +122,7 @@ export default class GlobalHeaderRight extends PureComponent {
     const {
       //currentUser,
       login: { modalVisible, modalType },
+      global: { suggestModalVisible },
       fetchingNotices,
       onNoticeVisibleChange,
       onMenuClick,
@@ -252,6 +263,25 @@ export default class GlobalHeaderRight extends PureComponent {
         >
           {modalType === 'login'? <Login/> : <Register/>}
         </Modal>
+        <Modal
+          maskStyle={{background: 'rgba(0,0,0,.3)'}}
+          visible={suggestModalVisible}
+          maskClosable={false}
+          onCancel={() => this.setSuggestModalVisible(false)}
+          footer={false}
+        >
+          <div className={styles.suggest_wrapper}>
+            <Suggest/>
+          </div>
+        </Modal>
+        <Tooltip placement='left' title='意见反馈'>
+          <div className={styles.suggest} onClick={() => this.setSuggestModalVisible(true)}>
+            <Icon type="edit" theme='filled'/>
+          </div>
+        </Tooltip>
+        <Tooltip placement='left' title='回到顶部'>
+          <BackTop />
+        </Tooltip>
       </div>
     );
   }

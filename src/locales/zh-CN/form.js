@@ -47,6 +47,8 @@ export default {
   'form.old-password.placeholder': '旧密码',
   'form.reason.placeholder': '为什么完善',
   'form.answer.placeholder': '说说你的答案~',
+  'form.suggest.placeholder': '告诉我们你的建议~',
+  'validation.suggest.required': '建议不能为空哦',
   //===调剂===//
   'form.yx.label': '高校名称',
   'form.yx.placeholder': '请输入高校名称',

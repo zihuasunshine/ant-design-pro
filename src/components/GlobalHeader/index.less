@@ -144,3 +144,36 @@
     cursor: pointer;
   }
 }
+
+.suggest_wrapper{
+  padding: 24px 16px 16px 16px;
+  .submit_btn_wrapper{
+    text-align: center;
+  }
+}
+.suggest{
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: #fff;
+  font-size: 18px;
+  font-variant: tabular-nums;
+  line-height: 40px;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  position: fixed;
+  right: 16px;
+  bottom: 100px;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.45);
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  border-radius: 50%;
+  cursor: pointer;
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.6);
+    transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  }
+}

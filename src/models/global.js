@@ -6,9 +6,16 @@ export default {
   state: {
     collapsed: false,
     notices: [],
+    suggestModalVisible: false,
   },
 
   effects: {
+    *setSuggestModal({ suggestModalVisible}, { put }) {
+      yield put({
+        type: 'changeSuggestModalVisible',
+        payload: suggestModalVisible
+      });
+    },
     *getOtherUserInfo({ params }, { call, put }) {
       const response = yield call(queryUser, params);
       yield put({
@@ -96,6 +103,12 @@ export default {
   },
 
   reducers: {
+    changeSuggestModalVisible(state, { payload }) {
+      return {
+        ...state,
+        suggestModalVisible: payload
+      }
+    },
     getOtherUserInfoHandle(state, { payload }) {
       return {
         ...state,

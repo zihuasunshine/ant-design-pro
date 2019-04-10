@@ -4,7 +4,7 @@ self.__precacheManifest = [
     "url": "/33.async.js"
   },
   {
-    "revision": "f6c77d1c3ac033316134",
+    "revision": "c2dd7dbc3de671962306",
     "url": "/vendors.chunk.css"
   },
   {
@@ -44,11 +44,11 @@ self.__precacheManifest = [
     "url": "/static/xs08.a3b794db.png"
   },
   {
-    "revision": "e57050c25f91ae42e771",
+    "revision": "b393005f8fd4e27a691f",
     "url": "/umi.css"
   },
   {
-    "revision": "e57050c25f91ae42e771",
+    "revision": "b393005f8fd4e27a691f",
     "url": "/umi.js"
   },
   {
@@ -164,7 +164,7 @@ self.__precacheManifest = [
     "url": "/static/xs02.3f5c4fd5.png"
   },
   {
-    "revision": "f6c77d1c3ac033316134",
+    "revision": "c2dd7dbc3de671962306",
     "url": "/vendors.async.js"
   },
   {
@@ -200,8 +200,8 @@ self.__precacheManifest = [
     "url": "/manifest.json"
   },
   {
-    "revision": "723e4067a93a8749d90866cb721263c0",
-    "url": "/favicon.png"
+    "revision": "5661ce8e2472d2727e8fd0390b22ba37",
+    "url": "/icons/icon-512x512.png"
   },
   {
     "revision": "4afd1ae6143716f23cc2",
@@ -220,20 +220,20 @@ self.__precacheManifest = [
     "url": "/38.async.js"
   },
   {
-    "revision": "694c4300be571fdd4d8b6abbe14d2e3f",
-    "url": "/favicon1.png"
+    "revision": "c23aa881b8d0e959f6c0aeb5ae7e4baa",
+    "url": "/icons/icon-192x192.png"
   },
   {
     "revision": "347329d0982682b42d40c8162817a940",
     "url": "/icons/icon-128x128.png"
   },
   {
-    "revision": "c23aa881b8d0e959f6c0aeb5ae7e4baa",
-    "url": "/icons/icon-192x192.png"
+    "revision": "694c4300be571fdd4d8b6abbe14d2e3f",
+    "url": "/favicon1.png"
   },
   {
-    "revision": "5661ce8e2472d2727e8fd0390b22ba37",
-    "url": "/icons/icon-512x512.png"
+    "revision": "723e4067a93a8749d90866cb721263c0",
+    "url": "/favicon.png"
   },
   {
     "revision": "6e986545304fa0773ab0af79cde9bfdd",
@@ -348,7 +348,7 @@ self.__precacheManifest = [
     "url": "/10.async.js"
   },
   {
-    "revision": "043e68bbcf3ec35e1c61",
+    "revision": "2a5aebe08046035e6db4",
     "url": "/11.async.js"
   },
   {
@@ -364,7 +364,7 @@ self.__precacheManifest = [
     "url": "/13.chunk.css"
   },
   {
-    "revision": "043e68bbcf3ec35e1c61",
+    "revision": "2a5aebe08046035e6db4",
     "url": "/11.chunk.css"
   },
   {
