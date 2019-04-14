@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { addTag, deleteTag, myQuestion, myAnswer } from '@/services/api';
+import { addTag, deleteTag, myQuestion, myAnswer, myFocus } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -36,11 +36,18 @@ export default {
     },
     *getMyAnswer({ params }, { call, put }) {
       const response = yield call(myAnswer, params);
-      put({
+      yield put({
         type: 'myAnswerHandle',
         payload: response
       });
     },
+    *getMyFocus({ params }, { call, put }) {
+      const response = yield call(myFocus, params);
+      yield put({
+        type: 'myFocusHandle',
+        payload: response
+      });
+    }
   },
 
   reducers: {
@@ -68,5 +75,11 @@ export default {
         myAnswerRes: payload,
       };        
     },
+    myFocusHandle(state, { payload }) {
+      return {
+        ...state,
+        myFocusRes: payload,
+      }
+    }
   },
 };

@@ -11,6 +11,20 @@ import styles from './Ask.less';
 
 const FormItem = Form.Item;
 const { TextArea } = Input;
+const formItemLayout = {
+  wrapperCol: {
+    xs: { span: 24 },
+    sm: { span: 24 },
+    md: { span: 24 },
+  },
+};
+
+const submitFormLayout = {
+  wrapperCol: {
+    xs: { span: 24, offset: 0 },
+    sm: { span: 10, offset: 7 },
+  },
+};
 
 @connect(({ question, loading }) => ({
   question,
@@ -26,26 +40,38 @@ class AskForms extends PureComponent {
   handleSubmit = e => {
     e.preventDefault();
     const { dispatch, form } = this.props;
-      form.validateFieldsAndScroll((err, values) => {
-        const { detail } = values;
-        if (this.imgs.length > 0) values.imgs = this.imgs;
-        if (!detail) delete values.detail;
-        if (!err) {
+    form.validateFieldsAndScroll((err, values) => {
+      const { detail } = values;
+      if (this.imgs.length > 0) values.imgs = this.imgs;
+      if (!detail) delete values.detail;
+      if (!err) {
+        if(values.id) {
+          dispatch({
+            type: 'question/edit',
+            payload: values
+          }).then (() => {
+            const { question: { editQuestionRes }} = this.props;
+            if(editQuestionRes && editQuestionRes.code === 200) {
+              notificationTip(formatMessage({id: 'app.setting.user.ask.success'}), true);
+              router.push('/');
+            }
+          });
+        } else {
           dispatch({
             type: 'question/submit',
             payload: values,
-            token: sessionStorage.getItem('access_token'),
           }).then(() => {
             const { question: { addQuestionRes }} = this.props;
             if(addQuestionRes && addQuestionRes.code === 200){
               notificationTip(formatMessage({id: 'app.setting.user.ask.success'}), true);
-              router.push('/');
+              router.push('/account/center/myQuestion');
             }else{
   
             }
           });
         }
-      });
+      }
+    });
     
   };
 
@@ -53,14 +79,14 @@ class AskForms extends PureComponent {
   uploadImg = file => {
     const { dispatch } = this.props;
     return dispatch({
-      type: 'question/upload',
+      type: 'global/upload',
       payload: {
         type: 'question',
         file: file,
       },
     }).then(() => {
       const {
-        question: { uploadRes },
+        global: { uploadRes },
       } = this.props;
       if (uploadRes.code === 200) {
         this.imgs.push(uploadRes.data.id);
@@ -71,23 +97,9 @@ class AskForms extends PureComponent {
   render() {
     const { submitting } = this.props;
     const {
+      location: { state:question },
       form: { getFieldDecorator, getFieldValue },
     } = this.props;
-
-    const formItemLayout = {
-      wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 24 },
-        md: { span: 24 },
-      },
-    };
-
-    const submitFormLayout = {
-      wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 10, offset: 7 },
-      },
-    };
 
     return (
       <GridContent>
@@ -97,11 +109,21 @@ class AskForms extends PureComponent {
             <span className={styles.text}>{formatMessage({id: 'form.question'})}</span>
           </div>
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
+            {getFieldDecorator('id', {
+              initialValue: question && question.id,
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.question.title.required' }),
+                },
+              ],
+            })(<Input type='hidden' />)}
             <FormItem
               {...formItemLayout}
               //label={<FormattedMessage id="form.question.title.label" />}
             >
               {getFieldDecorator('title', {
+                initialValue: question && question.title,
                 rules: [
                   {
                     required: true,
@@ -116,6 +138,7 @@ class AskForms extends PureComponent {
                 //label={<FormattedMessage id="form.question.detail.label" />}
               >
                 {getFieldDecorator('detail', {
+                  initialValue: question && question.detail,
                   rules: [
                     /*{
                       required: true,

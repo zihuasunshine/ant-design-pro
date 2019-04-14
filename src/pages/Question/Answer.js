@@ -4,12 +4,13 @@ import router from 'umi/router';
 import GridContent from '@/components/PageHeaderWrapper/GridContent';
 import RichTextEditor from '@/components/RichTextEditor';
 import CommentList from '@/components/CommentList';
+import ShareUser from './ShareUser';
 import BraftEditor from 'braft-editor';
 import { ContentUtils } from 'braft-utils'
 import { ImageUtils } from 'braft-finder'
-import { notificationTip } from  '@/utils/utils';
+import { notificationTip, isMobile } from  '@/utils/utils';
 import { formatMessage, FormattedMessage } from 'umi/locale';
-import { Row, Col, Icon, Button, Input, Avatar, message, Form, Divider, Upload } from 'antd';
+import { Row, Col, Icon, Button, Input, Avatar, message, Form, Divider, Upload, Drawer } from 'antd';
 import moment from 'moment';
 import styles from './Answer.less';
 //import bestSrc from '@/assets/best.png';
@@ -48,6 +49,7 @@ class Answer extends PureComponent {
       dislikeCount: 0,    // 点踩数
       commentCount: 0,    // 评论数
       messages: [],    // 评论列表
+      isFocus: false
     }
     this._comments = [];
     this.count = 0;
@@ -57,6 +59,7 @@ class Answer extends PureComponent {
 
   componentDidMount(){
     this.getQuestionDetail();
+    this.isFocus(this.id);
   }
 
   componentWillUnmount() {
@@ -116,8 +119,9 @@ class Answer extends PureComponent {
     });
   }
 
+  // 是否点赞
   isVote = (answerId) => {
-    if(sessionStorage.getItem('access_token')){
+    if(localStorage.getItem('access_token')){
       const { dispatch } = this.props;
       dispatch({
         type: 'question/isVote',
@@ -128,7 +132,24 @@ class Answer extends PureComponent {
     }else{
       // 未登录
     }
+  }
 
+  // 是否关注
+  isFocus = (questionId) => {
+    if(localStorage.getItem('access_token')) {
+      const { dispatch } = this.props;
+      dispatch({
+        type: 'question/isFocus',
+        payload: {
+          questionId
+        }
+      }).then(() => {
+        const { question: { isFocusRes }} = this.props;
+        if(isFocusRes && isFocusRes.code === 200) {
+          this.setState({ isFocus: isFocusRes.data });
+        }
+      });
+    }
   }
 
   getComment = (answerId) => {
@@ -220,6 +241,41 @@ class Answer extends PureComponent {
     }
   }
 
+  // 关注
+  handleFocus = (questionId, type) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/focus',
+      payload: {
+        questionId,
+        type,
+      }
+    }).then(() => {
+      const { question: { focusRes }} = this.props;
+      if(focusRes && focusRes.code === 200){
+        this.isFocus(questionId)
+      }
+    });
+  }
+
+  // 分享
+  handleShare = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/setShareDrawer',
+      payload: true
+    });
+  }
+
+  // 取消分享
+  handleCancleShare = () => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/setShareDrawer',
+      payload: false
+    });
+  }
+
   handleComment = (inputValue, answerId, commentId) => {
     const { dispatch } = this.props;
     if(!inputValue){
@@ -293,13 +349,13 @@ class Answer extends PureComponent {
     }
     const { dispatch } = this.props;
     dispatch({
-      type: 'question/upload',
+      type: 'global/upload',
       payload: {
         type: 'answer',
         file: param.file
       }
     }).then(()=> {
-      const { question: {uploadRes: { data } } } = this.props;
+      const { global: {uploadRes: { data } } } = this.props;
       this.setState({
         editorState: ContentUtils.insertMedias(this.state.editorState, [{
           type: 'IMAGE',
@@ -378,8 +434,8 @@ class Answer extends PureComponent {
   }
 
   render() {
-    const { question: { qDetailRes, isVoteRes, commentRes, moreCommentRes }, form: { getFieldDecorator }, global: { otherUserRes }} = this.props;
-    const { isFormVisible, likeCount, dislikeCount, commentCount, messages} = this.state;
+    const { question: { qDetailRes, isVoteRes, commentRes, moreCommentRes, shareDrawerlVisible }, form: { getFieldDecorator }, global: { otherUserRes }} = this.props;
+    const { isFormVisible, likeCount, dislikeCount, commentCount, messages, isFocus} = this.state;
     let answer = {}, question = {};
     if (this.count === 0) {
       if (qDetailRes && qDetailRes.code === 200 && commentRes && commentRes.code === 200) {
@@ -443,9 +499,15 @@ class Answer extends PureComponent {
                 </div>
                 <div className={styles.qTime}>
                   <span>#提问时间：{moment(question.addTime).format('YYYY-MM-DD')}</span>
-                  <span className={styles.view_wrapper}><Icon type="eye" className={styles.view}/>{question.viewCount}</span>
-                  <span className={styles.heart_wrapper}><Icon type="heart" className={styles.heart}/>{question.viewCount}</span>
-                  <span className={styles.heart_wrapper}><Icon type="share-alt" className={styles.heart}/></span>
+                  <span className={styles.view_wrapper} title='浏览量'>
+                    <Icon type="eye" className={styles.view}/>{question.viewCount}
+                  </span>
+                  <span className={styles.heart_wrapper} onClick={() => this.handleFocus(question.id, isFocus?'0':'1')} title={isFocus?'取消关注':'关注'}>
+                    <Icon type="heart" className={styles.heart} theme={isFocus?'filled':''}/>
+                  </span>
+                  <span className={styles.heart_wrapper} onClick={this.handleShare} title='分享'>
+                    <Icon type="share-alt" className={styles.heart}/>
+                  </span>
                 </div>
               </div>
               <div className={styles.qDetail} dangerouslySetInnerHTML={{__html: question.detail}}/>
@@ -561,6 +623,15 @@ class Answer extends PureComponent {
             </Col>
           </Row>
         </div>
+        <Drawer
+          width={isMobile()?256:400}
+          closable={false}
+          visible={shareDrawerlVisible}
+          footer={false}
+          onClose={this.handleCancleShare}
+        >
+          <ShareUser/>
+        </Drawer>
       </GridContent>
     );
   }

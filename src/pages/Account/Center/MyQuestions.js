@@ -1,5 +1,6 @@
 import React, { PureComponent } from 'react';
-import { List, Row, Col, Tag } from 'antd';
+import router from 'umi/router';
+import { List, Row, Col, Tag, Icon } from 'antd';
 import { connect } from 'dva';
 import momont from 'moment';
 import styles from './Questions.less';
@@ -43,6 +44,13 @@ class Center extends PureComponent {
     });
   }
 
+  handleEdit = (item) => {
+    router.push({
+      pathname: '/question',
+      state: item
+    });
+  }
+
   render() {
     const { center: { myQuestionRes } } = this.props;
     const listData = myQuestionRes && myQuestionRes.code===200 ? myQuestionRes.data.list :[];
@@ -58,26 +66,20 @@ class Center extends PureComponent {
           <List.Item
             key={item.id}
           >
-            <List.Item.Meta
-              title={
-                <Row>
-                  <Col {...colLayout1}>
-                    {item.state !== 5? 
-                      (<a className={styles.listItemMetaTitle} href={`/question/answer/${item.id}`}>{item.title}</a>) : 
-                      (<span className={styles.listItemMetaTitle}>{item.title}</span>) }
-                  </Col>
-                  <Col {...colLayout2}>
-                    <span className={styles.listItemMetaTitle}>{item.bestAnswer==0?'未回答':'已回答'} | {momont(item.addTime).format('YYYY-MM-DD HH:mm')}</span>
-                  </Col>
-                </Row>
-              }
-              description={
-                <div>
-                  <Tag color={state[item.state].color}>{state[item.state].name}</Tag>
-                </div>
-               
-              }
-            />
+            <Row>
+              <Col {...colLayout1}>
+                {item.state !== 5? 
+                  (<a className={styles.listItemMetaTitle} href={`/question/answer/${item.id}`}>{item.title}</a>) : 
+                  (<span className={styles.listItemMetaTitle}>{item.title}</span>) } 
+                  {item.state === 0 || item.state === 4? <Icon title='重新编辑' type='edit' className={styles.re_edit} onClick={() => this.handleEdit(item)}/> : null }
+              </Col>
+              <Col {...colLayout2}>
+                <span className={styles.listItemMetaTitle}>{item.bestAnswer==0?'未回答':'已回答'} | {momont(item.addTime).format('YYYY-MM-DD HH:mm')}</span>
+              </Col>
+              <Col span={24} className={styles.margin_top}>
+                <Tag color={state[item.state].color}>{state[item.state].name}</Tag>
+              </Col>
+            </Row>
           </List.Item>
         )}
       />

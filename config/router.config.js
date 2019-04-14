@@ -157,8 +157,8 @@ export default [
                 component: './Account/Center/MyAnswers',
               },
               {
-                path: '/account/center/myAttention',
-                component: './Account/Center/MyAttention',
+                path: '/account/center/myFocus',
+                component: './Account/Center/myFocus',
               },
             ],
           },

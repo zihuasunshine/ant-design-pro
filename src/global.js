@@ -44,11 +44,13 @@ window.addEventListener('sw.updated', e => {
       {formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
     </Button>
   );
-  notification.open({
-    message: formatMessage({ id: 'app.pwa.serviceworker.updated' }),
-    description: formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
-    btn,
-    key,
-    onClose: async () => {},
-  });
+  // 直接刷新，无需询问
+  reloadSW();
+  // notification.open({
+  //   message: formatMessage({ id: 'app.pwa.serviceworker.updated' }),
+  //   description: formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
+  //   btn,
+  //   key,
+  //   onClose: async () => {},
+  // });
 });

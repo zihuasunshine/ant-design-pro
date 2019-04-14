@@ -82,7 +82,6 @@ export default class GlobalHeaderRight extends PureComponent {
   };
 
   handleCancle = () =>{
-    debugger;
     const { dispatch } = this.props;
     dispatch({
       type: 'login/setModalType',
@@ -265,6 +264,7 @@ export default class GlobalHeaderRight extends PureComponent {
         </Modal>
         <Modal
           maskStyle={{background: 'rgba(0,0,0,.3)'}}
+          destroyOnClose={true}
           visible={suggestModalVisible}
           maskClosable={false}
           onCancel={() => this.setSuggestModalVisible(false)}

@@ -38,7 +38,8 @@ const passwordProgressMap = {
   poor: 'exception',
 };
 
-@connect(({ findpwd, loading }) => ({
+@connect(({ register, findpwd, loading }) => ({
+  register,
   findpwd,
   submitting: loading.effects['findpwd/submit'],
 }))
@@ -61,7 +62,8 @@ class FindPassword extends Component {
   }
 
   componentDidUpdate() {
-    const { form, findpwd } = this.props;
+    debugger;
+    const { register, form, findpwd } = this.props;
     if (findpwd.status === 'ok') {
       router.push({
         pathname: '/user/findpwd-result',

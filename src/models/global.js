@@ -1,4 +1,4 @@
-import { queryNotices, getProvince, getCpaTypes, getPgTypes, queryUser } from '@/services/api';
+import { queryNotices, getProvince, getCpaTypes, getPgTypes, queryUser, feedback, fileUpload } from '@/services/api';
 
 export default {
   namespace: 'global',
@@ -100,6 +100,20 @@ export default {
         },
       });
     },
+    *feedback({ payload }, { put, call }) {
+      const response = yield call(feedback, payload);
+      yield put({
+        type: 'feedbackHandle',
+        payload: response
+      });
+    },
+    *upload({ payload }, { call, put }) {
+      const response = yield call(fileUpload, payload);
+      yield put({
+        type: 'uploadHandle',
+        payload: response,
+      });
+    },
   },
 
   reducers: {
@@ -150,6 +164,18 @@ export default {
         ...state,
         pgjgTypeRes: payload
       }
+    },
+    feedbackHandle(state, { payload }) {
+      return {
+        ...state,
+        feedbackRes: payload
+      }
+    },
+    uploadHandle(state, { payload }) {
+      return {
+        ...state,
+        uploadRes: payload,
+      };
     },
   },
 

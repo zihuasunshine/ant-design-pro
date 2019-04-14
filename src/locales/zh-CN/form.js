@@ -50,6 +50,7 @@ export default {
   'form.answer.placeholder': '说说你的答案~',
   'form.suggest.placeholder': '告诉我们你的建议~',
   'validation.suggest.required': '建议不能为空哦',
+  'response.feedback.success': '谢谢您提的宝贵建议',
   //===调剂===//
   'form.yx.label': '高校名称',
   'form.yx.placeholder': '请输入高校名称',
@@ -61,4 +62,6 @@ export default {
   //===学科评估===//
   'form.school.placeholder': '请输入高校全称',
   'form.schoolKey.placeholder': '请输入高校名称关键词',
+  //===问题分享===//
+  'input.share.placeholder': '请输入用户昵称'
 };

@@ -63,8 +63,8 @@ class Center extends PureComponent {
       case 'myAnswer':
         router.push(`${match.url}/myAnswer`);
         break;
-      case 'myAttention':
-        router.push(`${match.url}/myAttention`);
+      case 'myFocus':
+        router.push(`${match.url}/myFocus`);
         break;
       default:
         break;
@@ -194,7 +194,7 @@ class Center extends PureComponent {
         ),
       },
       {
-        key: 'myAttention',
+        key: 'myFocus',
         tab: (
           <span>
             我的关注 <span style={{ fontSize: 14 }}></span>

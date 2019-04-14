@@ -54,4 +54,5 @@ export default {
   has_voted_dislike: '已经点过踩了哦',
   data_is_empty: '没有查询到数据',
   request_faild:'请求错误',
+  server_error: '哦偶, 服务器好像出了点问题',
 };

@@ -43,7 +43,8 @@ const passwordProgressMap = {
   long: 'exception',
 };
 
-@connect(({ register, loading }) => ({
+@connect(({ findpwd, register, loading }) => ({
+  findpwd,
   register,
   submitting: loading.effects['register/submit'],
 }))
@@ -66,18 +67,19 @@ class Register extends Component {
     this.refreshCode();
   }
 
-  // componentDidUpdate() {
-  //   const { form, register } = this.props;
-  //   const account = form.getFieldValue('mail');
-  //   if (register.status === 'ok') {
-  //     router.push({
-  //       pathname: '/user/register-result',
-  //       state: {
-  //         account,
-  //       },
-  //     });
-  //   }
-  // }
+  componentDidUpdate() {
+    // debugger;
+    // const { form, findpwd, register } = this.props;
+    // const account = form.getFieldValue('mail');
+    // if (register.status === 'ok') {
+    //   router.push({
+    //     pathname: '/user/register-result',
+    //     state: {
+    //       account,
+    //     },
+    //   });
+    // }
+  }
 
   componentWillUnmount() {
     clearInterval(this.interval);
@@ -85,6 +87,7 @@ class Register extends Component {
 
   // 获取手机短信验证码
   onGetCaptcha = () => {
+    debugger;
     const {
       form: { validateFields },
       dispatch,
@@ -184,13 +187,12 @@ class Register extends Component {
   checkUserName = (rule, value, callback) => {
     const { dispatch } = this.props;
     if(value && /([a-zA-Z0-9\u4e00-\u9fa5]){4,20}$/.test(value)){
-      debugger;
       dispatch({
         type: 'register/checkUserNameExisted',
         payload:{
           userName: value
         }
-      })/*.then(() => {
+      }).then(() => {
         const { register: {checkUserNameRes} } = this.props;
         if(checkUserNameRes && checkUserNameRes.code === 200){
           if(checkUserNameRes.data){
@@ -201,7 +203,7 @@ class Register extends Component {
         }else {
           callback(formatMessage({id: 'request_faild'}));
         }
-      });*/
+      });
     }
   }
 

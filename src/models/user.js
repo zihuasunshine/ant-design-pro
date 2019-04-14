@@ -23,7 +23,6 @@ export default {
 
   reducers: {
     currentUserHandle(state, { payload }) {
-      console.log(payload);
       return {
         ...state,
         currentUserRes: payload,

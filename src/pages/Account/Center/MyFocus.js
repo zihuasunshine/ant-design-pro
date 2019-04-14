@@ -4,49 +4,34 @@ import { connect } from 'dva';
 import momont from 'moment';
 import styles from './Questions.less';
 
-const colLayout1 = {xs:24, sm: 24, md: 18, lg: 18, xl: 18, xxl: 18};
-const colLayout2 = {xs:24, sm: 24, md: 6, lg: 6, xl: 6, xxl:68};
-const state = [{
-  color: 'blue',
-  name: '待审核',
-}, {
-  color: 'blue',
-  name: '待回答',
-}, {
-  color: 'green',
-  name: '已回答',
-}, {
-  color: 'blue',
-  name: '待完善',
-}, {
-  color: 'red',
-  name: '审核不通过',
-}, {
-  color: 'red',
-  name: '已删除',
-}];
+const colLayout1 = {xs:24, sm: 24, md: 20, lg: 20, xl: 20, xxl: 20};
+const colLayout2 = {xs:24, sm: 24, md: 4, lg: 4, xl: 4, xxl:4};
 
 @connect(({center}) => ({
   center,
 }))
 class Center extends PureComponent {
 
+  state = {
+    listData: []
+  }
+
   componentDidMount() {
-    const user = JSON.parse(sessionStorage.getItem('user'));
     const { dispatch } = this.props;
     dispatch({
-      type: 'center/getMyQuestion',
+      type: 'center/getMyFocus',
       params: {
-        userId: user.uid
+        state: -1
       }
-
+    }).then(() => {
+      const { center: { myFocusRes } } = this.props;
+      const listData = myFocusRes && myFocusRes.code===200 ? myFocusRes.data.list :[];
+      this.setState({ listData });
     });
   }
 
   render() {
-    const { center: { myQuestionRes } } = this.props;
-    const listData = myQuestionRes && myQuestionRes.code===200 ? myQuestionRes.data.list :[];
-
+    const { listData } = this.state;
     return (
       <List
         size="large"
@@ -67,15 +52,9 @@ class Center extends PureComponent {
                       (<span className={styles.listItemMetaTitle}>{item.title}</span>) }
                   </Col>
                   <Col {...colLayout2}>
-                    <span className={styles.listItemMetaTitle}>{item.bestAnswer==0?'未回答':'已回答'} | {momont(item.addTime).format('YYYY-MM-DD HH:mm')}</span>
+                    <span className={styles.listItemMetaTitle}>{momont(item.addTime).format('YYYY-MM-DD HH:mm')}</span>
                   </Col>
                 </Row>
-              }
-              description={
-                <div>
-                  <Tag color={state[item.state].color}>{state[item.state].name}</Tag>
-                </div>
-               
               }
             />
           </List.Item>

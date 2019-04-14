@@ -254,6 +254,30 @@ export async function addQuestion(params) {
   });
 }
 
+// 修改问题
+export async function editQuestion(params) {
+  return securityRequest(`/api/question/edit`, {
+    method: 'POST',
+    body: params
+  });
+}
+
+// 关注问题
+export async function focus(params) {
+  const { questionId, type } = params;
+  return securityRequest(`/api/question/focus?questionId=${questionId}&type=${type}`, {
+    method: 'POST'
+  });
+}
+
+// 分享问题
+export async function share(params) {
+  const { questionId, shareUid } = params;
+  return securityRequest(`/api/question/share?questionId=${questionId}&shareUid=${shareUid}`, {
+    method: 'POST'
+  });
+}
+
 // 添加标签
 export async function addTag(tag) {
   return securityRequest(`/api/user/tag/add?tag=${tag}`, {
@@ -278,10 +302,22 @@ export async function myAnswer(params) {
   return securityRequest(`/api/answer/findAnswerByUid?pageNo=${pageNo}&pageSize=${pageSize}`);
 }
 
+// 我的关注
+export async function myFocus(params) {
+  const { state } = params;
+  return securityRequest(`/api/question/focus/list?state=${state}`);
+}
+
 // 查询用户对指定答案是否点赞或点踩
 export async function isVote(params) {
   const { answerId } = params;
   return securityRequest(`/api/answer/getVoteValue/${answerId}`);
+}
+
+// 查询用户对问题是否关注
+export async function isFocus(params) {
+  const { questionId } = params;
+  return securityRequest(`/api/question/isFocus?questionId=${questionId}`)
 }
 
 // 给回答答案点赞或点踩
@@ -440,4 +476,23 @@ export async function getPgjgListBySchool(params) {
 export async function getUniversityInfo(params) {
   const { key, word } = params;
   return request(`/api/school?k=${key}&w=${word}`);
+}
+
+// 意见反馈
+export async function feedback(params) {
+  if(localStorage.getItem('access_token')) {
+    return securityRequest(`/api/feedback`, {
+      method: 'POST',
+      body: {
+        ...params
+      }
+    });
+  }else {
+    return request(`/api/feedback`, {
+      method: 'POST',
+      body: {
+        ...params
+      }
+    });
+  }
 }

@@ -1,25 +1,54 @@
-import { addQuestion, fileUpload, getQdetail, isVote, getComment,getMoreComment,vote, comment, perfect, answer } from '@/services/api';
+import { addQuestion, editQuestion, focus, share, isFocus, getQdetail, isVote, getComment,getMoreComment,vote, comment, perfect, answer } from '@/services/api';
 
 export default {
   namespace: 'question',
 
   state: {
-    moreCommentRes: {}
+    moreCommentRes: {},
+    shareDrawerlVisible: false,
   },
 
   effects: {
-    *upload({ payload }, { call, put }) {
-      const response = yield call(fileUpload, payload);
+    *setShareDrawer({ payload }, { put }) {
       yield put({
-        type: 'uploadHandle',
-        payload: response,
+        type: 'shareDrawerHandle',
+        payload
       });
     },
+    
     *submit({ payload}, { call, put }) {
       const response = yield call(addQuestion, payload);
       yield put({
         type: 'addQuestionHandle',
         payload: response,
+      });
+    },
+    *edit({ payload}, { call, put }) {
+      const response = yield call(editQuestion, payload);
+      yield put({
+        type: 'editQuestionHandle',
+        payload: response,
+      });
+    },
+    *focus({ payload}, { call, put }) {
+      const response = yield call(focus, payload);
+      yield put({
+        type: 'focusHandle',
+        payload: response
+      });
+    },
+    *isFocus({ payload }, { call, put }) {
+      const response = yield call(isFocus, payload);
+      yield put({
+        type: 'isFocusGandle',
+        payload: response
+      });
+    },
+    *share({ payload }, { call, put }) {
+      const response = yield call(share, payload);
+      yield put({
+        type: 'shareHandle',
+        payload: response
       });
     },
     *getDetail({ id }, { call, put }) {
@@ -89,17 +118,41 @@ export default {
   },
 
   reducers: {
-    uploadHandle(state, { payload }) {
+    shareDrawerHandle(state, { payload }) {
       return {
         ...state,
-        uploadRes: payload,
-      };
+        shareDrawerlVisible: payload
+      }
     },
     addQuestionHandle(state, { payload }) {
       return {
         ...state,
         addQuestionRes: payload,
       };
+    },
+    editQuestionHandle(state, { payload }) {
+      return {
+        ...state,
+        editQuestionRes: payload,
+      }
+    },
+    focusHandle(state, { payload }) {
+      return {
+        ...state,
+        focusRes: payload
+      }
+    },
+    isFocusGandle(state, { payload}) {
+      return {
+        ...state,
+        isFocusRes: payload
+      }
+    },
+    shareHandle(state, { payload }) {
+      return {
+        ...state,
+        focusRes: payload
+      }
     },
     getDetailHandel(state, { payload }) {
       return {
