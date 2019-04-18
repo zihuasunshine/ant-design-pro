@@ -1,4 +1,4 @@
-import { addQuestion, editQuestion, focus, share, isFocus, getQdetail, isVote, getComment,getMoreComment,vote, comment, perfect, answer } from '@/services/api';
+import { addQuestion, editQuestion, focus, share, isFocus, getQdetail, isVote, getComment,getMoreComment,vote, comment, modifyComment, deleteComment, perfect, answer } from '@/services/api';
 
 export default {
   namespace: 'question',
@@ -90,6 +90,20 @@ export default {
       const response = yield call(comment, params);
       yield put({
         type: 'commentHandle',
+        payload: response,
+      });
+    },
+    *modifyComment({params}, { call, put }) {
+      const response = yield call(modifyComment, params);
+      yield put({
+        type: 'modifyCommentHandle',
+        payload: response,
+      });
+    },
+    *deleteComment({params}, { call, put }) {
+      const response = yield call(deleteComment, params);
+      yield put({
+        type: 'deleteCommentHandle',
         payload: response,
       });
     },
@@ -188,6 +202,18 @@ export default {
       return {
         ...state,
         commentedRes: payload
+      }
+    },
+    modifyCommentHandle(state, { payload }) {
+      return {
+        ...state,
+        modifyCommentRes: payload
+      }
+    },
+    deleteCommentHandle(state, { payload }) {
+      return {
+        ...state,
+        deleteCommentRes: payload
       }
     },
     getCommentHandle(state, { payload }) {

@@ -308,6 +308,12 @@ export async function myFocus(params) {
   return securityRequest(`/api/question/focus/list?state=${state}`);
 }
 
+// 我的请求完善列表
+export async function myPlease(params){
+  const { state, pageno, pageSize } = params;
+  return securityRequest(`/api/perfect/list?state=${state}&pageno=${pageno}&pageSize=${pageSize}`);
+}
+
 // 查询用户对指定答案是否点赞或点踩
 export async function isVote(params) {
   const { answerId } = params;
@@ -356,6 +362,22 @@ export async function comment(params) {
     `/api/answer/comment/${answerId}?message=${message}`;
   return securityRequest(url, {
     method: 'POST',
+  });
+}
+
+// 修改评论
+export async function modifyComment(params) {
+  const { commentId, message } = params;
+  return securityRequest(`/api/answer/updateComment/${commentId}?message=${message}`, {
+    method: 'POST'
+  });
+}
+
+// 删除评论
+export async function deleteComment(params) {
+  const { commentId } = params;
+  return securityRequest(`/api/answer/deleteComment/${commentId}`, {
+    method: 'POST'
   });
 }
 

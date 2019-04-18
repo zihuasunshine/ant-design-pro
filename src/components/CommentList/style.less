@@ -8,9 +8,32 @@
       color: #999;
       font-weight: normal;
     }
+    .modify_span{
+      padding: 6px 11px;
+      height: 32px;
+    }
+    .modify_input {
+      //border: none;
+      background: transparent;
+      outline: none;
+    }
     .sub_comment{
      padding-left: 40px;
      box-sizing: border-box;
+     :global{
+        .ant-list-empty-text{
+          padding: 0;
+        }
+      }
+      .modify_span{
+        padding: 6px 11px;
+        height: 32px;
+      }
+      .modify_input{
+        //border: none;
+        background: transparent;
+        outline: none;
+      }
     }
     .comment_wraper{
       padding-left: 40px;
@@ -33,8 +56,10 @@
         }
       }
     }
-    .ant-list-empty-text{
-      padding: 0;
+    :gloabl{
+      .ant-list-empty-text{
+        padding: 0;
+      }
     }
   }
 }

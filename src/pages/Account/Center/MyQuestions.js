@@ -40,7 +40,6 @@ class Center extends PureComponent {
       params: {
         userId: user.uid
       }
-
     });
   }
 

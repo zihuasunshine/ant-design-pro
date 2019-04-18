@@ -46,7 +46,7 @@ export default {
   'form.question.detail.placeholder': '选填，详细说明问题',
   'form.question.imgs.label': '图片描述',
   'form.old-password.placeholder': '旧密码',
-  'form.reason.placeholder': '为什么完善',
+  'form.reason.placeholder': '必填，为什么完善',
   'form.answer.placeholder': '说说你的答案~',
   'form.suggest.placeholder': '告诉我们你的建议~',
   'validation.suggest.required': '建议不能为空哦',

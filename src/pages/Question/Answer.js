@@ -45,16 +45,18 @@ class Answer extends PureComponent {
       inputValue: '',
       isFormVisible: false,
       editorState: BraftEditor.createEditorState(null),
-      likeCount: 0,       // 点赞数
-      dislikeCount: 0,    // 点踩数
-      commentCount: 0,    // 评论数
-      messages: [],    // 评论列表
-      isFocus: false
+      agreeCount: 0,                      // 点赞数
+      againstCount: 0,                    // 点踩数
+      commentCount: 0,                    // 评论数
+      comments: [],                       // 评论列表
+      isFocus: false,                     // 是否关注  
+      isAgree: 0,                         // 1(点赞)、-1(点踩)、0(没有点赞也没点踩)     
+      loading: true,                      // 评论列表加载
     }
-    this._comments = [];
-    this.count = 0;
-    this.commentId = -1;
-    this.id = props.match.params.id;
+    this.requestCommetCount = 0;          // 请求评论列表次数, 只请求一次
+    this.commentId = -1;                  // 评论id
+    this.id = props.match.params.id;      // 问题id
+    this.currentUser = sessionStorage.getItem('user')? JSON.parse(sessionStorage.getItem('user')):null;
   }
 
   componentDidMount(){
@@ -69,11 +71,6 @@ class Answer extends PureComponent {
       type: 'question/destory',
     });
   }
-
-  showInput = () => {
-    const { inputVisible } = this.state;
-    this.setState({ inputVisible: !inputVisible });
-  };
 
   saveInputRef = input => {
     this.input = input;
@@ -91,6 +88,7 @@ class Answer extends PureComponent {
     }
   };
 
+  // 得到问题详情
   getQuestionDetail = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -108,8 +106,14 @@ class Answer extends PureComponent {
             }
           });
         }
-        if(answer) this.isVote(answer.answerId);
-        if(answer) this.getComment(answer.answerId);
+        // 答案若存在
+        if(answer) {
+          this.isVote(answer.answerId); // 是否点赞
+          const { agreeCount, againstCount, commentCount } = answer;
+          this.setState({
+            agreeCount, againstCount, commentCount
+          });
+        }
       }else{
         setTimeout(() => {
           router.push('/'); // 返回到首页
@@ -127,6 +131,11 @@ class Answer extends PureComponent {
         type: 'question/isVote',
         params:{
           answerId
+        }
+      }).then(() => {
+        const { question: { isVoteRes }} = this.props;
+        if(isVoteRes && isVoteRes.code === 200) {
+          this.setState({ isAgree: isVoteRes.data });
         }
       });
     }else{
@@ -152,6 +161,17 @@ class Answer extends PureComponent {
     }
   }
 
+  // 显示评论
+  showComment = (answerId) => {
+    const { inputVisible } = this.state;
+    this.setState({ inputVisible: !inputVisible });
+    if(this.requestCommetCount === 0) {
+      this.getComment(answerId);
+      this.requestCommetCount = 1;
+    }
+  };
+
+  // 请求评论
   getComment = (answerId) => {
     const { dispatch } = this.props;
     dispatch({
@@ -159,9 +179,15 @@ class Answer extends PureComponent {
       params:{
         answerId
       }
+    }).then(() => {
+      const { question: { commentRes }} = this.props;
+      if(commentRes && commentRes.code === 200) {
+        this.setState({ comments: commentRes.data, loading: false,});
+      }
     });
   }
 
+  // 获取更多评论
   getMoreComment = (commentId) =>{
     this.commentId = commentId;
     const { dispatch } = this.props;
@@ -173,14 +199,14 @@ class Answer extends PureComponent {
     }).then(()=> {
       const { question: { moreCommentRes }} = this.props;
       if(moreCommentRes && moreCommentRes.code === 200){
-        const { messages } = this.state;
-        let _messages = [...messages];
-        _messages.forEach(item => {
+        const { comments } = this.state;
+        let _comments = [...comments];
+        _comments.forEach(item => {
           if(item.id === this.commentId){
             item.commentlist = moreCommentRes.data;
           }
         });
-        this.setState({messages: _messages});
+        this.setState({comments: _comments});
       }
     });
   }
@@ -227,13 +253,13 @@ class Answer extends PureComponent {
       }).then(() => {
         const { question: {isVoteRes }} = this.props;
         if(isVoteRes && isVoteRes.code === 200){
-          let { likeCount, dislikeCount } = this.state;
+          let { agreeCount, againstCount } = this.state;
           if(voteValue == 1) {
-            likeCount = likeCount+1;
-            this.setState({ likeCount: likeCount});
+            agreeCount = agreeCount+1;
+            this.setState({ agreeCount: agreeCount});
           }else {
-            dislikeCount++;
-            this.setState({ dislikeCount: dislikeCount++});
+            againstCount++;
+            this.setState({ againstCount: againstCount++});
           }
           this.isVote(answerId);
         }
@@ -276,6 +302,7 @@ class Answer extends PureComponent {
     });
   }
 
+  // 添加评论
   handleComment = (inputValue, answerId, commentId) => {
     const { dispatch } = this.props;
     if(!inputValue){
@@ -294,12 +321,11 @@ class Answer extends PureComponent {
       if(commentedRes && commentedRes.code === 200) {
         // 前端追加数据
         const user = JSON.parse(sessionStorage.getItem('user'));
-        const { messages, commentCount } = this.state;
-        let _commentCount = commentCount;
-        let _messages = [...messages];
+        const { comments, commentCount } = this.state;
+        let _commentCount = commentCount, _comments = [...comments];
         if(commentId){
           // 二级评论追加数据
-          _messages.forEach(item => {
+          _comments.forEach(item => {
             if(item.id === commentId){
               ++item.commentsCount;
               item.commentlist.unshift({
@@ -309,12 +335,13 @@ class Answer extends PureComponent {
                 avatarFile: user.avatarFile,
                 commentsCount: 0,
                 message: inputValue,
+                uid: user.uid,
               });
             }
           });
         }else{
           // 一级评论追加数据
-          _messages.unshift({
+          _comments.unshift({
             id: commentedRes.data,
             addTime: new Date().getTime(),
             answerId: answerId,
@@ -323,18 +350,73 @@ class Answer extends PureComponent {
             commentsCount: 0,
             commentlist: [],
             message: inputValue,
+            uid: user.uid,
           });
         }
-        this.setState({messages:_messages, inputValue: '', commentCount: ++_commentCount});
+        this.setState({comments:_comments, inputValue: '', commentCount: ++_commentCount});
       }
     });
+  }
 
+  // 修改评论
+  handleModifyComment = (message, item) => {
+    const { dispatch } = this.props;
+    dispatch({
+      type: 'question/modifyComment',
+      params: {
+        message,
+        commentId: item.id,
+      }
+    }).then(() => {
+      const { question: modifyCommentRes } = this.props;
+      if(modifyCommentRes && modifyCommentRes.code === 200) {
+
+      }
+    });
+  }
+
+  // 删除评论
+  handleDeleteComment = (index, item) => {
+    const { comments, commentCount } = this.state, { dispatch } = this.props, _comments = [...comments];
+    let _commentCount = commentCount;
+    dispatch({
+      type: 'question/deleteComment',
+      params: {
+        commentId: item.id
+      }
+    }).then(() => {
+      const { question: { deleteCommentRes }} = this.props;
+      if(deleteCommentRes && deleteCommentRes.code === 200) {
+        _commentCount --;
+        if(item.commentId) {
+          // 二级评论
+          let _subComments = [];
+          for(let i = 0, length = _comments.length; i < length; i++) {
+            if(item.commentId === _comments[i].id) {
+              _subComments =  _comments[i].commentlist;
+              _comments[i].commentsCount --;
+              break;
+            }
+          }
+          _subComments.splice(index,1);
+        }else{
+          // 一级评论
+          _comments.splice(index, 1);
+        }
+        this.setState({ 
+          comments: _comments, 
+          commentCount: _commentCount
+        });
+        this.setState({ comments: _comments});
+      }
+    });
   }
 
   handleChange = (editorState) => {
     this.setState({ editorState })
   }
 
+  // 显示我来完善或我来回答对话框
   handleClick = () =>{
     this.setState(({isFormVisible})=> {
       return {
@@ -425,6 +507,14 @@ class Answer extends PureComponent {
           content: editorState.toHTML()
         }
       }).then(() => {
+        const { question: { answerRes } } = this.props;
+        if(answerRes && answerRes.code === 200) {
+          notificationTip(formatMessage({id: 'app.setting.answer.check'}), true);
+          // 跳转到首页
+          router.push({
+            pathname: '/'
+          });
+        }
         // 跳转到首页
         router.push({
           pathname: '/'
@@ -434,20 +524,9 @@ class Answer extends PureComponent {
   }
 
   render() {
-    const { question: { qDetailRes, isVoteRes, commentRes, moreCommentRes, shareDrawerlVisible }, form: { getFieldDecorator }, global: { otherUserRes }} = this.props;
-    const { isFormVisible, likeCount, dislikeCount, commentCount, messages, isFocus} = this.state;
     let answer = {}, question = {};
-    if (this.count === 0) {
-      if (qDetailRes && qDetailRes.code === 200 && commentRes && commentRes.code === 200) {
-        const as = qDetailRes.data.answer;
-        const comments = commentRes.data;
-        this.state.likeCount = as.agreeCount;
-        this.state.dislikeCount = as.againstCount;
-        this.state.commentCount = as.commentCount;
-        this.state.messages = commentRes.data;
-        this.count = 1;
-      }
-    }
+    const { question: { qDetailRes, shareDrawerlVisible }, form: { getFieldDecorator }, global: { otherUserRes }} = this.props;
+    const { inputVisible, inputValue, editorState, isFormVisible, agreeCount, againstCount, commentCount, comments, loading, isFocus, isAgree} = this.state;
     const extendControls = [
       {
         key: 'antd-uploader',
@@ -466,27 +545,13 @@ class Answer extends PureComponent {
         )
       }
     ]
-
-    const currentUser = sessionStorage.getItem('user')? JSON.parse(sessionStorage.getItem('user')):null;
-    
     const answerAvatar = !otherUserRes || otherUserRes && otherUserRes.code === 200 && otherUserRes.data.uid === 8? bestSrc : otherUserRes.data.avatarFile;
     const answerUser = !otherUserRes || otherUserRes && otherUserRes.code === 200 && otherUserRes.data.uid === 8? '小白考研' : (otherUserRes.data.nickname || otherUserRes.data.userName);
-    const agreeCount = likeCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.agreeCount : likeCount) : likeCount;
-    const disagreeCount = dislikeCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.againstCount : dislikeCount) : dislikeCount;
-    const commentsCount = commentCount == 0? (qDetailRes && qDetailRes.data && qDetailRes.data.answer? qDetailRes.data.answer.commentCount : commentCount) : commentCount;
-    const messageList = messages.length == 0?(commentRes && commentRes.data? commentRes.data : messages) : messages;
-
-    const isLiked = isVoteRes && isVoteRes.data == 1; // 点过赞
-    const isNotCare = isVoteRes && isVoteRes.data == 0; // 没点赞也没有点踩 
-    const isDislike = isVoteRes && isVoteRes.data == -1; // 点过踩
     if(qDetailRes && qDetailRes.code === 200){
       answer = qDetailRes.data.answer,
       question = qDetailRes.data.question;
     }
-    if(commentRes && commentRes.code === 200){
-      this._comments = commentRes.data;
-    }
-    const { inputVisible, inputValue, editorState } = this.state;
+
     return (
       <GridContent>
         <div className={styles.main}>
@@ -517,6 +582,23 @@ class Answer extends PureComponent {
                 }))}
               </div>
             </Col>
+            {/*我来回答的情况*/}
+            {!answer ? (
+              <Row className={styles.answer_btn}>
+              <Col span={11} className={styles.answer_center} onClick={() => {this.handlePlease(answer.answerId )}}>
+                <Icon type="user-add" className={styles.icon}/>
+                {answer && answer.answerId ? formatMessage({ id: 'app.settings.pleasePerfect' }) : formatMessage({ id: 'app.settings.pleaseAnswer' })}
+              </Col>
+              <Col span={2} className={styles.answer_center}>
+                <Divider type="vertical" />
+              </Col>
+              <Col span={11} className={styles.answer_center} onClick={this.handleClick}>
+                <Icon type="form" className={styles.icon}/>
+                {answer && answer.answerId ? formatMessage({ id: 'app.settings.perfect' }) : formatMessage({ id: 'app.settings.answer' })}
+              </Col>
+            </Row>
+            ) : null}
+            {/*我来完善的情况*/}
             {answer && answer.answerId ? (
               <Col {...colLayout}>
                 <div className={styles.title_wrapper}>
@@ -526,13 +608,13 @@ class Answer extends PureComponent {
                 <div className={styles.answer} dangerouslySetInnerHTML={{__html: answer.answerContent}}/>
                 <div className={styles.operator}>
                   <span className={styles.icon_wrapper} onClick={() => this.handleVote(1,answer.answerId)}>
-                    <Icon type="like" theme={isLiked?'filled':'' } className={isLiked?styles.iconSelected:styles.icon}/>{agreeCount}
+                    <Icon type="like" theme={isAgree === 1?'filled':'' } className={isAgree === 1?styles.iconSelected:styles.icon}/>{agreeCount}
                   </span>
                   <span className={styles.icon_wrapper} onClick={() => this.handleVote(-1,answer.answerId)}>
-                    <Icon type="dislike" theme={isDislike?'filled':''} className={styles.icon}/>{disagreeCount}
+                    <Icon type="dislike" theme={isAgree === -1?'filled':''} className={isAgree === -1?styles.iconSelected:styles.icon}/>{againstCount}
                   </span>
-                  <span title='评论' className={styles.icon_wrapper} onClick={this.showInput}>
-                    <Icon type="message" className={styles.icon}/>{commentsCount}
+                  <span title='评论' className={styles.icon_wrapper} onClick={() => this.showComment(answer.answerId)}>
+                    <Icon type="message" className={styles.icon}/>{commentCount}
                   </span>
                 </div>
                 <Row className={styles.answer_btn}>
@@ -551,9 +633,10 @@ class Answer extends PureComponent {
                 {inputVisible && (
                   <div className={styles.comment_wraper}>
                     <div className={styles.flex_wrapper}>
-                      {currentUser?<img className={styles.flex_left} src={currentUser.avatarFile} />:<Avatar size={32} icon="user" />}
+                      {this.currentUser?<img className={styles.flex_left} src={this.currentUser.avatarFile} />:<Avatar size={32} icon="user" />}
                       <div className={styles.flex_right}>
                         <TextArea
+                          className={styles.textarea}
                           ref={this.saveInputRef}
                           type="text"
                           rows={3}
@@ -575,8 +658,11 @@ class Answer extends PureComponent {
                       </div>
                     </div>
                     <CommentList 
-                      listData={messageList}
+                      listData={comments}
+                      loading={loading}
                       onHandleComment={this.handleComment}
+                      onHandleModifyComment={this.handleModifyComment}
+                      onHandleDeleteComment={this.handleDeleteComment}
                       onGetMoreComment={this.getMoreComment}
                     />
                   </div>
@@ -587,7 +673,7 @@ class Answer extends PureComponent {
           <Row className={styles.form_box} style={{display: isFormVisible? 'block':'none'}}>
             <Col {...colLayout}>
               <Form onSubmit={(e) => this.handleSubmit(e, question.bestAnswer, question.id)}>
-                {/*question.bestAnswer? (<FormItem className={styles.formitem}>
+                {question.bestAnswer? (<FormItem className={styles.formitem}>
                   {getFieldDecorator('reason', {
                     rules: [
                       {
@@ -602,7 +688,7 @@ class Answer extends PureComponent {
                     />
                   )}
                 </FormItem>):null
-                */}
+                }
                 <FormItem>
                   <BraftEditor
                       value={editorState}

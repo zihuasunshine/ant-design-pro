@@ -1,6 +1,6 @@
 import { routerRedux } from 'dva/router';
 import { stringify } from 'qs';
-import { addTag, deleteTag, myQuestion, myAnswer, myFocus } from '@/services/api';
+import { addTag, deleteTag, myQuestion, myAnswer, myFocus, myPlease } from '@/services/api';
 import { setAuthority } from '@/utils/authority';
 import { getPageQuery } from '@/utils/utils';
 import { reloadAuthorized } from '@/utils/Authorized';
@@ -47,6 +47,13 @@ export default {
         type: 'myFocusHandle',
         payload: response
       });
+    },
+    *getMyPlease({ params }, { call, put }) {
+      const response = yield call(myPlease, params);
+      yield put({
+        type: 'myPleaseHandle',
+        payload: response,
+      });
     }
   },
 
@@ -79,6 +86,12 @@ export default {
       return {
         ...state,
         myFocusRes: payload,
+      }
+    },
+    myPleaseHandle(state, { payload }) {
+      return {
+        ...state,
+        myPleaseRes: payload
       }
     }
   },

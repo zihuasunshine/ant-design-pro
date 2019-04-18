@@ -1,89 +1,63 @@
-
-import React, { PureComponent } from 'react';
-import { List, Row, Col, Tag } from 'antd';
+import React, { PureComponent, Fragment } from 'react';
+import { List, Row, Col, Tag, Pagination } from 'antd';
 import { connect } from 'dva';
 import momont from 'moment';
-import styles from './Questions.less';
+import ItemList from './ItemList';
 
-const colLayout1 = {xs:24, sm: 24, md: 18, lg: 18, xl: 18, xxl: 18};
-const colLayout2 = {xs:24, sm: 24, md: 6, lg: 6, xl: 6, xxl:68};
-const state = [{
-  color: 'blue',
-  name: '待审核',
-}, {
-  color: 'blue',
-  name: '待回答',
-}, {
-  color: 'green',
-  name: '已回答',
-}, {
-  color: 'blue',
-  name: '待完善',
-}, {
-  color: 'red',
-  name: '审核不通过',
-}, {
-  color: 'red',
-  name: '已删除',
-}];
+const pageSize = 10;
 
 @connect(({center}) => ({
   center,
 }))
-class Center extends PureComponent {
+class MyPlease extends PureComponent {
+
+  pager = {
+    pageno: 1,
+    pageSize
+  }
+  state = {
+    listData: [],
+    total: 0,
+    loading: true,
+  }
 
   componentDidMount() {
-    const user = JSON.parse(sessionStorage.getItem('user'));
+    this.getDataSource();
+  }
+
+  handleChange = (page, pageSize) => {
+    this.pager = {
+      pageno: page,
+      pageSize
+    }
+    this.getDataSource();
+  }
+
+  getDataSource = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'center/getMyQuestion',
+      type: 'center/getMyPlease',
       params: {
-        userId: user.uid
+        state: -1,
+        ...this.pager
       }
-
+    }).then(() => {
+      const { center: { myPleaseRes } } = this.props;
+      let listData = [], total = 0;
+      if(myPleaseRes && myPleaseRes.code===200 ) {
+        listData =  myPleaseRes.data.list;
+        total = myPleaseRes.data.total;
+      }
+      this.setState({ total, listData, loading: false });
     });
   }
 
   render() {
-    const { center: { myQuestionRes } } = this.props;
-    const listData = myQuestionRes && myQuestionRes.code===200 ? myQuestionRes.data.list :[];
-
+    const { listData, total, loading } = this.state;
     return (
-      <List
-        size="large"
-        className={styles.articleList}
-        rowKey="id"
-        itemLayout="vertical"
-        dataSource={listData}
-        renderItem={item => (
-          <List.Item
-            key={item.id}
-          >
-            <List.Item.Meta
-              title={
-                <Row>
-                  <Col {...colLayout1}>
-                    {item.state !== 5? 
-                      (<a className={styles.listItemMetaTitle} href={`/question/answer/${item.id}`}>{item.title}</a>) : 
-                      (<span className={styles.listItemMetaTitle}>{item.title}</span>) }
-                  </Col>
-                  <Col {...colLayout2}>
-                    <span className={styles.listItemMetaTitle}>{item.bestAnswer==0?'未回答':'已回答'} | {momont(item.addTime).format('YYYY-MM-DD HH:mm')}</span>
-                  </Col>
-                </Row>
-              }
-              description={
-                <div>
-                  <Tag color={state[item.state].color}>{state[item.state].name}</Tag>
-                </div>
-               
-              }
-            />
-          </List.Item>
-        )}
-      />
+      <ItemList listData={listData} loading={loading} total={total} onChange={this.handleChange}/>
     );
   }
 }
 
-export default Center;
+export default MyPlease;
