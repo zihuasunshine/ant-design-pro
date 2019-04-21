@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Upload, Icon, Modal } from 'antd';
-import './index.less';
+import styles from './index.less';
 
 class PicturesWall extends Component {
-  state = {
-    previewVisible: false,
-    previewImage: '',
-    fileList: [],
-  };
-  count = 0;
-
+  
+  constructor(props) {
+    super(props);
+    this.state = {
+      previewVisible: false,
+      previewImage: '',
+    }
+    this.count = 0;
+  }
+  
   handleCancel = () => this.setState({ previewVisible: false });
 
   handlePreview = file => {
@@ -21,19 +24,30 @@ class PicturesWall extends Component {
   };
 
   handleChange = ({file, fileList}) => {
-    this.count = this.count+1;
-    this.setState({ fileList });
-    if(this.count === 3){
-      const { originFileObj } = file;
-      const { uploadImg } = this.props;
-      uploadImg(originFileObj);
-      this.count = 0;
-    }
+    const { originFileObj } = file;
+    const { uploadImg } = this.props;
+    uploadImg(originFileObj);
+    // this.count = this.count+1;
+    // console.log(this.count);
+    // if(this.count === 3){
+    //   const { originFileObj } = file;
+    //   const { uploadImg } = this.props;
+    //   uploadImg(originFileObj);
+    //   this.count = 0;
+    // }
   };
 
   render() {
-    const { previewVisible, previewImage, fileList } = this.state;
-    const { count } = this.props;
+    const { previewVisible, previewImage } = this.state;
+    const { count, imgs } = this.props;
+    console.log(imgs);
+    const fileList = imgs.map((img, index) => {
+      return {
+        uid: index+'',
+        url: img
+      }
+    });
+    console.log(fileList);
     const uploadButton = (
       <div>
         <Icon type="plus" />
@@ -41,7 +55,7 @@ class PicturesWall extends Component {
       </div>
     );
     return (
-      <div className="clearfix">
+      <div className={styles.picture}>
         <Upload
           action=''
           listType="picture-card"

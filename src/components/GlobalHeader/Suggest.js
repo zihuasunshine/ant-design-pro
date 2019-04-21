@@ -21,7 +21,10 @@ const formItemLayout = {
 @Form.create()
 class Suggest extends Component {
 
-  imgs = [];
+  state = {
+    imgs: [],
+  }
+  imgsId = [];
 
   // 上传图片
   uploadImg = file => {
@@ -29,15 +32,21 @@ class Suggest extends Component {
     return dispatch({
       type: 'global/upload',
       payload: {
-        type: 'feedback',
+        type: 'question',
         file: file,
       },
     }).then(() => {
       const {
         global: { uploadRes },
       } = this.props;
-      if (uploadRes.code === 200) {
-        this.imgs.push(uploadRes.data.url);
+      if (uploadRes && uploadRes.code === 200) {
+        this.imgsId.push(uploadRes.data.id);
+        this.setState(({ imgs }) => {
+          imgs.push(uploadRes.data.url);
+          return {
+            imgs
+          }
+        });
       }
     });
   };
@@ -46,7 +55,7 @@ class Suggest extends Component {
     e.preventDefault();
     const { dispatch, form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
-      if (this.imgs.length > 0) values.fileimages = this.imgs.join('#');
+      if (this.imgsId.length > 0) values.fileimages = this.imgsId.join('#');
       if (!err) {
         dispatch({
           type: 'global/feedback',
@@ -69,6 +78,7 @@ class Suggest extends Component {
 
   render() {
     const { form: { getFieldDecorator }} = this.props;
+    const { imgs } = this.state;
 
     return (
       <Form onSubmit={this.feedback}>
@@ -97,7 +107,7 @@ class Suggest extends Component {
             {...formItemLayout}
           >
             <div className={styles.picture_wrapper}>
-              <PicturesWall count={5} uploadImg={this.uploadImg} />
+              <PicturesWall imgs={imgs} count={5} uploadImg={this.uploadImg} />
             </div>
           </FormItem>
         </div>

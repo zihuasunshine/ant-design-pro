@@ -12,7 +12,8 @@ import logo from '@/assets/black_logo.png';
 
 const { Tab, UserName, Password, Mobile, ImgCode, Captcha, Submit } = Login;
 
-@connect(({ user, login, loading }) => ({
+@connect(({ user, login, register, loading }) => ({
+  register,
   user,
   login,
   submitting: loading.effects['login/login'],

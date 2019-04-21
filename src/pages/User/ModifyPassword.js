@@ -4,36 +4,14 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import router from 'umi/router';
 import Link from 'umi/link';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
-import styles from './Register.less';
+import PasswordStatus from '@/components/PasswordStatus';
 import hash from 'hash.js';
+import { notificationTip, generateUUID, isMobile } from '@/utils/utils';
 import { imgCodeURL } from '@/services/api';
+import styles from './Register.less';
 import logo from '@/assets/black_logo.png';
 
 const FormItem = Form.Item;
-
-const passwordStatusMap = {
-  ok: (
-    <div className={styles.success}>
-      <FormattedMessage id="validation.password.strength.strong" />
-    </div>
-  ),
-  pass: (
-    <div className={styles.warning}>
-      <FormattedMessage id="validation.password.strength.medium" />
-    </div>
-  ),
-  poor: (
-    <div className={styles.error}>
-      <FormattedMessage id="validation.password.strength.short" />
-    </div>
-  ),
-};
-
-const passwordProgressMap = {
-  ok: 'success',
-  pass: 'normal',
-  poor: 'exception',
-};
 
 @connect(({ findpwd, loading }) => ({
   findpwd,
@@ -45,6 +23,7 @@ class FindPassword extends Component {
     super(props);
     this.state = {
       count: 0,
+      value: '',
       confirmDirty: false,
       visible: false,
       help: '',
@@ -73,17 +52,10 @@ class FindPassword extends Component {
     clearInterval(this.interval);
   }
 
-  getPasswordStatus = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    if (value && value.length > 9) {
-      return 'ok';
-    }
-    if (value && value.length > 5) {
-      return 'pass';
-    }
-    return 'poor';
-  };
+  handleChange = e => {
+    const { value } = e.target;
+    this.setState({ value });
+  }
 
   handleSubmit = e => {
     e.preventDefault();
@@ -94,24 +66,19 @@ class FindPassword extends Component {
           type: 'findpwd/modifyPwd',
           payload: {
             ...values,
-          },
-          token: sessionStorage.getItem('access_token'),
+          }
         }).then(() => {
           const {
             findpwd: { modifyPwdRes },
           } = this.props;
           if (modifyPwdRes.code === 200) {
-            message.success(formatMessage({ id: 'modifypwd_success' }));
-            // 密码修改成功跳转到登录页面
+            notificationTip(formatMessage({ id: 'modifypwd_success' }), true);
+            // 密码修改成功跳转到首页
             router.push({
-              pathname: '/user/login',
+              pathname: '/',
             });
           } else {
-            const msg = modifyPwdRes.msg;
-            const tip = formatMessage({ id: msg })
-              ? formatMessage({ id: msg })
-              : formatMessage({ id: 'modifypwd_faild' });
-            message.error(tip);
+            console.log("修改密码接口请求失败");
           }
         });
       }
@@ -156,23 +123,6 @@ class FindPassword extends Component {
     }
   };
 
-  renderPasswordProgress = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    const passwordStatus = this.getPasswordStatus();
-    return value && value.length ? (
-      <div className={styles[`progress-${passwordStatus}`]}>
-        <Progress
-          status={passwordProgressMap[passwordStatus]}
-          className={styles.progress}
-          strokeWidth={6}
-          percent={value.length * 10 > 100 ? 100 : value.length * 10}
-          showInfo={false}
-        />
-      </div>
-    ) : null;
-  };
-
   refreshCode = () => {
     const token = hash.sha256().digest('hex');
     this.setState({
@@ -184,14 +134,10 @@ class FindPassword extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { help, visible } = this.state;
+    const { help, visible, value } = this.state;
     return (
-      <div className={styles.main}>
-        <div className={styles.header}>
-          <Link to="/">
-            <img alt="logo" className={styles.logo} src={logo} />
-          </Link>
-        </div>
+      <div className={styles.modifypwd_main}>
+        <div className={styles.header}>{formatMessage({id: 'app.modifypwd.modifypwd'})} </div>
         <Form onSubmit={this.handleSubmit}>
           <FormItem>
             {getFieldDecorator('oldPassword', {
@@ -210,35 +156,26 @@ class FindPassword extends Component {
             )}
           </FormItem>
           <FormItem help={help}>
-            <Popover
-              getPopupContainer={node => node.parentNode}
-              content={
-                <div style={{ padding: '4px 0' }}>
-                  {passwordStatusMap[this.getPasswordStatus()]}
-                  {this.renderPasswordProgress()}
-                  <div style={{ marginTop: 10 }}>
-                    <FormattedMessage id="validation.password.strength.msg" />
-                  </div>
-                </div>
-              }
-              overlayStyle={{ width: 240 }}
-              placement="right"
-              visible={visible}
-            >
+            <PasswordStatus visible={visible} value={value}>
               {getFieldDecorator('password', {
-                rules: [
-                  {
-                    validator: this.checkPassword,
-                  },
-                ],
-              })(
-                <Input
-                  size="large"
-                  type="password"
-                  placeholder={formatMessage({ id: 'form.findpwd.placeholder' })}
-                />
-              )}
-            </Popover>
+                  rules: [
+                    {
+                      required: true,
+                      message: formatMessage({ id: 'validation.password.required' }),
+                    },
+                    {
+                      validator: isMobile()?'':this.checkPassword   // 移动端不进行检查
+                    },
+                  ],
+                })(
+                  <Input
+                    size="large"
+                    type="password"
+                    placeholder={formatMessage({ id: 'form.findpwd.placeholder' })}
+                    onChange={this.handleChange}
+                  />
+                )}
+            </PasswordStatus>
           </FormItem>
           <FormItem>
             {getFieldDecorator('confirm', {
@@ -261,7 +198,7 @@ class FindPassword extends Component {
           </FormItem>
           <FormItem>
             <Button
-              className={styles.modify_btn}
+              className={styles.submit}
               size="large"
               loading={submitting}
               type="primary"
@@ -269,6 +206,9 @@ class FindPassword extends Component {
             >
               <FormattedMessage id="app.modifypwd.modifypwd" />
             </Button>
+            <Link className={styles.login} to="/account/center/myQuestion">
+              <FormattedMessage id="app.modifypwd-result.back-center" />
+            </Link>
           </FormItem>
         </Form>
       </div>

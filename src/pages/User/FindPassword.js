@@ -4,39 +4,16 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
-import styles from './Register.less';
+import PasswordStatus from '@/components/PasswordStatus';
 import hash from 'hash.js';
+import styles from './Register.less';
 import { imgCodeURL } from '@/services/api';
-import { notificationTip, generateUUID } from '@/utils/utils';
+import { notificationTip, generateUUID, isMobile } from '@/utils/utils';
 import logo from '@/assets/black_logo.png';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 const InputGroup = Input.Group;
-
-const passwordStatusMap = {
-  ok: (
-    <div className={styles.success}>
-      <FormattedMessage id="validation.password.strength.strong" />
-    </div>
-  ),
-  pass: (
-    <div className={styles.warning}>
-      <FormattedMessage id="validation.password.strength.medium" />
-    </div>
-  ),
-  poor: (
-    <div className={styles.error}>
-      <FormattedMessage id="validation.password.strength.short" />
-    </div>
-  ),
-};
-
-const passwordProgressMap = {
-  ok: 'success',
-  pass: 'normal',
-  poor: 'exception',
-};
 
 @connect(({ register, findpwd, loading }) => ({
   register,
@@ -49,6 +26,7 @@ class FindPassword extends Component {
     super(props);
     this.state = {
       count: 0,
+      value: 0,
       confirmDirty: false,
       visible: false,
       help: '',
@@ -59,19 +37,6 @@ class FindPassword extends Component {
 
   componentDidMount() {
     this.refreshCode();
-  }
-
-  componentDidUpdate() {
-    debugger;
-    const { register, form, findpwd } = this.props;
-    if (findpwd.status === 'ok') {
-      router.push({
-        pathname: '/user/findpwd-result',
-        state: {
-          account,
-        },
-      });
-    }
   }
 
   componentWillUnmount() {
@@ -117,18 +82,6 @@ class FindPassword extends Component {
     });
   };
 
-  getPasswordStatus = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    if (value && value.length > 9) {
-      return 'ok';
-    }
-    if (value && value.length > 5) {
-      return 'pass';
-    }
-    return 'poor';
-  };
-
   handleSubmit = e => {
     debugger;
     e.preventDefault();
@@ -151,12 +104,17 @@ class FindPassword extends Component {
               pathname: '/',
             });
           } else {
-
+            console.log("找回密码接口请求失败");
           }
         });
       }
     });
   };
+
+  handleChange = e => {
+    const { value } = e.target;
+    this.setState({ value });
+  }
 
   handleConfirmBlur = e => {
     const { value } = e.target;
@@ -202,29 +160,6 @@ class FindPassword extends Component {
     }
   };
 
-  changePrefix = value => {
-    this.setState({
-      prefix: value,
-    });
-  };
-
-  renderPasswordProgress = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    const passwordStatus = this.getPasswordStatus();
-    return value && value.length ? (
-      <div className={styles[`progress-${passwordStatus}`]}>
-        <Progress
-          status={passwordProgressMap[passwordStatus]}
-          className={styles.progress}
-          strokeWidth={6}
-          percent={value.length * 10 > 100 ? 100 : value.length * 10}
-          showInfo={false}
-        />
-      </div>
-    ) : null;
-  };
-
   refreshCode = () => {
     const token = generateUUID();
     this.setState({
@@ -236,31 +171,21 @@ class FindPassword extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible, src } = this.state;
+    const { count, value, prefix, help, visible, src } = this.state;
     return (
       <div className={styles.findpwd_main}>
         <div className={styles.header}>{formatMessage({id: 'app.findpwd.findpwd'})} </div>
         <Form onSubmit={this.handleSubmit}>
           <FormItem help={help}>
-            <Popover
-              getPopupContainer={node => node.parentNode}
-              content={
-                <div style={{ padding: '4px 0' }}>
-                  {passwordStatusMap[this.getPasswordStatus()]}
-                  {this.renderPasswordProgress()}
-                  <div style={{ marginTop: 10 }}>
-                    <FormattedMessage id="validation.password.strength.msg" />
-                  </div>
-                </div>
-              }
-              overlayStyle={{ width: 240 }}
-              placement="right"
-              visible={visible}
-            >
+            <PasswordStatus visible={visible} value={value}>
               {getFieldDecorator('password', {
                 rules: [
                   {
-                    validator: this.checkPassword,
+                    required: true,
+                    message: formatMessage({ id: 'validation.password.required' }),
+                  },
+                  {
+                    validator: isMobile()?'':this.checkPassword   // 移动端不进行检查
                   },
                 ],
               })(
@@ -268,9 +193,10 @@ class FindPassword extends Component {
                   size="large"
                   type="password"
                   placeholder={formatMessage({ id: 'form.findpwd.placeholder' })}
+                  onChange={this.handleChange}
                 />
               )}
-            </Popover>
+            </PasswordStatus>
           </FormItem>
           <FormItem>
             {getFieldDecorator('confirm', {

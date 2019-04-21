@@ -1,65 +1,67 @@
 @import '~antd/lib/style/themes/default.less';
 
 .comment_box{
-  .list_wrapper{
-    .add_time{
-      margin-left: 24px;
-      font-size: 12px;
-      color: #999;
-      font-weight: normal;
-    }
-    .modify_span{
-      padding: 6px 11px;
-      height: 32px;
-    }
-    .modify_input {
-      //border: none;
-      background: transparent;
-      outline: none;
-    }
-    .sub_comment{
-     padding-left: 40px;
-     box-sizing: border-box;
-     :global{
-        .ant-list-empty-text{
-          padding: 0;
-        }
-      }
-      .modify_span{
-        padding: 6px 11px;
-        height: 32px;
-      }
-      .modify_input{
-        //border: none;
-        background: transparent;
-        outline: none;
-      }
-    }
-    .comment_wraper{
-      padding-left: 40px;
-      box-sizing: border-box;
-      margin-top: 10px;
-      .comment_btn_wrapper{
-        text-align: right;
-        @media screen and (max-width: @screen-sm){
-          margin-top: 12px;
-        }
-        .cancle_comment{
-          font-size: 16px;
-          color: #aaa;
-          cursor: pointer;
-        }
-        .comment{
-          margin-left: 12px;
-          width: 72px;
-          border-radius: 20px;
-        }
-      }
-    }
-    :gloabl{
+  .add_time{
+    margin-left: 24px;
+    font-size: 12px;
+    color: #999;
+    font-weight: normal;
+  }
+  .modify_span{
+    height: 32px;
+  }
+  .modify_input {
+    //border: none;
+    background: transparent;
+    outline: none;
+  }
+  .sub_comment{
+    padding-left: 40px;
+    box-sizing: border-box;
+    :global{
       .ant-list-empty-text{
         padding: 0;
       }
     }
+    .modify_span{
+      height: 32px;
+    }
+    .modify_input{
+      //border: none;
+      background: transparent;
+      outline: none;
+    }
+  }
+  .comment_wraper{
+    padding-left: 40px;
+    box-sizing: border-box;
+    margin-top: 10px;
+    .comment_btn_wrapper{
+      text-align: right;
+      @media screen and (max-width: @screen-sm){
+        margin-top: 12px;
+      }
+      .cancle_comment{
+        font-size: 16px;
+        color: #aaa;
+        cursor: pointer;
+      }
+      .comment{
+        margin-left: 12px;
+        width: 72px;
+        border-radius: 20px;
+      }
+    }
+  }
+  :global{
+    .ant-list-empty-text{
+      padding: 0;
+    }
+    .ant-list-vertical .ant-list-item-action{
+      padding-left: 32px;
+      .ant-list-item-action > li {
+        padding: 0 8px;
+      }
+    } 
   }
 }

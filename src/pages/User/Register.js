@@ -4,44 +4,15 @@ import { formatMessage, FormattedMessage } from 'umi/locale';
 import Link from 'umi/link';
 import router from 'umi/router';
 import { Form, Input, Button, Select, Row, Col, Popover, Progress, message } from 'antd';
-import styles from './Register.less';
+import PasswordStatus from '@/components/PasswordStatus';
 import { generateUUID, notificationTip, isMobile } from '@/utils/utils';
+import styles from './Register.less';
 import { imgCodeURL } from '@/services/api';
 import logo from '@/assets/black_logo.png';
 
 const FormItem = Form.Item;
 const { Option } = Select;
 const InputGroup = Input.Group;
-
-const passwordStatusMap = {
-  ok: (
-    <div className={styles.success}>
-      <FormattedMessage id="validation.password.strength.strong" />
-    </div>
-  ),
-  pass: (
-    <div className={styles.warning}>
-      <FormattedMessage id="validation.password.strength.medium" />
-    </div>
-  ),
-  poor: (
-    <div className={styles.error}>
-      <FormattedMessage id="validation.password.strength.short" />
-    </div>
-  ),
-  long: (
-    <div className={styles.error}>
-      <FormattedMessage id="validation.password.strength.long" />
-    </div>
-  ),
-};
-
-const passwordProgressMap = {
-  ok: 'success',
-  pass: 'normal',
-  poor: 'exception',
-  long: 'exception',
-};
 
 @connect(({ findpwd, register, loading }) => ({
   findpwd,
@@ -54,6 +25,7 @@ class Register extends Component {
     super(props);
     this.state = {
       count: 0,
+      value: '', // 密码框里的值
       confirmDirty: false,
       visible: false,
       help: '',
@@ -67,27 +39,12 @@ class Register extends Component {
     this.refreshCode();
   }
 
-  componentDidUpdate() {
-    // debugger;
-    // const { form, findpwd, register } = this.props;
-    // const account = form.getFieldValue('mail');
-    // if (register.status === 'ok') {
-    //   router.push({
-    //     pathname: '/user/register-result',
-    //     state: {
-    //       account,
-    //     },
-    //   });
-    // }
-  }
-
   componentWillUnmount() {
     clearInterval(this.interval);
   }
 
   // 获取手机短信验证码
   onGetCaptcha = () => {
-    debugger;
     const {
       form: { validateFields },
       dispatch,
@@ -143,30 +100,14 @@ class Register extends Component {
           } = this.props;
           if (registerRes.code === 200) {
             notificationTip(formatMessage({ id: 'register_success' }),true);
-            router.push({
-              pathname: '/user/register-result',
-            });
+            // 注册成功后切换为登录弹框
+            this.handleLogin();
           } else {
-            
+            console.log("登陆接口请求错误");
           }
         });
       }
     });
-  };
-
-  getPasswordStatus = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    if (value && value.length > 9 && value.length < 13) {
-      return 'ok';
-    }
-    if (value && value.length > 5 && value.length < 13) {
-      return 'pass';
-    }
-    if (value && value.length > 12) {
-      return 'long';
-    }
-    return 'poor';
   };
 
   handleConfirmBlur = e => {
@@ -174,6 +115,11 @@ class Register extends Component {
     const { confirmDirty } = this.state;
     this.setState({ confirmDirty: confirmDirty || !!value });
   };
+
+  handleChange = e => {
+    const { value } = e.target;
+    this.setState({ value });
+  }
 
   checkConfirm = (rule, value, callback) => {
     const { form } = this.props;
@@ -259,13 +205,7 @@ class Register extends Component {
     }
   };
 
-  changePrefix = value => {
-    this.setState({
-      prefix: value,
-    });
-  };
-
-  // 登录
+  // 切换为登录
   handleLogin = () => {
     const { dispatch } = this.props;
     dispatch({
@@ -275,23 +215,7 @@ class Register extends Component {
     });
   }
 
-  renderPasswordProgress = () => {
-    const { form } = this.props;
-    const value = form.getFieldValue('password');
-    const passwordStatus = this.getPasswordStatus();
-    return value && value.length ? (
-      <div className={styles[`progress-${passwordStatus}`]}>
-        <Progress
-          status={passwordProgressMap[passwordStatus]}
-          className={styles.progress}
-          strokeWidth={6}
-          percent={value.length * 10 > 100 ? 100 : value.length * 10}
-          showInfo={false}
-        />
-      </div>
-    ) : null;
-  };
-
+  // 刷新图片验证码
   refreshCode = () => {
     const token = generateUUID();
     this.setState({
@@ -303,7 +227,7 @@ class Register extends Component {
   render() {
     const { form, submitting } = this.props;
     const { getFieldDecorator } = form;
-    const { count, prefix, help, visible, src, isNextStep } = this.state;
+    const { count, value, prefix, help, visible, src, isNextStep } = this.state;
 
     return (
       <div className={styles.main}>
@@ -332,39 +256,46 @@ class Register extends Component {
             )}
           </FormItem>
           <FormItem help={help}>
-            <Popover
-              getPopupContainer={node => node.parentNode}
-              content={
-                <div style={{ padding: '4px 0' }}>
-                  {passwordStatusMap[this.getPasswordStatus()]}
-                  {this.renderPasswordProgress()}
-                  <div style={{ marginTop: 10 }}>
-                    <FormattedMessage id="validation.password.strength.msg" />
-                  </div>
-                </div>
-              }
-              overlayStyle={{ width: 240 }}
-              placement="right"
-              visible={visible}
-            >
+            <PasswordStatus visible={visible} value={value}>
               {getFieldDecorator('password', {
-                rules: [
-                  {
-                    required: true,
-                    message: formatMessage({ id: 'validation.password.required' }),
-                  },
-                  {
-                    validator: isMobile()?'':this.checkPassword   // 移动端不进行检查
-                  },
-                ],
-              })(
-                <Input
-                  size="large"
-                  type="password"
-                  placeholder={formatMessage({ id: 'form.findpwd.placeholder' })}
-                />
-              )}
-            </Popover>
+                  rules: [
+                    {
+                      required: true,
+                      message: formatMessage({ id: 'validation.password.required' }),
+                    },
+                    {
+                      validator: isMobile()?'':this.checkPassword   // 移动端不进行检查
+                    },
+                  ],
+                })(
+                  <Input
+                    size="large"
+                    type="password"
+                    placeholder={formatMessage({ id: 'form.findpwd.placeholder' })}
+                    onChange={this.handleChange}
+                  />
+                )}
+            </PasswordStatus>
+          </FormItem>
+          <FormItem>
+            {getFieldDecorator('confirm', {
+              rules: [
+                {
+                  required: true,
+                  message: formatMessage({ id: 'validation.confirm-password.required' }),
+                },
+                {
+                  validator: this.checkConfirm,
+                },
+              ],
+            })(
+              <Input
+                size="large"
+                type="password"
+                placeholder={formatMessage({ id: 'form.confirm-password.placeholder' })}
+                onBlur={this.handleConfirmBlur}
+              />
+            )}
           </FormItem>
           <FormItem>
             <Row gutter={8}>

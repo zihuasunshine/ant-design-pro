@@ -26,7 +26,8 @@ const submitFormLayout = {
   },
 };
 
-@connect(({ question, loading }) => ({
+@connect(({ global, question, loading }) => ({
+  global,
   question,
   submitting: loading.effects['question/submit'],
 }))
@@ -34,7 +35,33 @@ const submitFormLayout = {
 class AskForms extends PureComponent {
   constructor(props) {
     super(props);
-    this.imgs = [];
+    this.state = {
+      question: {},
+      imgs: [],
+    }
+    this.imgsId = [];
+  }
+
+  componentDidMount() {
+    const { dispatch, location: { state:item }, } = this.props;
+    item? this.getQuestionDetail() : '';
+    
+  }
+
+  // 得到问题详情
+  getQuestionDetail = () => {
+    const { dispatch, location: { state:item }, } = this.props;
+    dispatch({
+      type: 'question/getDetail',
+      id: item.id,
+    }).then(() => {
+      const { question: { qDetailRes }} = this.props;
+      if(qDetailRes && qDetailRes.code == 200) {
+        const { data: { question }} = qDetailRes;
+        const imgs = question.imgs? question.imgs : [];
+        this.setState({ question, imgs});
+      }
+    });
   }
 
   handleSubmit = e => {
@@ -42,7 +69,7 @@ class AskForms extends PureComponent {
     const { dispatch, form } = this.props;
     form.validateFieldsAndScroll((err, values) => {
       const { detail } = values;
-      if (this.imgs.length > 0) values.imgs = this.imgs;
+      if (this.imgsId.length > 0) values.imgs = this.imgsId;
       if (!detail) delete values.detail;
       if (!err) {
         if(values.id) {
@@ -88,18 +115,21 @@ class AskForms extends PureComponent {
       const {
         global: { uploadRes },
       } = this.props;
-      if (uploadRes.code === 200) {
-        this.imgs.push(uploadRes.data.id);
+      if (uploadRes && uploadRes.code === 200) {
+        this.imgsId.push(uploadRes.data.id);
+        this.setState(({ imgs }) => {
+          imgs.push(uploadRes.data.url);
+          return {
+            imgs
+          }
+        });
       }
     });
   };
 
   render() {
-    const { submitting } = this.props;
-    const {
-      location: { state:question },
-      form: { getFieldDecorator, getFieldValue },
-    } = this.props;
+    const { submitting, form: { getFieldDecorator, getFieldValue } } = this.props;
+    const { question, imgs } = this.state;
 
     return (
       <GridContent>
@@ -111,12 +141,6 @@ class AskForms extends PureComponent {
           <Form onSubmit={this.handleSubmit} hideRequiredMark style={{ marginTop: 8 }}>
             {getFieldDecorator('id', {
               initialValue: question && question.id,
-              rules: [
-                {
-                  required: true,
-                  message: formatMessage({ id: 'validation.question.title.required' }),
-                },
-              ],
             })(<Input type='hidden' />)}
             <FormItem
               {...formItemLayout}
@@ -161,7 +185,7 @@ class AskForms extends PureComponent {
               >
                 {getFieldDecorator('imgs', {})(
                   <div className={styles.picture_wrapper}>
-                    <PicturesWall count={5} uploadImg={this.uploadImg} />
+                    <PicturesWall imgs={imgs} count={5} uploadImg={this.uploadImg} />
                   </div>
                 )}
               </FormItem>

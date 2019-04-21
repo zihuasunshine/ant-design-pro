@@ -25,8 +25,8 @@ export default {
         payload: response,
       });
     },
-    *modifyPwd({ payload, token }, { call, put }) {
-      const response = yield call(modifyPassword, payload, token);
+    *modifyPwd({ payload }, { call, put }) {
+      const response = yield call(modifyPassword, payload);
       yield put({
         type: 'modifyPwdHandle',
         payload: response,

@@ -14,7 +14,6 @@ export default [
       { path: '/user/register', component: './User/Register' },
       { path: '/user/findpwd', component: './User/FindPassword' },
       { path: '/user/modifypwd', component: './User/ModifyPassword' },
-      { path: '/user/register-result', component: './User/RegisterResult' },
     ],
   },
   // app

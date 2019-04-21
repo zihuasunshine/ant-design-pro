@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react';
 import { Row, Col, List, Avatar, Icon, Input, Button,  } from 'antd';
 import { formatMessage } from 'umi/locale';
 import Link from 'umi/link';
+import { isMobile } from '@/utils/utils';
 import moment from 'moment';
 import styles from './style.less';
 
@@ -148,7 +149,7 @@ class CommentList extends Component {
         className={styles.comment_box}
         loading={loading}
         size='middle'
-        itemLayout='verticle'
+        itemLayout={isMobile()?'vertical':'-'}
         locale={{emptyText:' '}}
         pagination={listData.length>0?{
           onChange: (page) => {
@@ -158,13 +159,12 @@ class CommentList extends Component {
         }:false}
         dataSource={listData}
         renderItem={(item, index) => (
-          <div className={styles.list_wrapper}>
+          <Fragment>
             <List.Item
               key={item.addTime}
               actions={this.getActions(0, index, item)}
              >
               <List.Item.Meta
-                // avatar={<Link to={`/account/center/waitAnswer/${item.uid}`}><Avatar src={item.avatarFile} /></Link>}
                 avatar={<Avatar src={item.avatarFile}/>}
                 title={<div><a>{item.userName}</a><span className={styles.add_time}>{moment(item.addTime).format('YYYY-MM-DD HH:mm')}</span></div>}
                 description={<Fragment>
@@ -211,6 +211,7 @@ class CommentList extends Component {
             <div className={styles.sub_comment}>
               <List
                 locale={{emptyText:' '}}
+                itemLayout={isMobile()?'vertical':'-'}
                 loadMore={(item.commentsCount>3 && item.commentlist.length < 3) || item.commentsCount>3 && item.commentlist.length==3?<LoadMore commentId={item.id} />:null}
                 dataSource={item.commentlist}
                 renderItem={(el, index) => (
@@ -238,7 +239,7 @@ class CommentList extends Component {
                 )}
               />
             </div>
-          </div>
+          </Fragment>
         )}
       />
     )
