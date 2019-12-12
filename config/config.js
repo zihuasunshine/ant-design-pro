@@ -72,17 +72,22 @@ export default {
   externals: {
     '@antv/data-set': 'DataSet',
   },
-  "proxy": {
-    "/api": {
-      "target": "https://dev.api.ikaoyaner.com/api",
-      "changeOrigin": true,
-      "pathRewrite": { "^/api" : "" }
+  proxy: {
+    '/api': {
+      target: 'https://dev.ikaoyaner.com/api',
+      changeOrigin: true,
+      pathRewrite: { '^/api': '' },
     },
-    "/search": {
-      "target": "http://120.78.124.40:8000/",
-      "changeOrigin": true,
-      "pathRewrite": { "^/search" : "" }
-    }
+    // '/api': {
+    //   target: 'http://localhost:8063/api',
+    //   changeOrigin: true,
+    //   pathRewrite: { '^/api': '' },
+    // },
+    '/search': {
+      target: 'http://120.78.124.40:8000/',
+      changeOrigin: true,
+      pathRewrite: { '^/search': '' },
+    },
   },
   // proxy: {
   //   '/server/api/': {

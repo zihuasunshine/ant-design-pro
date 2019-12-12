@@ -23,57 +23,57 @@ export default [
     Routes: ['src/pages/Authorized'],
     authority: ['admin', 'user'],
     routes: [
-      //{path: '/', redirect: '/university'},
-      {path: '/', redirect: '/home'},
+      { path: '/', redirect: '/university' },
+      // { path: '/', redirect: '/home' },
+      // {
+      //   name: 'home',
+      //   icon: 'home',
+      //   path: '/home',
+      //   routes: [
+      //     {
+      //       path: '/home',
+      //       component: './Index',
+      //     },
+      //     {
+      //       path: '/article/:id',
+      //       component: './Index/ArticleDetail',
+      //     },
+      //   ],
+      // },
+      // {
+      //   icon: 'question-circle',
+      //   name: 'question',
+      //   path: '/question',
+      //   routes: [
+      //     {
+      //       path: '/question',
+      //       component: './Question/Ask',
+      //     },
+      //     {
+      //       path: '/question/ask',
+      //       component: './Question/Ask',
+      //     },
+      //     {
+      //       path: '/question/answer/:id',
+      //       component: './Question/Answer',
+      //     },
+      //   ],
+      // },
       {
-        name: 'home',
-        icon: 'home',
-        path: '/home',
+        icon: 'retweet',
+        name: 'adjust',
+        path: '/adjust',
         routes: [
           {
-            path: '/home',
-            component: './Index',
+            path: '/adjust',
+            component: './Adjust',
           },
           {
-            path: '/article/:id',
-            component: './Index/ArticleDetail'
-          },
-        ]
-      },
-      {
-        icon: 'question-circle',
-        name: 'question',
-        path: '/question',
-        routes: [
-          {
-            path: '/question',
-            component: './Question/Ask',
-          },
-          {
-            path: '/question/ask',
-            component: './Question/Ask',
-          },
-          {
-            path: '/question/answer/:id',
-            component: './Question/Answer',
+            path: '/adjust/detail/:id',
+            component: './Adjust/Detail',
           },
         ],
       },
-      // {
-      //   icon: 'retweet',
-      //   name: 'adjust',
-      //   path: '/adjust',
-      //   routes: [
-      //     {
-      //       path: '/adjust',
-      //       component: './Adjust',
-      //     },
-      //     {
-      //       path: '/adjust/detail/:id',
-      //       component: './Adjust/Detail'
-      //     },
-      //   ]
-      // },
       {
         icon: 'search',
         name: 'university',
@@ -82,8 +82,8 @@ export default [
           {
             path: '/university',
             component: './University',
-          }
-        ]
+          },
+        ],
       },
       {
         icon: 'form',
@@ -93,8 +93,8 @@ export default [
           {
             path: '/pgjg',
             component: './PGJG',
-          }
-        ]
+          },
+        ],
       },
       {
         icon: 'form',
@@ -104,8 +104,8 @@ export default [
           {
             path: '/cpa',
             component: './CPA',
-          }
-        ]
+          },
+        ],
       },
       {
         icon: 'line-chart',
@@ -115,8 +115,8 @@ export default [
           {
             path: '/score',
             component: './Score/NationalLine',
-          }
-        ]
+          },
+        ],
       },
       {
         icon: 'line-chart',
@@ -125,9 +125,9 @@ export default [
         routes: [
           {
             path: '/reexamine',
-            component: './Score/CrossedLine'
-          }
-        ]
+            component: './Score/CrossedLine',
+          },
+        ],
       },
       {
         //name: 'account',
