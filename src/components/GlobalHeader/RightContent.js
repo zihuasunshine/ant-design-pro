@@ -2,7 +2,7 @@ import React, { PureComponent } from 'react';
 import { FormattedMessage, formatMessage } from 'umi/locale';
 import { Spin, Tag, Menu, Icon, Avatar, Tooltip, Modal, BackTop } from 'antd';
 import Link from 'umi/link';
-import { connect } from 'dva' 
+import { connect } from 'dva';
 import moment from 'moment';
 import groupBy from 'lodash/groupBy';
 import NoticeIcon from '../NoticeIcon';
@@ -17,15 +17,15 @@ import styles from './index.less';
 const url = 'https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png'; // 默认头像
 
 @connect(({ global, login }) => ({
-  global, login
+  global,
+  login,
 }))
 export default class GlobalHeaderRight extends PureComponent {
-
   componentDidMount() {
     const access_token = localStorage.getItem('access_token');
     const refresh_token = localStorage.getItem('refresh_token');
     const user = sessionStorage.getItem('usr');
-    access_token && refresh_token && !user? this.getCurrentUserInfo() : '';
+    access_token && refresh_token && !user ? this.getCurrentUserInfo() : '';
   }
 
   getNoticeData() {
@@ -81,43 +81,45 @@ export default class GlobalHeaderRight extends PureComponent {
     });
   };
 
-  handleCancle = () =>{
+  handleCancle = () => {
     const { dispatch } = this.props;
     dispatch({
       type: 'login/setModalType',
-      visible: false
+      visible: false,
     });
-  }
+  };
 
   // 弹出框类型(login, register)
-  setModalType = (type) => {
+  setModalType = type => {
     const { dispatch } = this.props;
     dispatch({
       type: 'login/setModalType',
       visible: true,
-      modalType: type
+      modalType: type,
     });
-  }
+  };
 
   // 显示意见反馈弹框
-  setSuggestModalVisible = (visible) => {
+  setSuggestModalVisible = visible => {
     const { dispatch } = this.props;
     dispatch({
       type: 'global/setSuggestModal',
-      suggestModalVisible: visible
+      suggestModalVisible: visible,
     });
-  }
+  };
 
   // 获取当前登录人信息
   getCurrentUserInfo = () => {
     const { dispatch } = this.props;
     dispatch({
-      type: 'user/fetchCurrent'
-    })
-  }
-  
+      type: 'user/fetchCurrent',
+    });
+  };
+
   render() {
-    const currentUser = sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')): null;
+    const currentUser = sessionStorage.getItem('user')
+      ? JSON.parse(sessionStorage.getItem('user'))
+      : null;
     const {
       //currentUser,
       login: { modalVisible, modalType },
@@ -187,8 +189,8 @@ export default class GlobalHeaderRight extends PureComponent {
         {/*登录注册*/}
         {!localStorage.getItem('access_token') ? (
           <div className={styles.login_wrapper}>
-            <span onClick={() => this.setModalType('login')}>{formatMessage({id: 'app.login.login'})}</span>
-            <span onClick={() => this.setModalType('regster')}>{formatMessage({id: 'app.register.register'})}</span>
+            {/* <span onClick={() => this.setModalType('login')}>{formatMessage({id: 'app.login.login'})}</span>
+            <span onClick={() => this.setModalType('regster')}>{formatMessage({id: 'app.register.register'})}</span> */}
             {/*<Link to={'/user/login?redirect=' + window.location.href}>{formatMessage({id: 'app.login.login'})}</Link>
             <Link to="/user/register"></Link>*/}
           </div>
@@ -253,17 +255,17 @@ export default class GlobalHeaderRight extends PureComponent {
         ) : null}
         {/*<SelectLang className={styles.action} />*/}
         <Modal
-          maskStyle={{background: 'rgba(0,0,0,.3)'}}
+          maskStyle={{ background: 'rgba(0,0,0,.3)' }}
           destroyOnClose={true}
           width={375}
-          onCancel={this.handleCancle }
+          onCancel={this.handleCancle}
           visible={modalVisible}
           footer={null}
         >
-          {modalType === 'login'? <Login/> : <Register/>}
+          {modalType === 'login' ? <Login /> : <Register />}
         </Modal>
         <Modal
-          maskStyle={{background: 'rgba(0,0,0,.3)'}}
+          maskStyle={{ background: 'rgba(0,0,0,.3)' }}
           destroyOnClose={true}
           visible={suggestModalVisible}
           maskClosable={false}
@@ -271,15 +273,15 @@ export default class GlobalHeaderRight extends PureComponent {
           footer={false}
         >
           <div className={styles.suggest_wrapper}>
-            <Suggest/>
+            <Suggest />
           </div>
         </Modal>
-        <Tooltip placement='left' title='意见反馈'>
+        <Tooltip placement="left" title="意见反馈">
           <div className={styles.suggest} onClick={() => this.setSuggestModalVisible(true)}>
-            <Icon type="edit" theme='filled'/>
+            <Icon type="edit" theme="filled" />
           </div>
         </Tooltip>
-        <Tooltip placement='left' title='回到顶部'>
+        <Tooltip placement="left" title="回到顶部">
           <BackTop />
         </Tooltip>
       </div>

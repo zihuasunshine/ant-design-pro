@@ -59,21 +59,21 @@ export default [
       //     },
       //   ],
       // },
-      {
-        icon: 'retweet',
-        name: 'adjust',
-        path: '/adjust',
-        routes: [
-          {
-            path: '/adjust',
-            component: './Adjust',
-          },
-          {
-            path: '/adjust/detail/:id',
-            component: './Adjust/Detail',
-          },
-        ],
-      },
+      // {
+      //   icon: 'retweet',
+      //   name: 'adjust',
+      //   path: '/adjust',
+      //   routes: [
+      //     {
+      //       path: '/adjust',
+      //       component: './Adjust',
+      //     },
+      //     {
+      //       path: '/adjust/detail/:id',
+      //       component: './Adjust/Detail',
+      //     },
+      //   ],
+      // },
       {
         icon: 'search',
         name: 'university',
