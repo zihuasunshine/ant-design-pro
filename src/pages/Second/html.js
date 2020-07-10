@@ -27741,5 +27741,5 @@ export const html = `
   </tr>
   </tbody>
   </table>
-  <div style="margin-top:24px;font-size:12px;color:#888;">本文转载自：教育部。文章为作者独立观点，不代表青塔立场，转载请联系原作者。</div>
+  <div style="margin-top:24px;font-size:12px;color:#888;line-height:18px;">本文转载自：教育部。文章为作者独立观点，不代表小白考研立场，转载请联系原作者。</div>
   </body>`;

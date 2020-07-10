@@ -24,11 +24,11 @@ self.__precacheManifest = [
     "url": "/4.async.js"
   },
   {
-    "revision": "baf528ee8ca52a26b438",
+    "revision": "9f2ea26202dd2700364d",
     "url": "/umi.css"
   },
   {
-    "revision": "baf528ee8ca52a26b438",
+    "revision": "9f2ea26202dd2700364d",
     "url": "/umi.js"
   },
   {
@@ -76,51 +76,55 @@ self.__precacheManifest = [
     "url": "/11.async.js"
   },
   {
-    "revision": "48d28ddd4ab7a725e7e6",
+    "revision": "7e65d7f19324f9f6bc6a",
     "url": "/12.chunk.css"
   },
   {
-    "revision": "48d28ddd4ab7a725e7e6",
+    "revision": "7e65d7f19324f9f6bc6a",
     "url": "/12.async.js"
   },
   {
-    "revision": "3cee2bff320961f4c625",
+    "revision": "d3cf691a313bbb35e514",
     "url": "/13.chunk.css"
   },
   {
-    "revision": "3cee2bff320961f4c625",
+    "revision": "d3cf691a313bbb35e514",
     "url": "/13.async.js"
   },
   {
-    "revision": "85d576448b7355324049",
+    "revision": "64b54fc138fdbc7e8795",
     "url": "/14.chunk.css"
   },
   {
-    "revision": "85d576448b7355324049",
+    "revision": "64b54fc138fdbc7e8795",
     "url": "/14.async.js"
   },
   {
-    "revision": "bbe5eab8e39a0b683f69",
+    "revision": "36793ceba7008c71a711",
     "url": "/15.chunk.css"
   },
   {
-    "revision": "bbe5eab8e39a0b683f69",
+    "revision": "36793ceba7008c71a711",
     "url": "/15.async.js"
   },
   {
-    "revision": "3f0c0fdc43efcc260b2b",
+    "revision": "8b0d63c609e1f030cbfc",
     "url": "/16.chunk.css"
   },
   {
-    "revision": "3f0c0fdc43efcc260b2b",
+    "revision": "8b0d63c609e1f030cbfc",
     "url": "/16.async.js"
   },
   {
-    "revision": "15e92c76f02690fc9872",
+    "revision": "89858e3faa99418236e1",
+    "url": "/17.chunk.css"
+  },
+  {
+    "revision": "89858e3faa99418236e1",
     "url": "/17.async.js"
   },
   {
-    "revision": "94de4edca647fccf1b01",
+    "revision": "51102514745369f67c32",
     "url": "/18.async.js"
   },
   {
@@ -316,16 +320,16 @@ self.__precacheManifest = [
     "url": "/index.html"
   },
   {
-    "revision": "347329d0982682b42d40c8162817a940",
-    "url": "/icons/icon-128x128.png"
+    "revision": "694c4300be571fdd4d8b6abbe14d2e3f",
+    "url": "/favicon1.png"
   },
   {
     "revision": "723e4067a93a8749d90866cb721263c0",
     "url": "/favicon.png"
   },
   {
-    "revision": "694c4300be571fdd4d8b6abbe14d2e3f",
-    "url": "/favicon1.png"
+    "revision": "347329d0982682b42d40c8162817a940",
+    "url": "/icons/icon-128x128.png"
   },
   {
     "revision": "c23aa881b8d0e959f6c0aeb5ae7e4baa",
