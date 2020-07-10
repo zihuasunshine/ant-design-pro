@@ -130,6 +130,17 @@ export default [
         ],
       },
       {
+        icon: 'form',
+        name: 'second',
+        path: '/second',
+        routes: [
+          {
+            path: '/second',
+            component: './Second',
+          },
+        ],
+      },
+      {
         //name: 'account',
         icon: 'user',
         path: '/account',

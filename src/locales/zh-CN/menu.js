@@ -11,6 +11,7 @@ export default {
   'menu.reexamine': '34所复试线',
   'menu.cpa': '专业评估(专硕)',
   'menu.pgjg': '学科评估(学硕)',
+  'menu.second': '第二学位',
   'menu.question.askQuestion': '我要提问',
   'menu.form': '表单页',
   'menu.form.basicform': '基础表单',
